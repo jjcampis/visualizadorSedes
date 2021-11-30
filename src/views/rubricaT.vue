@@ -29,11 +29,6 @@
         ></v-select>
       </v-col>
   </v-row>
-Inscriptos: {{trayecto_data.length}}
-Aprobados: {{ aprobados.length }}
-No aprobados: {{ noAprobados.length }}
-Bajas: {{ bajas.length }}
-S/SA: {{ trayecto_data.length-aprobados.length-noAprobados.length-bajas.length }}
   <b-table sticky-header head-variant="dark" thead-tr-class="d-none" :fields="fields" :items="trayecto_data" :busy="isBusy" class="mt-3" outlined>
 <template #thead-top>
         <b-tr>
@@ -123,6 +118,47 @@ S/SA: {{ trayecto_data.length-aprobados.length-noAprobados.length-bajas.length }
         <span class="text-info">{{ data.item.field_rubrica_info_adicional }}</span>
 </template>
       
+<!-- <template slot="FOOT[dni]" slot-scope="scope">
+      {{ trayecto_data.length }}
+    </template> -->
+ <template #bottom-row>
+        <b-th rowspan="3">Totales:</b-th>
+        <b-th rowspan="3">{{ trayecto_data.length }}</b-th>
+        <b-th rowspan="3">{{ ea1tot }}</b-th>
+        <b-th rowspan="3">{{ ea2tot }}</b-th>
+        <b-th rowspan="3">{{ ea3tot }}</b-th>
+
+        <b-th rowspan="3">{{ ca1tot }}</b-th>
+        <b-th rowspan="3">{{ ca2tot }}</b-th>
+        <b-th rowspan="3">{{ ca3tot }}</b-th>
+
+        <b-th rowspan="3">{{ da1tot }}</b-th>
+        <b-th rowspan="3">{{ da2tot }}</b-th>
+        <b-th rowspan="3">{{ da3tot }}</b-th>
+
+        <b-th rowspan="3">{{ pa1tot }}</b-th>
+        <b-th rowspan="3">{{ pa2tot }}</b-th>
+        <b-th rowspan="3">{{ pa3tot }}</b-th>
+        <b-th rowspan="3">{{ psttot }}</b-th>
+        <b-th class="pl-0 pr-0">
+          <p class="text-center" style="margin-right:-20px"><b class="text-success">Aprobados: </b>{{ aprobados.length }}</br>
+          <b class="text-warning">No aprobados: </b>{{ noAprobados.length }}</p>
+        </b-th>
+        <b-th rowspan="3">
+          <p class="text-center">Inscriptos: {{trayecto_data.length}}</br>
+          Bajas: {{ bajas.length }}</br>
+          S/SA: {{ trayecto_data.length-aprobados.length-noAprobados.length-bajas.length }}</p>
+        </b-th>
+</template>
+
+
+<!-- <template slot="bottom-row"
+          slot-scope="data"
+>
+    <td v-for="(field, i) in data.fields">
+         {{ i }}
+    </td>
+</template> -->
 <template #table-busy>
         <div class="text-center text-danger my-2">
           <b-spinner class="align-middle"></b-spinner>
@@ -207,10 +243,11 @@ trayectos: ['Todos','TrendKids','TecnoKids','MakerJuniors','TeensMaker','TeamInn
           { value: {sel:'Tecno-kids' , matricula: 15} , text: 'Tecnokids',  },
           { value: {sel:'Maker-Juniors', matricula: 35} , text: 'Maker-Juniors' },*/
         ],
-      fields:['dni','estudiante',
+      fields:[{key:'dni',sortable: true},'estudiante',
       {
         key:'field_rubrica_electronica_a1',
-        tdClass: this.colores
+        tdClass: this.colores,
+        sortable:true
       },
       {
         key:'field_rubrica_electronica_a2',
@@ -275,6 +312,128 @@ computed:{
     return [];
   }
   },
+  //calculo de promedios
+  ea1tot(){
+    if(this.dato_sede.length > 0){
+    let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_electronica_a1) > 0).map(dato => parseInt(dato.field_rubrica_electronica_a1)).reduce((previousValue, currentValue) => previousValue + currentValue);
+    let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_electronica_a1) > 0).length;
+    return promedio.toFixed(1);
+  }else{
+    return 0
+  }
+  },
+    ea2tot(){
+    if(this.dato_sede.length > 0){
+    let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_electronica_a2) > 0).map(dato => parseInt(dato.field_rubrica_electronica_a2)).reduce((previousValue, currentValue) => previousValue + currentValue);
+    let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_electronica_a2) > 0).length;
+    return promedio.toFixed(1);
+  }else{
+    return 0
+  }
+  },
+    ea3tot(){
+    if(this.dato_sede.length > 0){
+    let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_electronica_a3) > 0).map(dato => parseInt(dato.field_rubrica_electronica_a3)).reduce((previousValue, currentValue) => previousValue + currentValue);
+    let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_electronica_a3) > 0).length;
+    return promedio.toFixed(1);
+  }else{
+    return 0
+  }
+  },
+  //-- Construccion promedios --//
+  ca1tot(){
+      if(this.dato_sede.length > 0){
+      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_contruccion_a1) > 0).map(dato => parseInt(dato.field_rubrica_contruccion_a1)).reduce((previousValue, currentValue) => previousValue + currentValue);
+      let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_contruccion_a1) > 0).length;
+      return promedio.toFixed(1);
+    }else{
+      return 0
+    }
+  },
+  ca2tot(){
+      if(this.dato_sede.length > 0){
+      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_contruccion_a2) > 0).map(dato => parseInt(dato.field_rubrica_contruccion_a2)).reduce((previousValue, currentValue) => previousValue + currentValue);
+      let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_contruccion_a2) > 0).length;
+      return promedio.toFixed(1);
+    }else{
+      return 0
+    }
+  },
+  ca3tot(){
+      if(this.dato_sede.length > 0){
+      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_contruccion_a3) > 0).map(dato => parseInt(dato.field_rubrica_contruccion_a3)).reduce((previousValue, currentValue) => previousValue + currentValue);
+      let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_contruccion_a3) > 0).length;
+      return promedio.toFixed(1);
+    }else{
+      return 0
+    }
+  },
+  //-- Disenno --//
+  da1tot(){
+      if(this.dato_sede.length > 0){
+      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_diseno_a1) > 0).map(dato => parseInt(dato.field_rubrica_diseno_a1)).reduce((previousValue, currentValue) => previousValue + currentValue);
+      let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_diseno_a1) > 0).length;
+      return promedio.toFixed(1);
+    }else{
+      return 0
+    }
+  },
+  da2tot(){
+      if(this.dato_sede.length > 0){
+      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_diseno_a2) > 0).map(dato => parseInt(dato.field_rubrica_diseno_a2)).reduce((previousValue, currentValue) => previousValue + currentValue);
+      let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_diseno_a2) > 0).length;
+      return promedio.toFixed(1);
+    }else{
+      return 0
+    }
+  },
+  da3tot(){
+      if(this.dato_sede.length > 0){
+      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_diseno_a3) > 0).map(dato => parseInt(dato.field_rubrica_diseno_a3)).reduce((previousValue, currentValue) => previousValue + currentValue);
+      let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_diseno_a3) > 0).length;
+      return promedio.toFixed(1);
+    }else{
+      return 0
+    }
+  },
+  //-- Programacion --//
+  pa1tot(){
+      if(this.dato_sede.length > 0){
+      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_programacion_a1) > 0).map(dato => parseInt(dato.field_rubrica_programacion_a1)).reduce((previousValue, currentValue) => previousValue + currentValue);
+      let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_programacion_a1) > 0).length;
+      return promedio.toFixed(1);
+    }else{
+      return 0
+    }
+  },
+  pa2tot(){
+      if(this.dato_sede.length > 0){
+      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_programacion_a2) > 0).map(dato => parseInt(dato.field_rubrica_programacion_a2)).reduce((previousValue, currentValue) => previousValue + currentValue);
+      let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_programacion_a2) > 0).length;
+      return promedio.toFixed(1);
+    }else{
+      return 0
+    }
+  },
+  pa3tot(){
+      if(this.dato_sede.length > 0){
+      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_programacion_a3) > 0).map(dato => parseInt(dato.field_rubrica_programacion_a3)).reduce((previousValue, currentValue) => previousValue + currentValue);
+      let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_programacion_a3) > 0).length;
+      return promedio.toFixed(1);
+    }else{
+      return 0
+    }
+  },
+  //--PST--//
+  psttot(){
+      if(this.dato_sede.length > 0){
+      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_promedio_php) > 0).map(dato => parseInt(dato.field_rubrica_promedio_php)).reduce((previousValue, currentValue) => previousValue + currentValue);
+      let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_promedio_php) > 0).length;
+      return promedio.toFixed(1);
+    }else{
+      return 0
+    }
+  },
   aprobados(){
     if(this.dato_sede.length > 0){
       return this.trayecto_data.filter((estud)=> {return estud.estado == "Aprobado"});
@@ -320,7 +479,7 @@ colores: ((value, key, item) => {
 this.isBusy = true;
 try{
       //la URL base ya esta cargada en main.js (axios.baseURL)
-      let response = await axios.get(axios.defaults.baseURL+sede.id);
+      let response = await axios.get(axios.defaults.baseURL+'/json/evaluacion_estudiantes?_format=json&field_user_espaciomaker_target_id_entityreference_filter='+sede.id);
       this.dato_sede = response.data;
       console.log(response.data);
       this.isBusy = false;
@@ -366,5 +525,11 @@ thead {
     overflow-y: auto;
     max-height: 750px;
     height: 80vh;
+}
+.b-table-bottom-row{
+  position: sticky;
+  bottom: -1px;
+  background: #343a40;
+  color: #FFF;
 }
 </style>

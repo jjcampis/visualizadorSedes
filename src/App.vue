@@ -11,7 +11,8 @@
       <v-list >
         <v-list-item to="/"><v-list-item-title>Sedes</v-list-item-title></v-list-item>
         <v-list-item to="/about"><v-list-item-title>Alumnos</v-list-item-title></v-list-item>  
-        <v-list-item to="/rubricaT"><v-list-item-title>Rubrica Trimestral</v-list-item-title></v-list-item>  
+        <v-list-item to="/rubricaT"><v-list-item-title>Rubrica Trimestral</v-list-item-title></v-list-item>
+        <v-list-item to="/rubricaG"><v-list-item-title>Rubrica General</v-list-item-title></v-list-item>
       </v-list>
     </v-navigation-drawer>
   
