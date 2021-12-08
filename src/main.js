@@ -11,6 +11,12 @@ import 'bootstrap/dist/css/bootstrap.css';
 import '@mdi/font/css/materialdesignicons.css' 
 ///Apexcharts
 import VueApexCharts from 'vue-apexcharts'
+import VueHtml2Canvas from 'vue-html2canvas';
+
+//import evenHub
+//import eventHub from './eventHub'
+Vue.use(VueHtml2Canvas);
+
 //Axios
 //import axios from 'axios';
 //pagina de r2d2
@@ -21,6 +27,9 @@ Vue.component('apexchart', VueApexCharts);
 //Bootstrap
 Vue.use(BootstrapVue);
 Vue.config.productionTip = false;
+//eventos globales
+//Vue.prototype.$eventHub = new Vue(); // Global event bus
+
 
 new Vue({
   router,

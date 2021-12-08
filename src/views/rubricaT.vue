@@ -13,7 +13,7 @@
           label="Sede"
           v-model="sede"
           return-object
-          @change="getSede(sede)"
+          @change="obtener_rubricas(sede)"
         ></v-select>
       </v-col>
       <v-col
@@ -29,7 +29,7 @@
         ></v-select>
       </v-col>
   </v-row>
-  <b-table sticky-header head-variant="dark" thead-tr-class="d-none" :fields="fields" :items="trayecto_data" :busy="isBusy" class="mt-3" outlined>
+  <b-table sticky-header head-variant="dark" thead-tr-class="d-none" :fields="fields" :items="trayecto_data" :busy="cargando" class="mt-3" outlined>
 <template #thead-top>
         <b-tr>
         <b-th rowspan="3">Dni</b-th>
@@ -141,12 +141,12 @@
         <b-th rowspan="3">{{ pa3tot }}</b-th>
         <b-th rowspan="3">{{ psttot }}</b-th>
         <b-th class="pl-0 pr-0">
-          <p class="text-center" style="margin-right:-20px"><b class="text-success">Aprobados: </b>{{ aprobados.length }}</br>
+          <p class="text-center" style="margin-right:-20px"><b class="text-success">Aprobados: </b>{{ aprobados.length }}<br>
           <b class="text-warning">No aprobados: </b>{{ noAprobados.length }}</p>
         </b-th>
         <b-th rowspan="3">
-          <p class="text-center">Inscriptos: {{trayecto_data.length}}</br>
-          Bajas: {{ bajas.length }}</br>
+          <p class="text-center">Inscriptos: {{trayecto_data.length}}<br>
+          Bajas: {{ bajas.length }}<br>
           S/SA: {{ trayecto_data.length-aprobados.length-noAprobados.length-bajas.length }}</p>
         </b-th>
 </template>
@@ -171,73 +171,12 @@
 
 <script>
 import axios from '@/axios'
+import { mapActions, mapState } from 'vuex'
 export default {
   data(){
 return{
   trayecto: '',
   sede: 0,
-   isBusy: false,
-      sedes:[
-            {sede:'25 de Mayo', id:19198},
-{sede:'Alba Posse', id:19199},
-{sede:'Almafuerte', id:19200},
-{sede:'Apóstoles', id:19201},
-{sede:'Aristóbulo del Valle', id:19202},
-{sede:'Azara', id:19203},
-{sede:'Bernardo de Irigoyen', id:19204},
-{sede:'Caá Yarí', id:19205},
-{sede:'Campo Grande', id:19206},
-{sede:'Campo Ramón', id:19207},
-{sede:'Campo Viera', id:19208},
-{sede:'Candelaria', id:19209},
-{sede:'Capioví', id:19210},
-{sede:'Cerro Azul', id:19211},
-{sede:'Cerro Corá', id:19212},
-{sede:'Colonia Alberdi', id:19213},
-{sede:'Colonia Aurora', id:19214},
-{sede:'Colonia Delicia', id:19215},
-{sede:'Colonía Victoria', id:19216},
-{sede:'Comandante Andresito', id:19217},
-{sede:'Concepción de la Sierra', id:19218},
-{sede:'Corpus', id:19219},
-{sede:'Dos de Mayo', id:19220},
-{sede:'El Alcazar', id:19221},
-{sede:'El Soberbio', id:19222},
-{sede:'Eldorado', id:19223},
-{sede:'Fachinal', id:19224},
-{sede:'Garuhape', id:19225},
-{sede:'Garupá', id:19226},
-{sede:'General Urquiza', id:19227},
-{sede:'Gobernador Roca', id:19228},
-{sede:'Guaraní', id:19229},
-{sede:'Jardín América', id:19231},
-{sede:'Leandro N. Alem', id:19232},
-{sede:'Loreto', id:19233},
-{sede:'Los helechos', id:19234},
-{sede:'Montecarlo', id:19235},
-{sede:'Oberá', id:19236},
-{sede:'Panambí', id:19237},
-{sede:'Posadas (En el Polo TIC)', id:19238},
-{sede:'Pozo Azul', id:19239},
-{sede:'Profundidad', id:19240},
-{sede:'Puerto Esperanza', id:19241},
-{sede:'Puerto Iguazú', id:19242},
-{sede:'Puerto Libertad', id:19243},
-{sede:'Puerto Piray', id:19244},
-{sede:'Puerto Rico 01', id:19245},
-{sede:'Puerto Rico 02', id:19286},
-{sede:'Ruiz de Montoya', id:19246},
-{sede:'Salto Encantado', id:19247},
-{sede:'San Ignacio', id:19248},
-{sede:'San Javier', id:19249},
-{sede:'San José', id:19250},
-{sede:'San Martín', id:19251},
-{sede:'San Pedro', id:19252},
-{sede:'San Vicente', id:19253},
-{sede:'Santa Ana', id:19254},
-{sede:'Santiago de Liniers', id:19255},
-{sede:'Santo Pipó', id:19256},
-],
 trayectos: ['Todos','TrendKids','TecnoKids','MakerJuniors','TeensMaker','TeamInn','HighMaker'
           /*{ value: 'Trend-kids', text: 'TrendKids' },
           { value: {sel:'Tecno-kids' , matricula: 15} , text: 'Tecnokids',  },
@@ -297,45 +236,73 @@ trayectos: ['Todos','TrendKids','TecnoKids','MakerJuniors','TeensMaker','TeamInn
       dato_sede:[]
 }
 },
+/*watch: {
+  'rubricas_sede': function() {
+    console.log(this.rubricas_sede)
+  }
+},*/
 computed:{
+  ...mapState(['rubricas_sede','cargando','sedes']),
   trayecto_data(){
-    if(this.dato_sede.length > 0){
-    var campo = this.trayecto;
-    if(campo == 'Todos'){
-      campo = ''
-    }
-    let filter = this.dato_sede.filter((tray) => {
-        return tray.field_user_estudiante.toLowerCase().includes(campo.toLowerCase());
-      })
-      return filter;
-  }else{
+    if(this.sede.id != undefined && !this.cargando){
+      console.log('id de sede');
+      if(this.rubricas_sede[this.sede.sede] != undefined){
+          this.dato_sede = this.rubricas_sede[this.sede.sede];
+          console.log('se creo la sede');
+      if(this.dato_sede.length > 0){
+          let campo = this.trayecto;
+          if(campo == 'Todos'){
+          campo = ''
+          }
+          let filter = this.dato_sede.filter((tray) => {
+            return tray.field_user_estudiante.toLowerCase().includes(campo.toLowerCase());
+          })
+          return filter;
+        }
+      }else{
+        this.$nextTick(console.log('siguiente tick data: ',this.rubricas_sede[this.sede.sede]))
+        return [];
+      }
+      }else{
     return [];
   }
   },
   //calculo de promedios
   ea1tot(){
     if(this.dato_sede.length > 0){
-    let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_electronica_a1) > 0).map(dato => parseInt(dato.field_rubrica_electronica_a1)).reduce((previousValue, currentValue) => previousValue + currentValue);
-    let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_electronica_a1) > 0).length;
-    return promedio.toFixed(1);
+    let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_electronica_a1) > 0).map(dato => parseInt(dato.field_rubrica_electronica_a1));
+      if(resultado.length>0){
+        resultado = resultado.reduce((previousValue, currentValue) => previousValue + currentValue);
+        let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_electronica_a1) > 0).length;
+        return promedio.toFixed(1);
+      }
+      return
   }else{
     return 0
   }
   },
     ea2tot(){
     if(this.dato_sede.length > 0){
-    let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_electronica_a2) > 0).map(dato => parseInt(dato.field_rubrica_electronica_a2)).reduce((previousValue, currentValue) => previousValue + currentValue);
-    let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_electronica_a2) > 0).length;
-    return promedio.toFixed(1);
+    let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_electronica_a2) > 0).map(dato => parseInt(dato.field_rubrica_electronica_a2));
+      if(resultado.length>0){
+        resultado = resultado.reduce((previousValue, currentValue) => previousValue + currentValue);
+        let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_electronica_a2) > 0).length;
+        return promedio.toFixed(1);
+      }
+      return
   }else{
     return 0
   }
   },
     ea3tot(){
     if(this.dato_sede.length > 0){
-    let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_electronica_a3) > 0).map(dato => parseInt(dato.field_rubrica_electronica_a3)).reduce((previousValue, currentValue) => previousValue + currentValue);
-    let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_electronica_a3) > 0).length;
-    return promedio.toFixed(1);
+    let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_electronica_a3) > 0).map(dato => parseInt(dato.field_rubrica_electronica_a3));
+      if(resultado.length>0){
+        resultado = resultado.reduce((previousValue, currentValue) => previousValue + currentValue);
+        let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_electronica_a3) > 0).length;
+        return promedio.toFixed(1);
+      }
+      return
   }else{
     return 0
   }
@@ -343,27 +310,39 @@ computed:{
   //-- Construccion promedios --//
   ca1tot(){
       if(this.dato_sede.length > 0){
-      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_contruccion_a1) > 0).map(dato => parseInt(dato.field_rubrica_contruccion_a1)).reduce((previousValue, currentValue) => previousValue + currentValue);
-      let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_contruccion_a1) > 0).length;
-      return promedio.toFixed(1);
+      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_contruccion_a1) > 0).map(dato => parseInt(dato.field_rubrica_contruccion_a1));
+      if(resultado.length>0){
+        resultado = resultado.reduce((previousValue, currentValue) => previousValue + currentValue);
+        let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_contruccion_a1) > 0).length;
+        return promedio.toFixed(1);
+      }
+      return
     }else{
       return 0
     }
   },
   ca2tot(){
       if(this.dato_sede.length > 0){
-      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_contruccion_a2) > 0).map(dato => parseInt(dato.field_rubrica_contruccion_a2)).reduce((previousValue, currentValue) => previousValue + currentValue);
-      let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_contruccion_a2) > 0).length;
-      return promedio.toFixed(1);
+      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_contruccion_a2) > 0).map(dato => parseInt(dato.field_rubrica_contruccion_a2));
+      if(resultado.length>0){
+        resultado = resultado.reduce((previousValue, currentValue) => previousValue + currentValue);
+        let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_contruccion_a2) > 0).length;
+        return promedio.toFixed(1);
+      }
+      return
     }else{
       return 0
     }
   },
   ca3tot(){
       if(this.dato_sede.length > 0){
-      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_contruccion_a3) > 0).map(dato => parseInt(dato.field_rubrica_contruccion_a3)).reduce((previousValue, currentValue) => previousValue + currentValue);
-      let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_contruccion_a3) > 0).length;
-      return promedio.toFixed(1);
+      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_contruccion_a3) > 0).map(dato => parseInt(dato.field_rubrica_contruccion_a3));
+      if(resultado.length>0){
+        resultado = resultado.reduce((previousValue, currentValue) => previousValue + currentValue);
+        let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_contruccion_a3) > 0).length;
+        return promedio.toFixed(1);
+      }
+      return
     }else{
       return 0
     }
@@ -371,27 +350,39 @@ computed:{
   //-- Disenno --//
   da1tot(){
       if(this.dato_sede.length > 0){
-      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_diseno_a1) > 0).map(dato => parseInt(dato.field_rubrica_diseno_a1)).reduce((previousValue, currentValue) => previousValue + currentValue);
-      let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_diseno_a1) > 0).length;
-      return promedio.toFixed(1);
+      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_diseno_a1) > 0).map(dato => parseInt(dato.field_rubrica_diseno_a1));
+      if(resultado.length>0){
+        resultado = resultado.reduce((previousValue, currentValue) => previousValue + currentValue);
+        let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_diseno_a1) > 0).length;
+        return promedio.toFixed(1);
+      }
+      return
     }else{
       return 0
     }
   },
   da2tot(){
       if(this.dato_sede.length > 0){
-      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_diseno_a2) > 0).map(dato => parseInt(dato.field_rubrica_diseno_a2)).reduce((previousValue, currentValue) => previousValue + currentValue);
-      let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_diseno_a2) > 0).length;
-      return promedio.toFixed(1);
+      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_diseno_a2) > 0).map(dato => parseInt(dato.field_rubrica_diseno_a2));
+      if(resultado.length>0){
+        resultado = resultado.reduce((previousValue, currentValue) => previousValue + currentValue);
+        let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_diseno_a2) > 0).length;
+        return promedio.toFixed(1);
+      }
+      return
     }else{
       return 0
     }
   },
   da3tot(){
       if(this.dato_sede.length > 0){
-      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_diseno_a3) > 0).map(dato => parseInt(dato.field_rubrica_diseno_a3)).reduce((previousValue, currentValue) => previousValue + currentValue);
-      let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_diseno_a3) > 0).length;
-      return promedio.toFixed(1);
+      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_diseno_a3) > 0).map(dato => parseInt(dato.field_rubrica_diseno_a3));
+      if(resultado.length>0){
+        resultado = resultado.reduce((previousValue, currentValue) => previousValue + currentValue);
+        let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_diseno_a3) > 0).length;
+        return promedio.toFixed(1);
+      }
+      return
     }else{
       return 0
     }
@@ -399,27 +390,39 @@ computed:{
   //-- Programacion --//
   pa1tot(){
       if(this.dato_sede.length > 0){
-      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_programacion_a1) > 0).map(dato => parseInt(dato.field_rubrica_programacion_a1)).reduce((previousValue, currentValue) => previousValue + currentValue);
+      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_programacion_a1) > 0).map(dato => parseInt(dato.field_rubrica_programacion_a1));
+      if(resultado.length>0){
+      resultado = resultado.reduce((previousValue, currentValue) => previousValue + currentValue);
       let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_programacion_a1) > 0).length;
       return promedio.toFixed(1);
+      }
+      return
     }else{
       return 0
     }
   },
   pa2tot(){
       if(this.dato_sede.length > 0){
-      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_programacion_a2) > 0).map(dato => parseInt(dato.field_rubrica_programacion_a2)).reduce((previousValue, currentValue) => previousValue + currentValue);
+      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_programacion_a2) > 0).map(dato => parseInt(dato.field_rubrica_programacion_a2));
+      if(resultado.length>0){
+      resultado = resultado.reduce((previousValue, currentValue) => previousValue + currentValue);
       let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_programacion_a2) > 0).length;
       return promedio.toFixed(1);
+      }
+      return
     }else{
       return 0
     }
   },
   pa3tot(){
       if(this.dato_sede.length > 0){
-      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_programacion_a3) > 0).map(dato => parseInt(dato.field_rubrica_programacion_a3)).reduce((previousValue, currentValue) => previousValue + currentValue);
+      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_programacion_a3) > 0).map(dato => parseInt(dato.field_rubrica_programacion_a3));
+      if(resultado.length>0){
+      resultado = resultado.reduce((previousValue, currentValue) => previousValue + currentValue);
       let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_programacion_a3) > 0).length;
       return promedio.toFixed(1);
+      }
+      return
     }else{
       return 0
     }
@@ -427,9 +430,13 @@ computed:{
   //--PST--//
   psttot(){
       if(this.dato_sede.length > 0){
-      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_promedio_php) > 0).map(dato => parseInt(dato.field_rubrica_promedio_php)).reduce((previousValue, currentValue) => previousValue + currentValue);
+      let resultado = this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_promedio_php) > 0).map(dato => parseInt(dato.field_rubrica_promedio_php));
+      if(resultado.length>0){
+      resultado = resultado.reduce((previousValue, currentValue) => previousValue + currentValue);
       let promedio = resultado/this.trayecto_data.filter(dato => parseInt(dato.field_rubrica_promedio_php) > 0).length;
       return promedio.toFixed(1);
+      }
+      return
     }else{
       return 0
     }
@@ -457,8 +464,11 @@ computed:{
   }
 },
 methods:{
+  ...mapActions([
+    'obtener_rubricas'
+  ]),
 colores: ((value, key, item) => {
-            console.log(item,key,value);
+            //console.log(item,key,value);
             if(parseInt(item[key]) <= 25){
             return 'bg-rojo';
             }
@@ -474,7 +484,7 @@ colores: ((value, key, item) => {
               return 'bg-black';
             }
       }),
- async getSede(sede) {
+/*async getSede(sede) {
 //console.log(sede)
 this.isBusy = true;
 try{
@@ -488,7 +498,7 @@ try{
       console.log(error);
       this.isBusy = false;
   }
-  }
+  }*/
 }
 }
 </script>

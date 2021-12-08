@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/visualizadorSedes/precache-manifest.7ebb48ae86b4994b1eae0324f55cdec5.js"
+  "/dashboard/precache-manifest.f309a283d96a5cb44d58318d69dcbc28.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "vuet-dash"});
