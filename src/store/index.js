@@ -87,6 +87,7 @@ export default new Vuex.Store({
 {sede:'Santo Pipó', id:19256},
 ],
     rubricas_sede:{},
+    rubricas_G:{},
     datos_sede:[],
     cargando: false
   },
@@ -109,6 +110,20 @@ export default new Vuex.Store({
         state.rubricas_sede[sede] = [];
       }
       Object.assign(state.rubricas_sede[sede],rubricas);
+    },
+    SET_rubricasG(state,payload){
+      let sede = payload.sede;
+      let datos_sede = payload.dato
+   
+   /* console.log('comit',datos_sede);
+      console.log('comit sede:',sede);
+      console.log('comit_crudo',payload);
+    */
+      if (state.rubricas_G[sede] == undefined) {
+        state.rubricas_G[sede] = {};
+        //console.log('se creo la sede en comit');
+      }
+      Object.assign(state.rubricas_G[sede],datos_sede);
     }
   },
   actions: {
@@ -182,7 +197,7 @@ export default new Vuex.Store({
     
     plugins:[createPersistedState({
       key: 'dashboard_red_maker',
-      paths:['rubricas_sede'],
+      paths:['rubricas_sede','rubricas_G'],
       rehydrated: rehydratedvue
     })]
     

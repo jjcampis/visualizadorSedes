@@ -1,23 +1,13 @@
 <template>
+<div>
     <v-row>
-      <v-col cols="12" md="4">
-        <v-card elevation="3" class="h-100">
-          <v-list-item two-line>
-            <v-list-item-content>
-              <v-list-item-title class="text-left text-h5">
-                Sedes
-              </v-list-item-title>
-              <v-list-item-subtitle class="text-left">porcentaje de alumnos aprobados</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <apexchart type="pie" width="380" :options="chartOptions" :series="series"></apexchart>
+      <v-col cols="12" md="12">
+        <v-card elevation="3" class="h-100" style="padding-bottom: 60px;">
+          <apexchart class="apex-moco" type="line" height="500" width="100%" :options="chartOptions" :series="vecins"></apexchart>
         </v-card>
       </v-col>
-      <v-col cols="12" md="4">
-        <v-card elevation="3">
-          <apexchart type="line" height="350" :options="chartOptions2" :series="series2"></apexchart>  
-        </v-card>
-      </v-col>
+    </v-row>
+    <v-row>
       <v-col cols="12" md="4">
         <v-card elevation="3" class="h-100">
           <v-list-item two-line>
@@ -28,68 +18,81 @@
               <v-list-item-subtitle class="text-left">Cantidad de alumnos Inscriptos</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
-          <apexchart type="pie" width="380" :options="chartOptions" :series="series"></apexchart>
+        <chart :etiquetas='etiquetas' :series='seriesN' ></chart>
         </v-card>
       </v-col>
     </v-row>
+</div>
 </template>
 
 <script>
 // @ is an alias to /src
+import chart from "@/components/chart.vue";
+import { mapState } from 'vuex'
 export default {
   name: "Home",
+  components:{
+    chart
+  },
+  computed:{
+    ...mapState(['rubricas_sede','sedes','rubricas_G']),
+    vsedes(){
+      if(Object.keys(this.rubricas_G).length > 0){
+      return Object.keys(this.rubricas_G).map((x)=>{return x});
+      }else{
+        return []
+      }
+    },
+    vecins(){
+      if(Object.keys(this.rubricas_G).length > 0){
+      let inscripted = Object.keys(this.rubricas_G).map((x)=>{return this.rubricas_G[x].inscriptos});
+      let aproved = Object.keys(this.rubricas_G).map((x)=>{return this.rubricas_G[x].aprobados});
+      let na = Object.keys(this.rubricas_G).map((x)=>{return this.rubricas_G[x].noaprobados});
+       
+      
+      return [{'name':'inscriptos','type':'column','data': inscripted},
+      {'name':'aprobados','type':'area','data': aproved},
+      {'name':'no aprobados','type':'line','data': na}      
+      ]
+    }else{
+      return []
+    }}
+    /* vinsc(){
+      if (Object.keys(this.rubricas_G).length > 0) {
+      return this.sedes.map((x)=>{
+        let ins = this.rubricas_G[x.sede].inscriptos;
+        console.log(ins);
+        return {'name':'inscriptos','type':'column','data':ins}
+      })
+    }else{
+      return []
+    }
+    } */
+    },
   data: ()=>{
     return{
-          series: [44, 55, 13, 43, 22],
+      etiquetas: ['TrendKids','TecnoKids','MakerJuniors','TeensMaker','TeamInn','HighMaker'],
+      seriesN: [20, 35, 23, 90, 20,45],
+
           chartOptions: {
             chart: {
-              width: 380,
-              type: 'pie',
-            },
-            labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
-            responsive: [{
-              breakpoint: 480,
-              options: {
-                chart: {
-                  width: 200
-                },
-                legend: {
-                  position: 'bottom'
-                }
-              }
-            }]
-          },
-
-          ///otro chart
-            series2: [{
-            name: 'TEAM A',
-            type: 'column',
-            data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30]
-          }, {
-            name: 'TEAM B',
-            type: 'area',
-            data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43]
-          }, {
-            name: 'TEAM C',
-            type: 'line',
-            data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39]
-          }],
-          chartOptions2: {
-            chart: {
-              height: 350,
+              height: "auto",
               type: 'line',
               stacked: false,
             },
+            colors: ['#F44336', '#E91E63', '#9C27B0'],
             stroke: {
               width: [0, 2, 5],
               curve: 'smooth'
             },
             plotOptions: {
               bar: {
-                columnWidth: '50%'
+                columnWidth: '60%'
               }
             },
-            
+            legend: {
+              position: 'top'
+            },
             fill: {
               opacity: [0.85, 0.25, 1],
               gradient: {
@@ -101,18 +104,17 @@ export default {
                 stops: [0, 100, 100, 100]
               }
             },
-            labels: ['01/01/2003', '02/01/2003', '03/01/2003', '04/01/2003', '05/01/2003', '06/01/2003', '07/01/2003',
-              '08/01/2003', '09/01/2003', '10/01/2003', '11/01/2003'
-            ],
+            //labels: ["25 de Mayo","Alba Posse","Almafuerte","Apóstoles","Aristóbulo del Valle","Azara","Bernardo de Irigoyen","Caá Yarí","Campo Grande","Campo Ramón","Campo Viera","Candelaria","Capioví","Cerro Azul","Cerro Corá","Colonia Alberdi","Colonia Aurora","Colonia Delicia","Colonía Victoria","Comandante Andresito","Concepción de la Sierra","Corpus","Dos de Mayo","El Alcazar","El Soberbio","Eldorado","Fachinal","Garuhape","Garupá","General Urquiza","Gobernador Roca","Guaraní","Jardín América","Leandro N. Alem","Loreto","Los helechos","Montecarlo","Oberá","Panambí","Posadas (En el Polo TIC)","Pozo Azul","Profundidad","Puerto Esperanza","Puerto Iguazú","Puerto Libertad","Puerto Piray","Puerto Rico 01","Puerto Rico 02","Ruiz de Montoya","Salto Encantado","San Ignacio","San Javier","San José","San Martín","San Pedro","San Vicente","Santa Ana","Santiago de Liniers","Santo Pipó"],
+            labels: [],
             markers: {
               size: 0
             },
             xaxis: {
-              type: 'datetime'
+              type: 'string'
             },
             yaxis: {
               title: {
-                text: 'Points',
+                text: 'Alumnos',
               },
               min: 0
             },
@@ -122,17 +124,28 @@ export default {
               y: {
                 formatter: function (y) {
                   if (typeof y !== "undefined") {
-                    return y.toFixed(0) + " points";
+                    return y.toFixed(0) + " alumnos";
                   }
                   return y;
-            
                 }
               }
             }
-          },
-          
-          
+          }
         }
+
+    },
+    created() {
+      // sino no toma
+      this.$set(this.chartOptions, 'labels', this.vsedes);
     }
   }
 </script>
+<style>
+.apex-moco .apexcharts-canvas .apexcharts-svg{
+  /* background: blue !important; */
+  overflow: visible !important;
+  
+  /* color: #F44336', '#E91E63', '#9C27B0' */
+
+}
+</style>

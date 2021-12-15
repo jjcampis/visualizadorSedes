@@ -1,36 +1,12 @@
 <template>
 <div>
-
-<b-row class="justify-content-md-center">
-    <b-col col lg="1" class="text-end"><label class="me-0" for="sedes">Sede:</label></b-col>
-    <b-col col lg="1" class="text-start" md="auto"><b-form-select id="sedes" v-model="sede" :options="sedes"></b-form-select></b-col>
-    <b-col col lg="1" class="text-end"><div>Matrícula: <strong v-if="sede">{{sede.matricula}}</strong></div></b-col>
-  </b-row>
-
-<b-row class="justify-content-md-center">
-    <b-col col lg="1" class="text-end"><label class="me-0" for="trayecto">Trayecto:</label></b-col>
-    <b-col col lg="1" class="text-start" md="auto"><b-form-select id="trayecto" v-model="trayecto" :options="trayectos"></b-form-select></b-col>
-    <b-col col lg="1" class="text-end"><div>Matrícula:<strong v-if="trayecto">{{trayecto.matricula}}</strong></div></b-col>
-  </b-row>
-
-  
-  
-  
-
-
-  <p class="mt-5" ><b>PLANILLA DE EVALUACIÓN GENERAL TRIMESTRAL POR SEDE Y POR TRAYECTOS</b></p>
-<b-button @click="muestra = !muestra">clickme</b-button>
-{{muestra}}
-<transition name="fade">
-  <div v-if="muestra">aloja</div>
-</transition>
-
-<b-button @click="cargard">carga</b-button>
-<div>
-           <b-progress :value="mapear(cargado,0,sedes.length-1,0,100)" variant="success" class="mt-3"></b-progress>
-          <p>{{sedes[cargado].sede}}</p>
-          {{cargado+1}} - {{sedes.length}}
-          </div>
+  <div>
+     <b-progress :value="mapear(cargado,0,sedes.length-1,0,100)" variant="danger" class="mt-3"></b-progress>
+      <p class="pt-5">
+          <b class="fadered" :key="sedes[cargado].sede">{{sedes[cargado].sede}}</b>
+      </p>
+     {{cargado+1}} - {{sedes.length}}
+  </div>
 </div>
 </template>
 
@@ -59,8 +35,15 @@ import {mapState} from 'vuex'
         sede: null
       }
     },
+    props:['cargar'],
     computed:{
     ...mapState(['rubricas_sede','rubricas_G','sedes','cargando']),
+},
+created(){
+    if (this.cargar){
+      console.log('segunda carga');
+      this.cargard()
+    }
 },
     methods:{
 mapear: function(val, in_min, in_max, out_min, out_max){
@@ -69,6 +52,7 @@ return Math.round((val - in_min) * (out_max - out_min) / (in_max - in_min) + out
       ///funciono de a uno
       async cargard(){
         let pos = 0;
+        this.cargado = 0;
         //deep clone
         //window.mysede = JSON.parse(JSON.stringify(this.trayectos));//clona a otro con igual hace ref
         window.mysede = this.rubricas_sede//por mas que haga ref al ser solo lectura puedo modificar este
@@ -79,7 +63,7 @@ return Math.round((val - in_min) * (out_max - out_min) / (in_max - in_min) + out
           //await this.otra(response.data);//debe devolver una promise para que espere el tiempo de otra()
           
           let dato = response.data;
-          store.commit('SET_rubricasG',{sede,dato})//esto tendria que hacer una vez filtrado todo
+          //store.commit('SET_rubricasG',{sede,dato})//esto tendria que hacer una vez filtrado todo
           await this.filtro_trayectos(sede.sede);//envio los datos de la sede actual
           //asigno las llaves
           this.añadir_claves_trayectos(dato,sede.sede);
@@ -87,11 +71,16 @@ return Math.round((val - in_min) * (out_max - out_min) / (in_max - in_min) + out
           console.log(this.sedes[pos].sede,dato);
           console.log('trayectito: ',this.trayectitos_sedes);
           
-          if (pos == this.sedes.length-1) {
-            console.log('todo ok cargado')
+          //this.extras(sede.sede);//aprobados no aprobados etc
+          
+          if (this.cargado < this.sedes.length-1) {
+            pos++;
+            this.cargado++;
           }
-          pos++;
-          this.cargado++;
+          if (pos == this.sedes.length-1) {
+            console.log('todo ok cargado');
+            this.$emit('datosSedesCargados');
+          }
         }
       },
       async filtro_trayectos(sede){
@@ -131,15 +120,38 @@ return Math.round((val - in_min) * (out_max - out_min) / (in_max - in_min) + out
 //trayecto
  if(this.trayectitos_sedes[sede] == undefined){
             this.trayectitos_sedes[sede] = {}
+            this.trayectitos_sedes[sede]['inscriptos'] = this.rubricas_sede[sede].length;
+            this.trayectitos_sedes[sede]['aprobados'] = this.rubricas_sede[sede].filter((estud)=> {return estud.estado == "Aprobado"}).length;
+            this.trayectitos_sedes[sede]['noaprobados'] = this.rubricas_sede[sede].filter((estud)=> {return estud.estado == "No Aprobado"}).length;
+            this.trayectitos_sedes[sede]['bajas'] = this.rubricas_sede[sede].filter((estud)=> {return estud.estado == "Baja"}).length;
+            this.trayectitos_sedes[sede]['ssa'] = this.rubricas_sede[sede].length - this.trayectitos_sedes[sede]['aprobados'] - this.trayectitos_sedes[sede]['noaprobados'] - this.trayectitos_sedes[sede]['bajas'];
+            this.trayectitos_sedes[sede]['evaluados'] = this.rubricas_sede[sede].filter((est)=>{ return parseInt(est.field_rubrica_promedio_php) > 0}).length;
+            
+            let resultado = this.rubricas_sede[sede].filter(dato => parseInt(dato.field_rubrica_promedio_php) > 0).map(dato => parseInt(dato.field_rubrica_promedio_php));
+            let promedio = 0;
+            if(resultado.length > 0){
+              resultado = resultado.reduce((previousValue, currentValue) => previousValue + currentValue)
+              promedio = resultado/this.rubricas_sede[sede].filter(dato => parseInt(dato.field_rubrica_promedio_php) > 0).length;
+              //return promedio.toFixed(2);//no retorno porque lo ocupo en linea
+            }
+            this.trayectitos_sedes[sede]['promPST'] = promedio; 
+            this.trayectitos_sedes[sede]['trayectos'] = {}
             console.log('se creo sede',sede);
           }
-          if(this.trayectitos_sedes[sede][trayecto] == undefined){
-            this.trayectitos_sedes[sede][trayecto] = {}
+          if(this.trayectitos_sedes[sede]['trayectos'][trayecto] == undefined){
+            this.trayectitos_sedes[sede]['trayectos'][trayecto] = {}
+            this.trayectitos_sedes[sede]['trayectos'][trayecto]['inscriptos'] = filtrado.length;
+            this.trayectitos_sedes[sede]['trayectos'][trayecto]['aprobados'] = filtrado.filter((estud)=> {return estud.estado == "Aprobado"}).length;
+            this.trayectitos_sedes[sede]['trayectos'][trayecto]['noaprobados'] = filtrado.filter((estud)=> {return estud.estado == "No Aprobado"}).length;
+            this.trayectitos_sedes[sede]['trayectos'][trayecto]['bajas'] = filtrado.filter((estud)=> {return estud.estado == "Baja"}).length;
+            this.trayectitos_sedes[sede]['trayectos'][trayecto]['ssa'] = filtrado.length - this.trayectitos_sedes[sede]['trayectos'][trayecto]['aprobados'] - this.trayectitos_sedes[sede]['trayectos'][trayecto]['noaprobados'] - this.trayectitos_sedes[sede]['trayectos'][trayecto]['bajas'];
+            this.trayectitos_sedes[sede]['trayectos'][trayecto]['evaluados'] = filtrado.filter((est)=>{ return parseInt(est.field_rubrica_promedio_php) > 0}).length;
+
             console.log('se creo trayecto',trayecto);
           }
-          if(this.trayectitos_sedes[sede][trayecto][eje] == undefined){
+          if(this.trayectitos_sedes[sede]['trayectos'][trayecto][eje] == undefined){
             console.log('se creo eje',eje);
-            this.trayectitos_sedes[sede][trayecto][eje] = {}
+            this.trayectitos_sedes[sede]['trayectos'][trayecto][eje] = {} 
           }
   var columna = '';
   var datito = {};
@@ -184,7 +196,7 @@ if(filtrado.length > 0){
           //console.log('guardando: '+promedio.toFixed(2));
           datito = {[pos]:promedio.toFixed(2)};
           //console.log(datito);
-          Object.assign(this.trayectitos_sedes[sede][trayecto][eje],datito);
+          Object.assign(this.trayectitos_sedes[sede]['trayectos'][trayecto][eje],datito);
         }
   //fin for
     }
@@ -201,7 +213,7 @@ if(filtrado.length > 0){
       datito = {'a1':0,'a2':0,'a3':0};
     }
     console.log('datito',datito,'trayecto',trayecto,'eje',eje);
-    Object.assign(this.trayectitos_sedes[sede][trayecto][eje],datito);
+    Object.assign(this.trayectitos_sedes[sede]['trayectos'][trayecto][eje],datito);
   
   /*resolve();
   })*/
@@ -224,34 +236,34 @@ llaves[clave].forEach(element => {
   if(clave == 'tr'){
     try {
       //console.log(dato_sede[0][element]);
-      if(this.trayectitos_sedes[sede]['TrendKids'] == undefined){
-        this.trayectitos_sedes[sede]['TrendKids'] = {}
+      if(this.trayectitos_sedes[sede]['trayectos']['TrendKids'] == undefined){
+        this.trayectitos_sedes[sede]['trayectos']['TrendKids'] = {}
       }
-      Object.assign(this.trayectitos_sedes[sede]['TrendKids'],{[element.substring(7)]:dato_sede[0][element]})
+      Object.assign(this.trayectitos_sedes[sede]['trayectos']['TrendKids'],{[element.substring(7)]:dato_sede[0][element]})
     } catch (error) {
       console.log('El error: ',error);
-      console.log(this.trayectitos_sedes[sede]['TrendKids']);
+      console.log(this.trayectitos_sedes[sede]['trayectos']['TrendKids']);
       console.log(dato_sede[0][element]);    }
   }
   if(clave == 'tk'){
     console.log('datosede: ',dato_sede);
-    Object.assign(this.trayectitos_sedes[sede]['TecnoKids'],{[element.substring(7)]:dato_sede[0][element]})
+    Object.assign(this.trayectitos_sedes[sede]['trayectos']['TecnoKids'],{[element.substring(7)]:dato_sede[0][element]})
   }
   if(clave == 'mj'){
     //console.log(dato_sede[0][element]);
-    Object.assign(this.trayectitos_sedes[sede]['MakerJuniors'],{[element.substring(7)]:dato_sede[0][element]})
+    Object.assign(this.trayectitos_sedes[sede]['trayectos']['MakerJuniors'],{[element.substring(7)]:dato_sede[0][element]})
   }
   if(clave == 'tm'){
     //console.log(dato_sede[0][element]);
-    Object.assign(this.trayectitos_sedes[sede]['TeensMaker'],{[element.substring(7)]:dato_sede[0][element]})
+    Object.assign(this.trayectitos_sedes[sede]['trayectos']['TeensMaker'],{[element.substring(7)]:dato_sede[0][element]})
   }
   if(clave == 'ti'){
     //console.log(dato_sede[0][element]);
-    Object.assign(this.trayectitos_sedes[sede]['TeamInn'],{[element.substring(7)]:dato_sede[0][element]})
+    Object.assign(this.trayectitos_sedes[sede]['trayectos']['TeamInn'],{[element.substring(7)]:dato_sede[0][element]})
   }
   if(clave == 'hm'){
     //console.log(dato_sede[0][element]);
-    Object.assign(this.trayectitos_sedes[sede]['HighMaker'],{[element.substring(7)]:dato_sede[0][element]})
+    Object.assign(this.trayectitos_sedes[sede]['trayectos']['HighMaker'],{[element.substring(7)]:dato_sede[0][element]})
   }
 });
 })
@@ -259,8 +271,15 @@ llaves[clave].forEach(element => {
 //testing///
 //this.table_trayectitosP.push(this.table_trayectitos[0]) 
 //console.log(this.table_trayectitos);
+let dato = this.trayectitos_sedes[sede];
+//console.log('dato a enviar:',dato,sede);
+store.commit('SET_rubricasG',{sede,dato})
 }
 },
+
+/* extras(sede){//aprobados no aprobados etc
+
+}, */
 
 
 

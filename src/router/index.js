@@ -68,10 +68,21 @@ const routes = [
       import(/* webpackChunkName: "imprimir" */
       /* webpackPrefetch: true */ "../views/printest.vue"),
   }
+  ,
+  {
+    path: "/rubG",
+    name: "rubG",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "rubG" */
+      /* webpackPrefetch: true */ "../views/rubG.vue"),
+  }
 ];
 
 const router = new VueRouter({
-  mode: "history",
+  mode: "hash",//no se opta por history para evitar error de navegacion
   base: process.env.BASE_URL,
   routes,
 });

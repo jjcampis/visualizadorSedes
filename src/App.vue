@@ -15,7 +15,7 @@
         <v-list-item to="/"><v-list-item-title>Distribución</v-list-item-title></v-list-item>
         <v-list-item to="/about"><v-list-item-title>Asistencias</v-list-item-title></v-list-item>
         <v-list-item to="/rubricaT"><v-list-item-title>Rubrica Estudiantes</v-list-item-title></v-list-item>
-        <v-list-item to="/rubricaG"><v-list-item-title>Rubrica Sedes</v-list-item-title></v-list-item>
+        <v-list-item to="/rubG"><v-list-item-title>Rubrica Sedes</v-list-item-title></v-list-item>
       </v-list>
     </v-navigation-drawer>
   
