@@ -29,7 +29,7 @@
         ></v-select>
       </v-col>
   </v-row>
-  <b-table sticky-header head-variant="dark" thead-tr-class="d-none" :fields="fields" :items="trayecto_data" :busy="cargando" class="mt-3" outlined>
+  <b-table sticky-header head-variant="dark" thead-tr-class="d-none" :fields="fields" :items="trayecto_data" :busy="cargando" class="my-0" outlined>
 <template #thead-top>
         <b-tr>
         <b-th rowspan="3">Dni</b-th>

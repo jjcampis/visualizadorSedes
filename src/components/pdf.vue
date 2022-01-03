@@ -1,0 +1,47 @@
+<template>
+   <div>
+     <vue-html2pdf
+        :show-layout="false"
+        :float-layout="true"
+        :enable-download="true"
+        :preview-modal="false"
+        :paginate-elements-by-height="1400"
+        filename="hee hee"
+        :pdf-quality="2"
+        :manual-pagination="false"
+        pdf-format="a4"
+        pdf-orientation="landscape"
+        pdf-content-width="800px"
+        ref="html2Pdf"
+    >
+        <section slot="pdf-content">
+            <p>ALOJA!</p>
+        </section>
+    </vue-html2pdf>
+    <b-button @click="generateReport">descarga</b-button>
+   </div>
+</template>
+
+<script>
+import VueHtml2pdf from 'vue-html2pdf'
+
+export default {
+    methods: {
+        /*
+            Generate Report using refs and calling the
+            refs function generatePdf()
+        */
+        generateReport () {
+            this.$refs.html2Pdf.generatePdf()
+        }
+    },
+
+    components: {
+        VueHtml2pdf
+    }
+}
+</script>
+
+<style>
+
+</style>

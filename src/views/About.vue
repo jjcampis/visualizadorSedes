@@ -39,7 +39,7 @@ methods:{
  async getTodos() {
 try{
       //la URL base ya esta cargada en main.js (axios.baseURL)
-      console.log(axios.defaults.baseURL);
+      //console.log(axios.defaults.baseURL);
       let response = await axios.get(axios.defaults.baseURL+this.sedes[1].id);
       console.log(response.data);
   }catch(error){

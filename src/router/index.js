@@ -67,6 +67,16 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "imprimir" */
       /* webpackPrefetch: true */ "../views/printest.vue"),
+  },
+  {
+    path: "/newhome",
+    name: "newhome",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "newhome" */
+      /* webpackPrefetch: true */ "../views/NewHome.vue"),
   }
   ,
   {

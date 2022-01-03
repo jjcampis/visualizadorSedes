@@ -1,18 +1,17 @@
 <template>
 <v-app>
-   <v-app-bar v-if="$route.name!=='cargar' && !loading" app style="background: #bd1919;">
+   <v-app-bar v-if="$route.name!=='cargar' && !loading" app style="background: #bd1919; z-index:22">
       <v-app-bar-nav-icon class="text-white" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title class="text-white">Visualizador por sedes</v-toolbar-title>
     </v-app-bar>
   
-    <v-navigation-drawer v-if="$route.name!=='cargar'  && !loading" v-model="drawer" app>
+    <v-navigation-drawer hide-overlay v-if="$route.name!=='cargar'  && !loading" v-model="drawer" app>
       <v-img :src="require('./assets/logo_red_maker.png')"></v-img>
       
       <v-list >
         <v-list-item to="/"><v-list-item-title>Sedes</v-list-item-title></v-list-item>
-        <v-list-item to="/"><v-list-item-title>Preinscriptos</v-list-item-title></v-list-item>
-        <v-list-item to="/"><v-list-item-title>Inscriptos</v-list-item-title></v-list-item>
-        <v-list-item to="/"><v-list-item-title>Distribución</v-list-item-title></v-list-item>
+        <v-list-item to="/newhome"><v-list-item-title>Preinscriptos**</v-list-item-title></v-list-item>
+        <v-list-item to="/imprimir"><v-list-item-title>Distribución</v-list-item-title></v-list-item>
         <v-list-item to="/about"><v-list-item-title>Asistencias</v-list-item-title></v-list-item>
         <v-list-item to="/rubricaT"><v-list-item-title>Rubrica Estudiantes</v-list-item-title></v-list-item>
         <v-list-item to="/rubG"><v-list-item-title>Rubrica Sedes</v-list-item-title></v-list-item>
@@ -33,7 +32,8 @@
       </v-container>
       
       <transition v-if="!loading" name="fab-transition" mode="out-in">
-        <keep-alive>
+        <!-- <keep-alive exclude="Home"> -->
+        <keep-alive exclude="newhome">
         <router-view></router-view>
         </keep-alive>
         </transition>
@@ -53,7 +53,7 @@ import cargar from './views/cargar.vue'
 export default {
   data:()=>{
     return{
-      drawer: false,
+      drawer: true,
       loading:true,
       compo: cargar,
       timeElapsed: false

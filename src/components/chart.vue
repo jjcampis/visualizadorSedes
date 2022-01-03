@@ -12,13 +12,13 @@ export default {
         //seriesp: [44, 55, 13, 43],
         chartOptionsp: {
             chart: {
-              width: 500,//100% y en responsive era 430
+              width: "100%",//100% y en responsive era 430
               type: 'pie',
               toolbar: {
         show: true,
-        offsetX: 0,
+        offsetX: -10,
         offsetY: 0,
-        tools: {
+        /* tools: {
           download: true,
           selection: true,
           zoom: true,
@@ -27,9 +27,12 @@ export default {
           pan: true,
           reset: true | '<img src="/static/icons/reset.png" width="20">',
           customIcons: []
-        }}
+        } */
+        }
             },
-            //colors: ['#93C3EE', '#E5C6A0', '#669DB5', '#94A74A'],
+            // colors: ['#690E2C', '#EC6592', '#E91E63', '#692D41','#B5184C'],
+            // colors: ['#700303', '#BDBB2B', '#BD1919', '#0676BD','#094870'],//triada
+            colors: ['#BD4F22', '#5EBD2B', '#BD1919', '#06BDA1','#BD0FBD'],//doble separacion complementaria
             //labels: ['TrendKids', 'TecnoKids', 'MakerJuniors', 'TeenMakers'],
             labels: this.etiquetas,
             dataLabels:{
@@ -52,14 +55,14 @@ export default {
                 },
 
                 style: {
-                    fontSize: '14px',
+                    fontSize: '12px',
                     fontFamily: 'Helvetica, Arial, sans-serif',
                     fontWeight: 'bold',
                     colors: ['#fff']
                 },
                 formatter: function(val, opt) {
-                    console.log(val);
-                    console.log(opt);
+                    // console.log(val);
+                    // console.log(opt);
                     //para separar el label y el porcentaje devuelvo un vector
                     return [opt.w.globals.labels[opt.seriesIndex],val.toFixed(1)+"%"];
                 }
@@ -76,18 +79,26 @@ export default {
                 *   },
                 * }
                 */
+               
+                horizontalAlign: 'left',
                 formatter: function(seriesName, opts) {
                     return [seriesName, " - ", opts.w.globals.series[opts.seriesIndex]]
                 }
             },
             responsive: [{
-              breakpoint: 480,
+              breakpoint: 680,
               options: {
                 chart: {
-                  width: 430
+                  width: "100%"
+                },
+                style: {
+                    fontSize: '5px',
+                    fontFamily: 'Helvetica, Arial, sans-serif',
+                    fontWeight: 'bold',
+                    colors: ['#fff']
                 },
                 legend: {
-                  position: 'top'
+                  position: 'bottom'
                 }
               }
             }]
@@ -96,3 +107,8 @@ export default {
       },
 }
 </script>
+<style>
+.apexcharts-legend.apx-legend-position-right{
+  align-items: flex-start;
+}
+</style>

@@ -4,7 +4,7 @@ module.exports = {
     proxy:'http://r2d2.roboticamisiones.com/'
   },
   publicPath: process.env.NODE_ENV === 'production'
-    ? '/dashboard/'
+    ? '/dashboard/preview'
     : '/',
     outputDir: 'docs'
 };
