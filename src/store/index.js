@@ -26,7 +26,7 @@ export default new Vuex.Store({
   state: {
     count: 0,
     sedes:[
-      {sede:'25 de Mayo', id:19198},
+    /*{sede:'25 de Mayo', id:19198},
 {sede:'Alba Posse', id:19199},
 {sede:'Almafuerte', id:19200},
 {sede:'Apóstoles', id:19201},
@@ -73,14 +73,16 @@ export default new Vuex.Store({
 {sede:'Puerto Libertad', id:19243},
 {sede:'Puerto Piray', id:19244},
 {sede:'Puerto Rico 01', id:19245},
-{sede:'Puerto Rico 02', id:19286},
+{sede:'Puerto Rico 02', id:19286}, 
+
 {sede:'Ruiz de Montoya', id:19246},
+
 {sede:'Salto Encantado', id:19247},
 {sede:'San Ignacio', id:19248},
 {sede:'San Javier', id:19249},
 {sede:'San José', id:19250},
 {sede:'San Martín', id:19251},
-{sede:'San Pedro', id:19252},
+{sede:'San Pedro', id:19252},*/
 {sede:'San Vicente', id:19253},
 {sede:'Santa Ana', id:19254},
 {sede:'Santiago de Liniers', id:19255},
@@ -88,6 +90,7 @@ export default new Vuex.Store({
 ],
     rubricas_sede:{},
     rubricas_G:{},
+    horario:[],
     datos_sede:[],
     cargando: false
   },
@@ -124,6 +127,10 @@ export default new Vuex.Store({
         //console.log('se creo la sede en comit');
       }
       Object.assign(state.rubricas_G[sede],datos_sede);
+    },
+    SET_horario(state,payload){
+      state.cargando = false;
+      state.horario = payload;
     }
   },
   actions: {
@@ -147,6 +154,28 @@ export default new Vuex.Store({
       console.log(error);
     }
   },
+  async obtener_horario({state,commit}){
+    try{
+      //la URL base ya esta cargada en main.js (axios.baseURL)
+      console.log(state.horario)
+      if (Object.entries(state.horario).length == 0) {
+        state.cargando = true;
+        //let response = await axios.get(axios.defaults.baseURL+'/json/horario-grupos?_format=json');
+        let response = await axios.get('/json.html');
+        let horario = response.data;
+        console.log(horario);
+        commit('SET_horario',horario);
+        //return response;
+      }else{
+      state.cargando = false;
+      console.log('ya existe');
+      return 200;
+      }
+    }catch(error){
+      state.cargando = false;
+      console.log(error);
+    }
+  },
   obtener_rub_sede({commit},sede){
     try {
       //devuelvo promesa para que cargar.vue pueda esperar antes de llamar al siguiente
@@ -154,6 +183,7 @@ export default new Vuex.Store({
       axios.get(axios.defaults.baseURL+'/json/evaluacion_estudiantes?_format=json&field_user_espaciomaker_target_id_entityreference_filter='+sede.id)
       .then(function(response){
         resolve(response);
+        console.log("cargo:"+JSON.parse(response.data));
         commit('SET_rubricas',{sede,response});
       })
       .catch((error) => {
@@ -164,6 +194,7 @@ export default new Vuex.Store({
       console.log(error);
     }
   },
+
     incrementale({commit}){
       commit('increment');
     }

@@ -14,10 +14,10 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/dashboard/preview/precache-manifest.8c0365be0944c8cf0372602fbe23a887.js"
+  "/dashboard/2/precache-manifest.02123a0ab92042afdab9ae293224d911.js"
 );
 
-workbox.core.setCacheNameDetails({prefix: "vuet-dash"});
+workbox.core.setCacheNameDetails({prefix: "Dashboard-Red-Maker"});
 
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {

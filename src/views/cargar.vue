@@ -21,6 +21,7 @@
 <script>
 import datosede from '@/components/cargaDatosSedes'
 import axios from '@/axios'
+import store from '@/store'
 import {mapState} from 'vuex'
 import router from '@/router'//necesito para acceder en que ruta estoy
 export default {
@@ -41,9 +42,26 @@ created(){
     this.cargar();
 },
 methods:{
-cargar(){
+async cargar(){
     console.log(router);
-this.sedes.forEach((sede,index) => {
+    for (const sede of this.sedes) {
+        console.log(sede);
+          let response = await axios.get(axios.defaults.baseURL+'/json/evaluacion_estudiantes?_format=json&field_user_espaciomaker_target_id_entityreference_filter='+sede.id)
+          let dato = response.data;
+            if(dato){
+                if (this.cargado < this.sedes.length-1) {
+                    this.cargado++;
+                store.commit('SET_rubricas',{sede,dato});
+                    
+            if (this.cargado == this.sedes.length-1) {
+                this.segunda = true;
+            }
+
+
+                }
+            }
+    }
+/* this.sedes.forEach((sede,index) => {
     this.$store.dispatch('obtener_rub_sede',sede)
     .then(msg=> {if(msg.status == 200){
         
@@ -53,19 +71,24 @@ this.sedes.forEach((sede,index) => {
         if (this.cargado == this.sedes.length-1) {
             //this.$router.push({name:'Home'});
             //this.$emit('sedesCargadas');//se llama desde el hijo(datos sedes)
+            
             this.segunda = true;
+            
             //this.$refs.dsedes.cargard();//funciona pero error en consola
 
             /* if(router.history.current.name == 'cargar'){
                 router.push({name:'Home'});
-            } */
+            } ////*
         
         
         }
-
+        }else{
+            console.log('No existia'+sede.sede);
+             this.cargado++;
+        }
         
-        }});
-});
+        });
+}); */
 },
 dasedcargado(){
     console.log('datosSedesCargados');
