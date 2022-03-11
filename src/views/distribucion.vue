@@ -14,14 +14,6 @@
           v-model="sede"
           :disabled="cargando"
         ></v-select>
-        <v-select
-          :items="sedes"
-          item-text="sede"
-          item-value="sede"
-          label="Sede"
-          v-model="sede"
-          :disabled="cargando"
-        ></v-select>
       </v-col>
       <!-- vacios -->
       <v-col
@@ -53,29 +45,90 @@
       </v-col>
   </v-row>
   <!-- thead-tr-class="d-none" -->
-  <b-table sticky-header head-variant="dark" 
+  <!-- <b-table sticky-header head-variant="dark" 
       :fields="fields"
       :items="horarioGrouped"
       :busy="cargando"
       :sort-by.sync="sortBy"
-      :sort-desc.sync="sortDesc" class="my-0" outlined>
-      <!-- <template #thead-top>
+      :sort-desc.sync="sortDesc" class="my-0" outlined> -->
+      <!-- <b-table sticky-header head-variant="dark" :busy="cargando" class="my-0" outlined> -->
+      <b-table-simple sticky-header striped small responsive>
+      <b-thead head-variant="dark">
             <b-tr>
                 <b-th rowspan="3">Lunes</b-th>
                 <b-th rowspan="3">Martes</b-th>
                 <b-th rowspan="3">Miércoles</b-th>
                 <b-th rowspan="3">Jueves</b-th>
                 <b-th rowspan="3">Viernes</b-th>
-                <b-th rowspan="3">Sábado</b-th>
             </b-tr>
-      </template> -->
+      </b-thead>
       <!-- body -->
-      <template #cell(Lunes)="data">
-        <!-- <span v-if="data.item[0] == 'Lunes'" class="text-info">
+      <b-tbody v-if="horarioGrouped != null && Object.entries(horarioGrouped).length > 0">       
+        <b-tr>
+           <b-td class="align-middle">
+              <div v-if="horarioGrouped.hasOwnProperty('Lunes')">
+                <span class="text-info" v-for="(dato, index) in horarioGrouped.Lunes" :key="'L'+index">
+                  <p>Dia {{dato.hr_dia}}</p>       
+                  <p>{{dato.hr_trayecto}}</p>
+                  <p>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</p>
+                  <p>Cupo {{dato.hr_cantidad_actual}} De {{dato.hr_cupo_maximo}}</p>       
+                </span>
+              </div>
+           </b-td>
+            <!-- Martes -->
+            <b-td class="align-middle">
+              <div v-if="horarioGrouped.hasOwnProperty('Martes')">
+                <span class="text-info" v-for="(dato, index) in horarioGrouped.Martes" :key="'M'+index">
+                    <p>Dia {{dato.hr_dia}}</p>
+                    <p>{{dato.hr_trayecto}}</p>
+                    <p>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</p>
+                    <p>Cupo {{dato.hr_cantidad_actual}} De {{dato.hr_cupo_maximo}}</p>       
+                </span>
+              </div>
+            </b-td>
+            <!-- Miercoles -->
+             <b-td class="align-middle">
+                <div v-if="horarioGrouped.hasOwnProperty('Miércoles')">
+                  <span class="text-info" v-for="(dato, index) in horarioGrouped.Miércoles" :key="'X'+index">
+                      <p>Dia {{dato.hr_dia}}</p>
+                      <p>{{dato.hr_trayecto}}</p>
+                      <p>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</p>
+                      <p>Cupo {{dato.hr_cantidad_actual}} De {{dato.hr_cupo_maximo}}</p>       
+                  </span>
+                </div>
+              </b-td>
+              <!-- Jueves -->
+              <b-td class="align-middle">
+                <div v-if="horarioGrouped.hasOwnProperty('Jueves')">
+                  <span class="text-info" v-for="(dato, index) in horarioGrouped.Jueves" :key="'J'+index">
+                      <p>Dia {{dato.hr_dia}}</p>
+                      <p>{{dato.hr_trayecto}}</p>
+                      <p>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</p>
+                      <p>Cupo {{dato.hr_cantidad_actual}} De {{dato.hr_cupo_maximo}}</p>       
+                  </span>
+                </div>
+              </b-td>
+              <!-- Viernes -->
+              <b-td class="align-middle">
+                <div v-if="horarioGrouped.hasOwnProperty('Viernes')">
+                  <span class="text-info" v-for="(dato, index) in horarioGrouped.Viernes" :key="'V'+index">
+                      <p>Dia {{dato.hr_dia}}</p>
+                      <p>{{dato.hr_trayecto}}</p>
+                      <p>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</p>
+                      <p>Cupo {{dato.hr_cantidad_actual}} De {{dato.hr_cupo_maximo}}</p>       
+                  </span>
+                </div>
+              </b-td>
+          
+          
+        </b-tr>
+      </b-tbody>
+      <!--<template #cell(Lunes)="data">
+        <span v-if="data.item[0] == 'Lunes'" class="text-info">
           <p>De <span class="text-success">{{ data.item[1][0].hr_hora_inicio }}</span> A <span class="text-success">{{ data.item[1][0].hr_hora_fin }}</span></p>
           {{data.item[1]}}
         </span> -->
-        <span v-if="data.item[0] == 'Lunes'" class="text-info" v-for="(dato, index) in data.item[1]" :key="'L'+index">
+        <!-- <span v-if="data.item[0] == 'Lunes'" class="text-info" v-for="(dato, index) in data.item[1]" :key="'L'+index">
           <p>{{dato.hr_trayecto}}</p>
           <p>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</p>
           <p>Cupo {{dato.hr_cantidad_actual}} De {{dato.hr_cupo_maximo}}</p>       
@@ -115,8 +168,8 @@
           <b-spinner class="align-middle"></b-spinner>
           <strong>Cargando...</strong>
         </div>
-      </template>
-  </b-table>
+      </template> -->
+      </b-table-simple>
 </div>
 </template>
 
@@ -171,7 +224,9 @@ computed:{
     (a[estKey] ? a[estKey] : (a[estKey] = null || [])).push(e);
       return a;
     }, {});
-    return Object.entries(outObject);
+    console.log(outObject);
+    //return Object.entries(outObject);
+    return outObject;
       }
     },
     vacios(){

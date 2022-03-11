@@ -26,7 +26,7 @@ export default new Vuex.Store({
   state: {
     count: 0,
     sedes:[
-    /*{sede:'25 de Mayo', id:19198},
+    {sede:'25 de Mayo', id:19198},
 {sede:'Alba Posse', id:19199},
 {sede:'Almafuerte', id:19200},
 {sede:'Apóstoles', id:19201},
@@ -82,7 +82,7 @@ export default new Vuex.Store({
 {sede:'San Javier', id:19249},
 {sede:'San José', id:19250},
 {sede:'San Martín', id:19251},
-{sede:'San Pedro', id:19252},*/
+{sede:'San Pedro', id:19252},
 {sede:'San Vicente', id:19253},
 {sede:'Santa Ana', id:19254},
 {sede:'Santiago de Liniers', id:19255},
