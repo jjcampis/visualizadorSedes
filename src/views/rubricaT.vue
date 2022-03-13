@@ -258,6 +258,8 @@ computed:{
             return tray.field_user_estudiante.toLowerCase().includes(campo.toLowerCase());
           })
           return filter;
+        }else{
+          return [];
         }
       }else{
         this.$nextTick(console.log('siguiente tick data: ',this.rubricas_sede[this.sede.sede]))

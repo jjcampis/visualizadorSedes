@@ -1,6 +1,11 @@
 <template>
   <v-main>
-      <v-container>
+      <v-container fluid fill-heights
+      style="max-width: 95%;"
+      class="px-0">
+      <v-row no-gutters>
+        <v-col md="6"
+        offset-md="3" cols="6" sm="6">
           <v-img :src="require('@/assets/logo_red_maker.png')"></v-img>
           <div v-if="!segunda">
               Cargando rubricas Trimestrales
@@ -14,6 +19,8 @@
             Cargando rubricas Generales
         </div>
           <datosede v-on:datosSedesCargados="dasedcargado" v-if="segunda" :cargar='segunda' ref="dsedes"></datosede>
+        </v-col>
+      </v-row>
       </v-container>
   </v-main>
 </template>
@@ -44,22 +51,25 @@ created(){
 methods:{
 async cargar(){
     console.log(router);
+    store.commit('Reiniciarbd');
     for (const sede of this.sedes) {
         console.log(sede);
+        console.log("URL: "+"r2d2.roboticamisiones.com"+'/json/evaluacion_estudiantes?_format=json&field_user_espaciomaker_target_id_entityreference_filter='+sede.id);
           let response = await axios.get(axios.defaults.baseURL+'/json/evaluacion_estudiantes?_format=json&field_user_espaciomaker_target_id_entityreference_filter='+sede.id)
-          let dato = response.data;
-            if(dato){
+          //let dato = response.data;
+          console.log("resp del serv: ",response.data);
+            //if(dato){
                 if (this.cargado < this.sedes.length-1) {
                     this.cargado++;
-                store.commit('SET_rubricas',{sede,dato});
-                    
+                }    
+                store.commit('SET_rubricas',{sede,response});
             if (this.cargado == this.sedes.length-1) {
                 this.segunda = true;
             }
 
 
-                }
-            }
+                
+            //}
     }
 /* this.sedes.forEach((sede,index) => {
     this.$store.dispatch('obtener_rub_sede',sede)

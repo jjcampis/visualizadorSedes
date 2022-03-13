@@ -3,7 +3,6 @@ import Vuex from "vuex";
 //import createPersistedState from "vuex-persistedstate";
 import axios from '@/axios'
 //import * as localforage from 'localforage'
-import router from '@/router'
 import createPersistedState from "vuex-persist-indexeddb";
 import eventHub from '@/eventHub'
 Vue.use(Vuex);
@@ -74,9 +73,7 @@ export default new Vuex.Store({
 {sede:'Puerto Piray', id:19244},
 {sede:'Puerto Rico 01', id:19245},
 {sede:'Puerto Rico 02', id:19286}, 
-
 {sede:'Ruiz de Montoya', id:19246},
-
 {sede:'Salto Encantado', id:19247},
 {sede:'San Ignacio', id:19248},
 {sede:'San Javier', id:19249},
@@ -91,7 +88,7 @@ export default new Vuex.Store({
     rubricas_sede:{},
     rubricas_G:{},
     horario:[],
-    datos_sede:[],
+    //datos_sede:[],
     cargando: false
   },
   mutations: {
@@ -101,7 +98,8 @@ export default new Vuex.Store({
     SET_rubricas(state,payload){
       //state.rubricas_sede = payload;
       let sede = payload.sede.sede;
-      let rubricas = []
+      let rubricas = [];
+      console.log(payload);
       if (payload.hasOwnProperty('response')) {//si son todos viene con .data
         rubricas = payload.response.data;
       }else{
@@ -114,6 +112,8 @@ export default new Vuex.Store({
       }
       Object.assign(state.rubricas_sede[sede],rubricas);
     },
+
+
     SET_rubricasG(state,payload){
       let sede = payload.sede;
       let datos_sede = payload.dato
@@ -128,9 +128,16 @@ export default new Vuex.Store({
       }
       Object.assign(state.rubricas_G[sede],datos_sede);
     },
+
+
+
     SET_horario(state,payload){
       state.cargando = false;
       state.horario = payload;
+    },
+    Reiniciarbd(state){
+      state.rubricas_sede = {};
+      state.rubricas_G = {};
     }
   },
   actions: {
@@ -160,8 +167,8 @@ export default new Vuex.Store({
       console.log(state.horario)
       if (Object.entries(state.horario).length == 0) {
         state.cargando = true;
-        //let response = await axios.get(axios.defaults.baseURL+'/json/horario-grupos?_format=json');
-        let response = await axios.get('/json.html');
+        let response = await axios.get(axios.defaults.baseURL+'/json/horario-grupos?_format=json');
+        //let response = await axios.get('/json.html');
         let horario = response.data;
         console.log(horario);
         commit('SET_horario',horario);

@@ -113,13 +113,21 @@ export default {
       }
     },
     todassedes(){
-      let vec = this.vsedes;
+      if(Object.keys(this.rubricas_G).length > 0){
+      let vec = Object.keys(this.rubricas_G).map((x)=>{return x});
+      vec.unshift('Todo');
+      return vec
+      }else{
+        return []
+      }
+      
+      /*let vec = this.vsedes;
       if(vec.length > 0){
         vec.unshift('Todo');
       return vec
       }else{
         return []
-      }
+      }*/
 
     },
     PSTs(){

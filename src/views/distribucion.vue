@@ -35,10 +35,12 @@
               </b-button>
             </span>
           <b-tooltip target="disabled-wrapper" variant="danger">
-            <div v-if="vacios.length>0" v-for="x in vacios">
-              <p style="border-bottom:1px solid #FFF">
-                {{x}}
-              </p>
+            <div v-if="vacios.length>0">
+              <span v-for="(x,index) in vacios" :key="index">
+                <p style="border-bottom:1px solid #FFF">
+                  {{x}}
+                </p>
+              </span>
             </div>
           </b-tooltip>
         </div>
@@ -63,12 +65,22 @@
             </b-tr>
       </b-thead>
       <!-- body -->
-      <b-tbody v-if="horarioGrouped != null && Object.entries(horarioGrouped).length > 0">       
+      <!-- <b-tbody v-if="cargando">
         <b-tr>
-           <b-td class="align-middle">
+          <b-td colspan="5" class="fill-height">
+              <div class="text-center text-danger my-2">
+                <b-spinner class="align-middle"></b-spinner>
+                <strong>Cargando...</strong>
+              </div>
+            </b-td>
+          </b-tr>
+      </b-tbody> -->
+      <b-tbody v-if="horarioGrouped != null && Object.entries(horarioGrouped).length > 0">
+        <b-tr>
+           <b-td :class="valign('Lunes')">
               <div v-if="horarioGrouped.hasOwnProperty('Lunes')">
                 <span class="text-info" v-for="(dato, index) in horarioGrouped.Lunes" :key="'L'+index">
-                  <p>Dia {{dato.hr_dia}}</p>       
+                         
                   <p>{{dato.hr_trayecto}}</p>
                   <p>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</p>
                   <p>Cupo {{dato.hr_cantidad_actual}} De {{dato.hr_cupo_maximo}}</p>       
@@ -76,10 +88,10 @@
               </div>
            </b-td>
             <!-- Martes -->
-            <b-td class="align-middle">
+            <b-td :class="valign('Martes')">
               <div v-if="horarioGrouped.hasOwnProperty('Martes')">
                 <span class="text-info" v-for="(dato, index) in horarioGrouped.Martes" :key="'M'+index">
-                    <p>Dia {{dato.hr_dia}}</p>
+                    
                     <p>{{dato.hr_trayecto}}</p>
                     <p>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</p>
                     <p>Cupo {{dato.hr_cantidad_actual}} De {{dato.hr_cupo_maximo}}</p>       
@@ -87,10 +99,10 @@
               </div>
             </b-td>
             <!-- Miercoles -->
-             <b-td class="align-middle">
+             <b-td :class="valign('Miércoles')">
                 <div v-if="horarioGrouped.hasOwnProperty('Miércoles')">
                   <span class="text-info" v-for="(dato, index) in horarioGrouped.Miércoles" :key="'X'+index">
-                      <p>Dia {{dato.hr_dia}}</p>
+                      
                       <p>{{dato.hr_trayecto}}</p>
                       <p>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</p>
                       <p>Cupo {{dato.hr_cantidad_actual}} De {{dato.hr_cupo_maximo}}</p>       
@@ -98,10 +110,10 @@
                 </div>
               </b-td>
               <!-- Jueves -->
-              <b-td class="align-middle">
+              <b-td :class="valign('Jueves')">
                 <div v-if="horarioGrouped.hasOwnProperty('Jueves')">
                   <span class="text-info" v-for="(dato, index) in horarioGrouped.Jueves" :key="'J'+index">
-                      <p>Dia {{dato.hr_dia}}</p>
+                      
                       <p>{{dato.hr_trayecto}}</p>
                       <p>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</p>
                       <p>Cupo {{dato.hr_cantidad_actual}} De {{dato.hr_cupo_maximo}}</p>       
@@ -109,10 +121,10 @@
                 </div>
               </b-td>
               <!-- Viernes -->
-              <b-td class="align-middle">
+              <b-td :class="valign('Viernes')">
                 <div v-if="horarioGrouped.hasOwnProperty('Viernes')">
                   <span class="text-info" v-for="(dato, index) in horarioGrouped.Viernes" :key="'V'+index">
-                      <p>Dia {{dato.hr_dia}}</p>
+                      
                       <p>{{dato.hr_trayecto}}</p>
                       <p>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</p>
                       <p>Cupo {{dato.hr_cantidad_actual}} De {{dato.hr_cupo_maximo}}</p>       
@@ -170,6 +182,21 @@
         </div>
       </template> -->
       </b-table-simple>
+
+<!-- loading -->
+<v-row v-if="cargando" align="center">
+      <v-col
+        md="6"
+        offset-md="3"
+      >
+      <div class="text-center text-danger my-2">
+                <b-spinner class="align-middle"></b-spinner>
+                <strong>Cargando...</strong>
+              </div>
+      </v-col>
+        </v-row>
+<apexchart :key="created" v-if="showcharts && !cargando" class="apex-moco" :type="type" height="400" width="100%" :options="chartOptions" :series="vechoras" @dataPointSelection="get_H"></apexchart>
+
 </div>
 </template>
 
@@ -179,6 +206,7 @@ export default {
 data(){
     return{
         sede:'',
+        type:"line",
         fields:[
           {key:'Lunes'},
           {key:'Martes'},
@@ -187,12 +215,149 @@ data(){
           {key:'Viernes'},
         ],
         sortBy:"hr_trayecto",
-      sortDesc:true
+      sortDesc:true,
+      hsedes:{},//vector donde creo sedes con sus horarios
+      showcharts: false,
+      created:0,
+      creado:false,
+// Graficos
+chartOptions: {
+            chart: {
+              height: 'auto',
+              width: '100%',
+              stacked: false,
+            },
+            dataLabels: {
+              enabled: true,
+              enabledOnSeries: [0]
+            },
+            colors: ['#F44336', '#E91E63', '#9C27B0'],
+            stroke: {
+              width: [0, 2, 5],
+              curve: 'smooth'
+            },
+            plotOptions: {
+              bar: {
+                columnWidth: '60%',
+                horizontal: false
+              }
+            },
+            legend: {
+              position: 'top'
+            },
+
+
+
+            responsive: [{
+              breakpoint: 580,
+              options: {
+                chart:{
+                stacked: true,
+                type:'bar',
+                stackType: '100%',
+                },
+                plotOptions: {
+                  bar: {
+                    barHeight: '100%',
+                    horizontal: true
+                  }
+                },
+                yaxis: {
+                  type: 'string'
+                },
+                xaxis: {
+                  title: {
+                    text: 'Horas',
+                  },
+                  min: 0
+                },
+                tooltip: {
+                  shared: true,
+                  position:'bottomLeft',
+                  x: {
+                    formatter: function (x) {
+                      if (typeof x !== "undefined") {
+                        return x.toFixed(0);
+                      }
+                      return x;
+                    }
+                  }
+                },
+                legend: {
+                  position: "bottom"
+                }
+              }
+            }],
+
+
+
+            fill: {
+              opacity: [0.85, 0.25, 1],
+              gradient: {
+                inverseColors: false,
+                shade: 'light',
+                type: "vertical",
+                opacityFrom: 0.85,
+                opacityTo: 0.55,
+                stops: [0, 100, 100, 100]
+              }
+            },
+            //labels: ["25 de Mayo","Alba Posse","Almafuerte","Apóstoles","Aristóbulo del Valle","Azara","Bernardo de Irigoyen","Caá Yarí","Campo Grande","Campo Ramón","Campo Viera","Candelaria","Capioví","Cerro Azul","Cerro Corá","Colonia Alberdi","Colonia Aurora","Colonia Delicia","Colonía Victoria","Comandante Andresito","Concepción de la Sierra","Corpus","Dos de Mayo","El Alcazar","El Soberbio","Eldorado","Fachinal","Garuhape","Garupá","General Urquiza","Gobernador Roca","Guaraní","Jardín América","Leandro N. Alem","Loreto","Los helechos","Montecarlo","Oberá","Panambí","Posadas (En el Polo TIC)","Pozo Azul","Profundidad","Puerto Esperanza","Puerto Iguazú","Puerto Libertad","Puerto Piray","Puerto Rico 01","Puerto Rico 02","Ruiz de Montoya","Salto Encantado","San Ignacio","San Javier","San José","San Martín","San Pedro","San Vicente","Santa Ana","Santiago de Liniers","Santo Pipó"],
+            labels: [],
+            markers: {
+              size: 0
+            },
+            xaxis: {
+              type: 'string'
+            },
+            yaxis: {
+              title: {
+                text: 'Grupos - Horarios',
+              },
+              min: 0
+            },
+            tooltip: {
+              shared: true,
+              position:'topRight',
+              intersect: false,
+              y: {
+                formatter: function (y) {
+                  if (typeof y !== "undefined") {
+                    return y.toFixed(0);
+                  }
+                  return y;
+                }
+              }
+            }
+          }
+// fin graficos
+
     }
 },
+created() {
+      // sino no toma
+      ///de esta manera asigno el valor de una computed al cargar la pagina
+      this.$set(this.chartOptions.xaxis, 'categories', Object.values(this.sedes).map(x=>x.sede));
+    },
 mounted(){
 this.obtener_horario();
+setTimeout(() => {
+        this.creado = true;
+        this.created++
+      }, 1);
+setTimeout(() => {
+        this.showcharts = true;},500)
 },
+activated: function() {
+    if (this.creado) {
+      console.log('de nuevo');
+      //refresco el chart
+      this.showcharts = false;
+      setTimeout(() => {
+        this.showcharts = true;
+      }, 500);
+    }
+  },
 computed:{
     ...mapState(['horario','cargando','sedes']),
     horarioF(){
@@ -202,8 +367,8 @@ computed:{
         if(Object.entries(this.horario).length > 0 && !this.cargando){
             //return Object.entries(this.horario).filter(x=>x[1].hr_espaciomaker == this.sede);
         return Object.values(this.horario).filter((tray) => {
-            return tray.hr_espaciomaker.toLowerCase().includes(this.sede.toLowerCase());
-            //return tray.hr_espaciomaker == this.sede;
+            //return tray.hr_espaciomaker.toLowerCase().includes(this.sede.toLowerCase());
+            return tray.hr_espaciomaker == this.sede;
           })
         
         }else{
@@ -239,19 +404,58 @@ computed:{
       }else{
         return [];
       }
-    }
+    },
+
+      vechoras(){
+      if(Object.entries(this.horario).length > 0 && !this.cargando){
+      //Recorro con map las sedes y dentro (para cada sede hago un filtro de todos los horarios para cada sede)
+      let inscripted =  this.sedes.map(x => this.hsedes[x.sede] = Object.values(this.horario).filter((tray) => {
+            return tray.hr_espaciomaker == x.sede;
+          }).length
+          );
+        //filtro los que no estan en ob1
+      //console.log(obj2.filter(o2 => obj1.indexOf(o2) === 1));
+      console.log(inscripted);
+
+
+      if (this.$vuetify.breakpoint.xs) {
+        console.log('es mobile');
+        this.type = "bar";
+        return [{'name':'Grupos-Horarios','data': inscripted}]  
+      }else{
+      //es desktop
+      this.type = "bar";
+      return [{'name':'Grupos-Horarios','type':'bar','data': inscripted}]
+      
+      }
+    }else{
+      return []
+    }}
 
 },
 methods:{
   ...mapActions(['obtener_horario']),
+  //funcion para alinear verticalmente segun el horario
+  valign(dia){
+    if(this.horarioGrouped.hasOwnProperty(dia)){
+      var h = parseInt(this.horarioGrouped[dia][0].hr_hora_inicio.substring(0, 2));
+     return (h>=14 ? "align-bottom" : "align-top")
+    }
+  },
+  get_H(event, chartContext, config){
+        console.log("click")
+        console.log(this.sedes[config.dataPointIndex]);
+        this.sede = this.sedes[config.dataPointIndex].sede;
+    },
+
 }
 }
 </script>
 
-<style>
+<style scoped>
 .b-table-sticky-header {
     overflow-y: auto;
-    max-height: 750px;
-    height: 80vh;
+    max-height: 750px !important;
+    height: 46vh;
 }
 </style>

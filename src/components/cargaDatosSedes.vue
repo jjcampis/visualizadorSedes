@@ -63,6 +63,7 @@ return Math.round((val - in_min) * (out_max - out_min) / (in_max - in_min) + out
           //await this.otra(response.data);//debe devolver una promise para que espere el tiempo de otra()
           
           let dato = response.data;
+          console.log("antes de filtrar: "+JSON.stringify(dato));
           //store.commit('SET_rubricasG',{sede,dato})//esto tendria que hacer una vez filtrado todo
           await this.filtro_trayectos(sede.sede);//envio los datos de la sede actual
           //asigno las llaves
@@ -88,16 +89,22 @@ return Math.round((val - in_min) * (out_max - out_min) / (in_max - in_min) + out
           console.log(sede);
           for (const trayecto of this.vTrayectos) {//recorro cada trayecto
             if(Object.keys(this.rubricas_sede).length > 0){//en teoria no haria falta
-            let filter = this.rubricas_sede[sede].filter((estud)=> {//recorro rubrica en la posicion sede
-              return estud.field_user_estudiante.toLowerCase().includes(trayecto.toLowerCase());
-            });
-            for(const eje of this.ejes) {
-              this.calcprom(filter,eje,trayecto,sede);
-            console.log('que1');
-            }
-            console.log(sede,trayecto,filter);
-            console.log('trayectitos: ',this.trayectitos_sedes);
-            
+                //if (this.rubricas_sede[sede].length > 0) {
+                  
+                
+                  let filter = this.rubricas_sede[sede].filter((estud)=> {//recorro rubrica en la posicion sede
+                    return estud.field_user_estudiante.toLowerCase().includes(trayecto.toLowerCase());
+                  });
+                  for(const eje of this.ejes) {
+                    this.calcprom(filter,eje,trayecto,sede);
+                  console.log('que1');
+                  }
+                  console.log(sede,trayecto,filter);
+                  console.log('trayectitos: ',this.trayectitos_sedes);
+                
+                /*}else{
+                 return [] 
+                }*/
             }else{
               console.log('error',Object.keys(this.rubricas_sede).length);
               return []
