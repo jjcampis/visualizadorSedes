@@ -8,7 +8,8 @@
         offset-md="3" cols="6" sm="6">
           <v-img :src="require('@/assets/logo_red_maker.png')"></v-img>
           <div v-if="!segunda">
-              Cargando rubricas Trimestrales
+              <!-- Cargando rubricas Trimestrales -->
+              01 / 02
            <b-progress :value="mapear(cargado,0,sedes.length-1,0,100)" variant="danger" :animated=animated class="mt-3"></b-progress>
             <p class="pt-5">
                 <b class="fadered" :key="sedes[cargado].sede">{{sedes[cargado].sede}}</b>
@@ -16,7 +17,8 @@
           {{cargado+1}} - {{sedes.length}}
           </div>
         <div v-show="segunda">
-            Cargando rubricas Generales
+            <!-- Cargando rubricas Generales -->
+            02 / 02
         </div>
           <datosede v-on:datosSedesCargados="dasedcargado" v-if="segunda" :cargar='segunda' ref="dsedes"></datosede>
         </v-col>
@@ -104,7 +106,9 @@ dasedcargado(){
     console.log('datosSedesCargados');
     this.$emit('sedesCargadas');
     if(router.history.current.name == 'cargar'){
-        router.push({name:'Home'});
+      setTimeout(() => {
+        router.push({name:'Home'});  
+  }, 1000);
     }
 },
 cargadatoSede(sede){

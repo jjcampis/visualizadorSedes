@@ -1,12 +1,23 @@
 <template>
    <div>
-     <apexchart type="pie" width="100%" :options="chartOptionsp" :series="series"></apexchart>
+     <apexchart ref="chartx" type="pie" width="100%" :options="chartOptionsp" :series="series"></apexchart>
    </div>
 </template>
 
 <script>
 export default {
     props:['series','etiquetas'],
+    methods:{
+      refresh(){
+        console.log("clicked")
+        this.$refs.chartx.refresh()
+      }
+    },
+    watch:{
+      series(antes,ahora){
+        this.refresh();
+      }
+    },
     data: function() {
       return {
         //seriesp: [44, 55, 13, 43],
@@ -14,21 +25,21 @@ export default {
             chart: {
               width: "100%",//100% y en responsive era 430
               type: 'pie',
-              toolbar: {
-        show: true,
-        offsetX: -10,
-        offsetY: 0,
-        /* tools: {
-          download: true,
-          selection: true,
-          zoom: true,
-          zoomin: true,
-          zoomout: true,
-          pan: true,
-          reset: true | '<img src="/static/icons/reset.png" width="20">',
-          customIcons: []
-        } */
-        }
+                    toolbar: {
+              show: true,
+              offsetX: -10,
+              offsetY: 0,
+              /* tools: {
+                download: true,
+                selection: true,
+                zoom: true,
+                zoomin: true,
+                zoomout: true,
+                pan: true,
+                reset: true | '<img src="/static/icons/reset.png" width="20">',
+                customIcons: []
+              } */
+              }
             },
             // colors: ['#690E2C', '#EC6592', '#E91E63', '#692D41','#B5184C'],
             // colors: ['#700303', '#BDBB2B', '#BD1919', '#0676BD','#094870'],//triada
@@ -82,7 +93,9 @@ export default {
                
                 horizontalAlign: 'left',
                 formatter: function(seriesName, opts) {
+                  console.log(opts);
                     return [seriesName, " - ", opts.w.globals.series[opts.seriesIndex]]
+                    //series[opt.seriesIndex]]//this.series//opts.w.globals.series[opts.seriesIndex]]
                 }
             },
             responsive: [{
@@ -101,7 +114,10 @@ export default {
                   position: 'bottom'
                 }
               }
-            }]
+            }],
+            /*tooltip: {
+              shared: false,
+            } */
           }
         }
       },

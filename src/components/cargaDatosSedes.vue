@@ -64,6 +64,12 @@ return Math.round((val - in_min) * (out_max - out_min) / (in_max - in_min) + out
           
           let dato = response.data;
           console.log("antes de filtrar: "+JSON.stringify(dato));
+          if (dato.length > 0){
+            console.log("xxse filtra");
+            
+          }else{
+            console.log("xxno se filtra");
+          }
           //store.commit('SET_rubricasG',{sede,dato})//esto tendria que hacer una vez filtrado todo
           await this.filtro_trayectos(sede.sede);//envio los datos de la sede actual
           //asigno las llaves
@@ -80,6 +86,7 @@ return Math.round((val - in_min) * (out_max - out_min) / (in_max - in_min) + out
           }
           if (pos == this.sedes.length-1) {
             console.log('todo ok cargado');
+            await this.otra("x");
             this.$emit('datosSedesCargados');
           }
         }
@@ -89,9 +96,8 @@ return Math.round((val - in_min) * (out_max - out_min) / (in_max - in_min) + out
           console.log(sede);
           for (const trayecto of this.vTrayectos) {//recorro cada trayecto
             if(Object.keys(this.rubricas_sede).length > 0){//en teoria no haria falta
+            console.log(this.rubricas_sede[sede].length);
                 //if (this.rubricas_sede[sede].length > 0) {
-                  
-                
                   let filter = this.rubricas_sede[sede].filter((estud)=> {//recorro rubrica en la posicion sede
                     return estud.field_user_estudiante.toLowerCase().includes(trayecto.toLowerCase());
                   });
@@ -103,12 +109,13 @@ return Math.round((val - in_min) * (out_max - out_min) / (in_max - in_min) + out
                   console.log('trayectitos: ',this.trayectitos_sedes);
                 
                 /*}else{
-                 return [] 
+                 //return [];
+                 resolve();
                 }*/
-            }else{
+            }/*else{
               console.log('error',Object.keys(this.rubricas_sede).length);
               return []
-            }
+            }*/
           }
           console.log('que2');
           //if (sede == '25 de Mayo' ) {
@@ -230,6 +237,7 @@ if(filtrado.length > 0){
 añadir_claves_trayectos(dato_sede,sede){
   //tr,tk...
   console.log('datosxx',dato_sede.length > 0);
+  // console.log('datosxy',dato_sede,sede);
   if(dato_sede.length > 0){
   var llaves = {};
 this.claves_datos.forEach(element => {
@@ -279,8 +287,275 @@ llaves[clave].forEach(element => {
 //this.table_trayectitosP.push(this.table_trayectitos[0]) 
 //console.log(this.table_trayectitos);
 let dato = this.trayectitos_sedes[sede];
-//console.log('dato a enviar:',dato,sede);
+console.log('dato a enviar:',dato,sede); 
 store.commit('SET_rubricasG',{sede,dato})
+}else{
+  let dato = {
+    "inscriptos": 0,
+    "aprobados": 0,
+    "noaprobados": 0,
+    "bajas": 0,
+    "ssa": 0,
+    "evaluados": 0,
+    "promPST": 0,
+    "trayectos": {
+        "TrendKids": {
+            "inscriptos": 0,
+            "aprobados": 0,
+            "noaprobados": 0,
+            "bajas": 0,
+            "ssa": 0,
+            "evaluados": 0,
+            "electronica": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "contruccion": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "diseno": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "programacion": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "promedio_php": {
+                "pst": 0
+            },
+            "tiene_este_trayecto": "No",
+            "informacion_adicional": "",
+            "elect_recursos": "",
+            "elect_ejecutado": "0%",
+            "const_recursos": "",
+            "const_ejecutado": "0%",
+            "disen_recursos": "",
+            "disen_ejecutado": "0%",
+            "progr_recursos": "",
+            "progr_ejecutado": "0%",
+            "ods": ""
+        },
+        "TecnoKids": {
+            "inscriptos": 0,
+            "aprobados": 0,
+            "noaprobados": 0,
+            "bajas": 0,
+            "ssa": 0,
+            "evaluados": 0,
+            "electronica": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "contruccion": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "diseno": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "programacion": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "promedio_php": {
+                "pst": 0
+            },
+            "tiene_este_trayecto": "No",
+            "informacion_adicional": "",
+            "elect_recursos": "",
+            "elect_ejecutado": "0%",
+            "const_recursos": "",
+            "const_ejecutado": "0%",
+            "disen_recursos": "",
+            "disen_ejecutado": "0%",
+            "progr_recursos": "",
+            "progr_ejecutado": "0%",
+            "ods": ""
+        },
+        "MakerJuniors": {
+            "inscriptos": 0,
+            "aprobados": 0,
+            "noaprobados": 0,
+            "bajas": 0,
+            "ssa": 1,
+            "evaluados": 0,
+            "electronica": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "contruccion": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "diseno": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "programacion": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "promedio_php": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "tiene_este_trayecto": "No",
+            "informacion_adicional": "",
+            "elect_recursos": "",
+            "elect_ejecutado": "0%",
+            "const_recursos": "",
+            "const_ejecutado": "0%",
+            "disen_recursos": "",
+            "disen_ejecutado": "0%",
+            "progr_recursos": "",
+            "progr_ejecutado": "0%",
+            "ods": ""
+        },
+        "TeensMaker": {
+            "inscriptos": 0,
+            "aprobados": 0,
+            "noaprobados": 0,
+            "bajas": 0,
+            "ssa": 0,
+            "evaluados": 0,
+            "electronica": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "contruccion": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "diseno": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "programacion": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "promedio_php": {
+                "pst": 0
+            },
+            "tiene_este_trayecto": "No",
+            "elect_recursos": "",
+            "const_recursos": "",
+            "disen_recursos": "",
+            "progr_recursos": "",
+            "informacion_adicional": "",
+            "elect_ejecutado": "0%",
+            "const_ejecutado": "0%",
+            "disen_ejecutado": "0%",
+            "progr_ejecutado": "0%",
+            "ods": ""
+        },
+        "TeamInn": {
+            "inscriptos": 0,
+            "aprobados": 0,
+            "noaprobados": 0,
+            "bajas": 0,
+            "ssa": 0,
+            "evaluados": 0,
+            "electronica": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "contruccion": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "diseno": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "programacion": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "promedio_php": {
+                "pst": 0
+            },
+            "informacion_adicional": "",
+            "elect_ejecutado": "0%",
+            "const_ejecutado_4": "0%",
+            "disen_ejecutado": "0%",
+            "progr_ejecutado": "0%",
+            "ods": "",
+            "tiene_este_trayecto": "No",
+            "elect_recursos": "",
+            "const_recursos": "",
+            "disen_recursos": "",
+            "progr_recursos": ""
+        },
+        "HighMaker": {
+            "inscriptos": 0,
+            "aprobados": 0,
+            "noaprobados": 0,
+            "bajas": 0,
+            "ssa": 0,
+            "evaluados": 0,
+            "electronica": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "contruccion": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "diseno": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "programacion": {
+                "a1": 0,
+                "a2": 0,
+                "a3": 0
+            },
+            "promedio_php": {
+                "pst": 0
+            },
+            "tiene_este_trayecto": "No",
+            "informacion_adicional": "",
+            "elect_recursos": "",
+            "elect_ejecutado": "0%",
+            "const_recursos": "",
+            "const_ejecutado": "0%",
+            "disen_recursos": "",
+            "disen_ejecutado": "0%",
+            "progr_recursos": "",
+            "progr_ejecutado": "0%",
+            "ods": ""
+        }
+    }
+};
+  store.commit('SET_rubricasG',{sede,dato})
 }
 },
 
@@ -305,7 +580,7 @@ store.commit('SET_rubricasG',{sede,dato})
         return new Promise((resolve)=>{
           setTimeout(() => {
           resolve(sed);
-        }, 150);
+        }, 2000);
         })
       },
     }

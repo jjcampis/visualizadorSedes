@@ -77,57 +77,92 @@
       </b-tbody> -->
       <b-tbody v-if="horarioGrouped != null && Object.entries(horarioGrouped).length > 0">
         <b-tr>
-           <b-td :class="valign('Lunes')">
+           <b-td :class="valign('Lunes')" style="min-width: 250.6px">
               <div v-if="horarioGrouped.hasOwnProperty('Lunes')">
                 <span class="text-info" v-for="(dato, index) in horarioGrouped.Lunes" :key="'L'+index">
-                         
-                  <p>{{dato.hr_trayecto}}</p>
-                  <p>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</p>
-                  <p>Cupo {{dato.hr_cantidad_actual}} De {{dato.hr_cupo_maximo}}</p>       
+                    <b-container fluid class="max px-0">
+                          <b-row no-gutters>
+                            <b-col cols="8" class="text-white color1 py-0"><b>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</b></b-col>
+                            <b-col cols="4" class="text-white color2 py-0" :class="[dato.hr_cantidad_actual > 6 ? 'color2' : 'colorbad']"><b>{{dato.hr_cantidad_actual}}/<span class="cupo-max">{{dato.hr_cupo_maximo}}</span></b></b-col>
+                          </b-row>
+                          <b-row no-gutters align-v="center" class="border">
+                            <b-col cols="12" class="px-0 py-1 min">
+                              <p>{{dato.hr_trayecto.slice(7)}}</p>
+                            </b-col>
+                          </b-row>
+                    </b-container>
                 </span>
               </div>
            </b-td>
             <!-- Martes -->
-            <b-td :class="valign('Martes')">
+            <b-td :class="valign('Martes')" style="min-width: 250.6px">
               <div v-if="horarioGrouped.hasOwnProperty('Martes')">
                 <span class="text-info" v-for="(dato, index) in horarioGrouped.Martes" :key="'M'+index">
-                    
-                    <p>{{dato.hr_trayecto}}</p>
-                    <p>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</p>
-                    <p>Cupo {{dato.hr_cantidad_actual}} De {{dato.hr_cupo_maximo}}</p>       
+                    <b-container fluid class="max px-0">
+                          <b-row no-gutters>
+                            <b-col cols="8" class="text-white color1 py-0"><b>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</b></b-col>
+                            <b-col cols="4" class="text-white color2 py-0" :class="[dato.hr_cantidad_actual > 6 ? 'color2' : 'colorbad']"><b>{{dato.hr_cantidad_actual}}/<span class="cupo-max">{{dato.hr_cupo_maximo}}</span></b></b-col>
+                          </b-row>
+                          <b-row no-gutters align-v="center" class="border">
+                            <b-col cols="12" class="px-0 py-1 min">
+                              <p>{{dato.hr_trayecto.slice(7)}}</p>
+                            </b-col>
+                          </b-row>
+                    </b-container>
                 </span>
               </div>
             </b-td>
             <!-- Miercoles -->
-             <b-td :class="valign('Miércoles')">
+             <b-td :class="valign('Miércoles')" style="min-width: 250.6px">
                 <div v-if="horarioGrouped.hasOwnProperty('Miércoles')">
                   <span class="text-info" v-for="(dato, index) in horarioGrouped.Miércoles" :key="'X'+index">
-                      
-                      <p>{{dato.hr_trayecto}}</p>
-                      <p>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</p>
-                      <p>Cupo {{dato.hr_cantidad_actual}} De {{dato.hr_cupo_maximo}}</p>       
+                   <b-container fluid class="max px-0">
+                          <b-row no-gutters>
+                            <b-col cols="8" class="text-white color1 py-0"><b>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</b></b-col>
+                            <b-col cols="4" class="text-white color2 py-0" :class="[dato.hr_cantidad_actual > 6 ? 'color2' : 'colorbad']"><b>{{dato.hr_cantidad_actual}}/<span class="cupo-max">{{dato.hr_cupo_maximo}}</span></b></b-col>
+                          </b-row>
+                          <b-row no-gutters align-v="center" class="border">
+                            <b-col cols="12" class="px-0 py-1 min">
+                              <p>{{dato.hr_trayecto.slice(7)}}</p>
+                            </b-col>
+                          </b-row>
+                    </b-container>
                   </span>
                 </div>
               </b-td>
               <!-- Jueves -->
-              <b-td :class="valign('Jueves')">
+              <b-td :class="valign('Jueves')" style="min-width: 250.6px">
                 <div v-if="horarioGrouped.hasOwnProperty('Jueves')">
                   <span class="text-info" v-for="(dato, index) in horarioGrouped.Jueves" :key="'J'+index">
-                      
-                      <p>{{dato.hr_trayecto}}</p>
-                      <p>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</p>
-                      <p>Cupo {{dato.hr_cantidad_actual}} De {{dato.hr_cupo_maximo}}</p>       
+                    <b-container fluid class="max px-0">
+                          <b-row no-gutters>
+                            <b-col cols="8" class="text-white color1 py-0"><b>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</b></b-col>
+                            <b-col cols="4" class="text-white color2 py-0" :class="[dato.hr_cantidad_actual > 6 ? 'color2' : 'colorbad']"><b>{{dato.hr_cantidad_actual}}/<span class="cupo-max">{{dato.hr_cupo_maximo}}</span></b></b-col>
+                          </b-row>
+                          <b-row no-gutters align-v="center" class="border">
+                            <b-col cols="12" class="px-0 py-1 min">
+                              <p>{{dato.hr_trayecto.slice(7)}}</p>
+                            </b-col>
+                          </b-row>
+                    </b-container>    
                   </span>
                 </div>
               </b-td>
               <!-- Viernes -->
-              <b-td :class="valign('Viernes')">
+              <b-td :class="valign('Viernes')" style="min-width: 250.6px">
                 <div v-if="horarioGrouped.hasOwnProperty('Viernes')">
                   <span class="text-info" v-for="(dato, index) in horarioGrouped.Viernes" :key="'V'+index">
-                      
-                      <p>{{dato.hr_trayecto}}</p>
-                      <p>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</p>
-                      <p>Cupo {{dato.hr_cantidad_actual}} De {{dato.hr_cupo_maximo}}</p>       
+                   <b-container fluid class="max px-0">
+                          <b-row no-gutters>
+                            <b-col cols="8" class="text-white color1 py-0"><b>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</b></b-col>
+                            <b-col cols="4" class="text-white color2 py-0" :class="[dato.hr_cantidad_actual > 6 ? 'color2' : 'colorbad']"><b>{{dato.hr_cantidad_actual}}/<span class="cupo-max">{{dato.hr_cupo_maximo}}</span></b></b-col>
+                          </b-row>
+                          <b-row no-gutters align-v="center" class="border">
+                            <b-col cols="12" class="px-0 py-1 min">
+                              <p>{{dato.hr_trayecto.slice(7)}}</p>
+                            </b-col>
+                          </b-row>
+                    </b-container>      
                   </span>
                 </div>
               </b-td>
@@ -308,7 +343,13 @@ chartOptions: {
               size: 0
             },
             xaxis: {
-              type: 'string'
+              type: 'string',
+              tickPlacement: 'on',
+              labels:{
+                style:{
+                        fontSize: '8.5px'
+                      }
+              }
             },
             yaxis: {
               title: {
@@ -437,10 +478,11 @@ methods:{
   ...mapActions(['obtener_horario']),
   //funcion para alinear verticalmente segun el horario
   valign(dia){
-    if(this.horarioGrouped.hasOwnProperty(dia)){
+    return "align-top";
+    /*if(this.horarioGrouped.hasOwnProperty(dia)){
       var h = parseInt(this.horarioGrouped[dia][0].hr_hora_inicio.substring(0, 2));
      return (h>=14 ? "align-bottom" : "align-top")
-    }
+    }*/
   },
   get_H(event, chartContext, config){
         console.log("click")
@@ -456,6 +498,65 @@ methods:{
 .b-table-sticky-header {
     overflow-y: auto;
     max-height: 750px !important;
-    height: 46vh;
+    /*height: 46vh;*/
+}
+
+
+
+/* 
+.text-info p {
+    margin: auto;
+}
+.text-info p:nth-child(1) {
+font-weight: bold;
+    color: #ffffff;
+}
+
+.text-info p:nth-child(3) {
+    font-weight: bold;
+}
+
+td span.text-info {
+    margin: -1px 0px;
+    display: block;
+    border: 1px solid;
+    padding: 10px 0px;
+}
+
+span.enc-row {
+    display: flex;
+    background: #156673;
+    margin-bottom: 10px;
+}
+
+.enc-row p:nth-child(2) {
+    background: #17a2b8;
+    color: #fff;
+    padding: 0px 5px;
+    margin: 0px;
+    font-weight: bold;
+} */
+.max{
+  max-height: 60px;
+  min-height: 60px;
+}
+.min{
+  min-height: 50px;
+}
+span.cupo-max {
+    font-size: 70%;
+}
+.border{
+  border: 1px solid #17a2b8 !important;
+  max-height: 30px;
+}
+.color1{
+background: #156673;
+}
+.color2{
+background: #17a2b8;
+}
+.colorbad{
+  background: #ff7007;
 }
 </style>

@@ -12,6 +12,7 @@
         <v-list-item to="/"><v-list-item-title>Sedes</v-list-item-title></v-list-item>
         <!-- <v-list-item to="/newhome"><v-list-item-title>Preinscriptos**</v-list-item-title></v-list-item> -->
         <v-list-item to="/imprimir"><v-list-item-title>Distribución</v-list-item-title></v-list-item>
+        <v-list-item to="/cargar"><v-list-item-title>Actualizar - Datos</v-list-item-title></v-list-item>
         <!-- <v-list-item to="/about"><v-list-item-title>Asistencias</v-list-item-title></v-list-item> -->
         <!-- <v-list-item to="/rubricaT"><v-list-item-title>Rubrica Estudiantes</v-list-item-title></v-list-item> -->
         <!-- <v-list-item to="/rubG"><v-list-item-title>Rubrica Sedes</v-list-item-title></v-list-item> -->
@@ -33,9 +34,9 @@
       
       <transition v-if="!loading" name="fab-transition" mode="out-in">
         <!-- <keep-alive exclude="Home"> -->
-        <keep-alive exclude="newhome">
+        <!-- <keep-alive exclude="newhome"> -->
         <router-view></router-view>
-        </keep-alive>
+        <!-- </keep-alive> -->
         </transition>
 
       </v-container>

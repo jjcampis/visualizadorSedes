@@ -4,7 +4,7 @@
   <v-col  cols="12" md="12">
     <v-card elevation="3" class="h-100" style="min-height:400px;">
       <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-      <apexchart v-if="showcharts" ref="barras" class="apex-moco" :type="type" height="400" width="100%" :options="chartOptions" :series="vecins"></apexchart>
+      <apexchart v-if="showcharts" ref="barras" class="apex-moco" :type="type" height="400" width="100%" :options="chartOptions" :series="vecins" @dataPointSelection="get_S"></apexchart>
       </div>
     </v-card>
   </v-col>
@@ -49,6 +49,7 @@
         </v-list-item-content>
       </v-list-item>
     <chart v-if="showcharts" ref="inscriptoschart" :etiquetas='etiquetas' :series='seriesSedes2'></chart>
+    
     </v-card>
   </v-col>
   <v-col cols="12" md="4">
@@ -101,6 +102,11 @@ export default {
         this[cual] = true;
       }, 1000)
     } */
+    get_S(event, chartContext, config){
+        console.log("click")
+        console.log(this.sedes[config.dataPointIndex]);
+        this.sede = this.sedes[config.dataPointIndex].sede;
+    },
   },
 
   computed:{
@@ -115,6 +121,7 @@ export default {
     todassedes(){
       if(Object.keys(this.rubricas_G).length > 0){
       let vec = Object.keys(this.rubricas_G).map((x)=>{return x});
+      //let vec = Object.values(this.sedes).map(x=>x.sede);
       vec.unshift('Todo');
       return vec
       }else{
@@ -173,6 +180,7 @@ if(Object.keys(this.rubricas_G).length > 0){
 },
 
     seriesSedes2(){
+      //console.log('pute: ',this.rubricas_G[this.sede]);
       if(Object.keys(this.rubricas_G).length > 0){
         console.log(this.sede);
         if (this.sede != 'Todo'){
@@ -180,16 +188,16 @@ if(Object.keys(this.rubricas_G).length > 0){
           let trays = [];
           for(const t of this.etiquetas){
             console.log(t,this.rubricas_G[this.sede]["trayectos"][t].inscriptos);
-          trays.push(this.rubricas_G[this.sede]["trayectos"][t].inscriptos);
+            trays.push(this.rubricas_G[this.sede]["trayectos"][t].inscriptos);
           }
           return trays;
 
         }else{//traigo todas las sedes pero agrupadas para eso uso reduce()
             let trays = {};
               for (const trayectoxx of this.etiquetas) {
-                console.log(trayectoxx);
+                //console.log(trayectoxx);
                 let inscripted = Object.keys(this.rubricas_G).map((x)=>{return this.rubricas_G[x]['trayectos'][trayectoxx].inscriptos}).reduce((a,b)=>a+b);
-                //console.log('trayecto',trayecto, inscripted);
+                //console.log('trayecto',trayectoxx, inscripted);
               if(trays[trayectoxx] == undefined){trays[trayectoxx] ={}}                
               trays[trayectoxx] = inscripted
               }
@@ -469,6 +477,13 @@ stackop:{
               size: 0
             },
             xaxis: {
+              labels:{
+                    style:{
+                      fontSize: '8.5px',
+                      trim:true,
+                      hideOverlappingLabels: false
+                    }
+                    },
               type: 'string'
             },
             yaxis: {
@@ -527,9 +542,14 @@ stackop:{
       // this.creado = true;
       console.log('padre: ',this.$root.$children[0].drawer);
       ///de esta manera asigno el valor de una computed al cargar la pagina
-      this.$set(this.chartOptions, 'labels', this.vsedes);
-      this.$set(this.radarOptions.xaxis, 'categories', this.vsedes);
-      this.$set(this.stackop.xaxis, 'categories', this.vsedes);
+       this.$set(this.chartOptions, 'labels', this.vsedes);
+       this.$set(this.radarOptions.xaxis, 'categories', this.vsedes);
+       this.$set(this.stackop.xaxis, 'categories', this.vsedes);
+      /*this.$set(this.chartOptions, 'labels', Object.values(this.sedes).map(x=>x.sede));
+      console.log(Object.values(this.sedes).map(x=>x.sede));
+      this.$set(this.radarOptions.xaxis, 'categories', Object.values(this.sedes).map(x=>x.sede));
+      this.$set(this.stackop.xaxis, 'categories', Object.values(this.sedes).map(x=>x.sede));
+      */
       this.$set(this,'menuinicial',this.$root.$children[0].drawer);
     },
     
