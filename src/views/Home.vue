@@ -2,7 +2,7 @@
 <div>
 <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
   <v-col  cols="12" md="12">
-    <v-card elevation="3" class="h-100" style="min-height:400px;">
+    <v-card elevation="3" class="h-100" style="min-height:420px;">
       <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
       <apexchart v-if="showcharts" ref="barras" class="apex-moco" :type="type" height="400" width="100%" :options="chartOptions" :series="vecins" @dataPointSelection="get_S"></apexchart>
       </div>
@@ -25,8 +25,8 @@
 
 <v-row class="mt-0" v-show="showcharts">
   <v-col cols="12" md="4">
-    <v-card elevation="3" style="min-height:300px">
-      <v-list-item two-line>
+    <v-card elevation="3" style="min-height:300px; max-height: 390px">
+      <v-list-item two-line style="min-height:113px;">
         <v-list-item-content>
           <v-list-item-title class="text-left text-h5">
             <v-row align="center">
@@ -53,20 +53,21 @@
     </v-card>
   </v-col>
   <v-col cols="12" md="4">
-    <v-card elevation="3" style="min-height:300px">
-       <v-list-item two-line>
+    <v-card elevation="3" style="min-height:300px; max-height: 390px">
+       <v-list-item two-line style="min-height:113px;">
         <v-list-item-content>
           <v-list-item-title class="text-left text-h5">
             <p class="mb-0">Situación Académica</p>
-          </v-list-item-title></v-list-item-content>
+          </v-list-item-title>
+          <!-- <v-list-item-subtitle class="text-left">Cantidad de alumnos Inscriptos</v-list-item-subtitle> -->
+          </v-list-item-content>
           </v-list-item>
-          <br><br>
               <chart v-if="showcharts" ref="situacionchart" :etiquetas='campo' :series='situacionAc'></chart>
     </v-card>
   </v-col>
 
   <v-col cols="12" md="4">
-    <v-card elevation="3" style="min-height:300px">
+    <v-card elevation="3" style="min-height:300px; max-height: 390px">
        <v-list-item class="py-0">
         <v-list-item-content>
           <v-list-item-title class="text-left text-h5">
@@ -84,17 +85,32 @@
     </v-card>
   </v-col>
 </v-row>
+
+
+<v-row class="mt-0" v-show="showcharts">
+ <v-col  cols="12" md="12">
+    <v-card elevation="3" class="h-100" style="min-height:420px;">
+      <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+      <!-- <apexchart v-if="showcharts" ref="barras" class="apex-moco" :type="type" height="400" width="100%" :options="chartOptions" :series="vecins" @dataPointSelection="get_S"></apexchart> -->
+      <horario></horario>
+      </div>
+    </v-card>
+  </v-col>
+</v-row>
+
 </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import chart from "@/components/chart.vue";
+import horario from "@/views/distribucion.vue";
 import { mapState } from 'vuex'
 export default {
   name: "Home",
   components:{
-    chart
+    chart,
+    horario
   },
   methods:{
     /* delayed: function(cual){

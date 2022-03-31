@@ -46,6 +46,23 @@
         </div>
       </v-col>
   </v-row>
+
+<!-- loading -->
+<v-row v-if="cargando" align="center">
+      <v-col
+        md="6"
+        offset-md="3"
+      >
+      <div class="text-center text-danger my-2">
+                <b-spinner class="align-middle"></b-spinner>
+                <strong>Cargando...</strong>
+              </div>
+      </v-col>
+</v-row>
+<!-- end loading -->
+<button @click="actu">click</button>
+<apexchart :key="createdH" ref="barritash" v-show="showchartsH && !cargando" class="apex-moco" :type="type" height="200" width="100%" :options="chartOptions" :series="vechoras" @dataPointSelection="get_H"></apexchart>
+{{showchartsH}} {{cargando}}
   <!-- thead-tr-class="d-none" -->
   <!-- <b-table sticky-header head-variant="dark" 
       :fields="fields"
@@ -62,6 +79,7 @@
                 <b-th rowspan="3">Miércoles</b-th>
                 <b-th rowspan="3">Jueves</b-th>
                 <b-th rowspan="3">Viernes</b-th>
+                <b-th rowspan="3">Sábado</b-th>
             </b-tr>
       </b-thead>
       <!-- body -->
@@ -166,6 +184,24 @@
                   </span>
                 </div>
               </b-td>
+              <!-- sabado -->
+              <b-td :class="valign('Sabado')" style="min-width: 250.6px">
+                <div v-if="horarioGrouped.hasOwnProperty('Sábado')">
+                  <span class="text-info" v-for="(dato, index) in horarioGrouped.Sábado" :key="'V'+index">
+                   <b-container fluid class="max px-0">
+                          <b-row no-gutters>
+                            <b-col cols="8" class="text-white color1 py-0"><b>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</b></b-col>
+                            <b-col cols="4" class="text-white color2 py-0" :class="[dato.hr_cantidad_actual > 6 ? 'color2' : 'colorbad']"><b>{{dato.hr_cantidad_actual}}/<span class="cupo-max">{{dato.hr_cupo_maximo}}</span></b></b-col>
+                          </b-row>
+                          <b-row no-gutters align-v="center" class="border">
+                            <b-col cols="12" class="px-0 py-1 min">
+                              <p>{{dato.hr_trayecto.slice(7)}}</p>
+                            </b-col>
+                          </b-row>
+                    </b-container>      
+                  </span>
+                </div>
+              </b-td>
           
           
         </b-tr>
@@ -218,19 +254,6 @@
       </template> -->
       </b-table-simple>
 
-<!-- loading -->
-<v-row v-if="cargando" align="center">
-      <v-col
-        md="6"
-        offset-md="3"
-      >
-      <div class="text-center text-danger my-2">
-                <b-spinner class="align-middle"></b-spinner>
-                <strong>Cargando...</strong>
-              </div>
-      </v-col>
-        </v-row>
-<apexchart :key="created" v-if="showcharts && !cargando" class="apex-moco" :type="type" height="400" width="100%" :options="chartOptions" :series="vechoras" @dataPointSelection="get_H"></apexchart>
 
 </div>
 </template>
@@ -252,8 +275,8 @@ data(){
         sortBy:"hr_trayecto",
       sortDesc:true,
       hsedes:{},//vector donde creo sedes con sus horarios
-      showcharts: false,
-      created:0,
+      showchartsH: false,
+      createdH:0,
       creado:false,
 // Graficos
 chartOptions: {
@@ -381,22 +404,22 @@ created() {
       this.$set(this.chartOptions.xaxis, 'categories', Object.values(this.sedes).map(x=>x.sede));
     },
 mounted(){
-this.obtener_horario();
-setTimeout(() => {
-        this.creado = true;
-        this.created++
-      }, 1);
-setTimeout(() => {
-        this.showcharts = true;},500)
+this.obtener_horario().then(this.actu())
 },
 activated: function() {
     if (this.creado) {
       console.log('de nuevo');
       //refresco el chart
-      this.showcharts = false;
+      this.showchartsH = false;
       setTimeout(() => {
-        this.showcharts = true;
+        this.showchartsH = true;
       }, 500);
+    }
+  },
+  watch:{
+    horario(newVal,oldVal){
+      console.log("cambioHo");
+      this.actu();
     }
   },
 computed:{
@@ -477,6 +500,17 @@ computed:{
 methods:{
   ...mapActions(['obtener_horario']),
   //funcion para alinear verticalmente segun el horario
+  actu(){
+    // :key="created" 
+    setTimeout(() => {
+        this.creado = true;
+        this.createdH++
+      }, 150),
+    setTimeout(() => {this.showchartsH = true;},500),
+    // window.dispatchEvent(new Event('resize'))
+    this.$refs.barritash.refresh();
+      
+  },
   valign(dia){
     return "align-top";
     /*if(this.horarioGrouped.hasOwnProperty(dia)){
@@ -498,6 +532,7 @@ methods:{
 .b-table-sticky-header {
     overflow-y: auto;
     max-height: 750px !important;
+    min-height: 540px;
     /*height: 46vh;*/
 }
 

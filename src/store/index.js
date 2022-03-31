@@ -25,6 +25,10 @@ export default new Vuex.Store({
   state: {
     count: 0,
     sedes:[
+      /*{sede:'Colonia Wanda', id:1005588},
+      {sede:'Dos Arroyos', id:1005589},
+      {sede:'Mojón Grande', id:1005596},
+      */
       {sede:'25 de Mayo', id:19198},
       {sede:'9 de julio', id:1005583},
       {sede:'Alba Posse', id:19199},
@@ -255,7 +259,7 @@ export default new Vuex.Store({
     
     plugins:[createPersistedState({
       key: 'dashboard_red_maker',
-      paths:['rubricas_sede','rubricas_G'],
+      paths:['rubricas_sede','rubricas_G',"horario"],
       rehydrated: rehydratedvue
     })]
     

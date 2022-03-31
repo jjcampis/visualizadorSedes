@@ -1,6 +1,6 @@
 <template>
-   <div>
-     <apexchart ref="chartx" type="pie" width="100%" :options="chartOptionsp" :series="series"></apexchart>
+   <div style="margin-top: -20px">
+     <apexchart ref="chartx" type="pie" width="100%" height="300px" :options="chartOptionsp" :series="series"></apexchart>
    </div>
 </template>
 

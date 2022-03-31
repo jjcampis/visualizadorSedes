@@ -555,6 +555,7 @@ store.commit('SET_rubricasG',{sede,dato})
         }
     }
 };
+console.log("la sede:",sede);
   store.commit('SET_rubricasG',{sede,dato})
 }
 },
