@@ -9,7 +9,7 @@
           <v-img :src="require('@/assets/logo_red_maker.png')"></v-img>
           <div v-if="!segunda">
               <!-- Cargando rubricas Trimestrales -->
-              01 / 02
+              01 / 03
            <b-progress :value="mapear(cargado,0,sedes.length-1,0,100)" variant="danger" :animated=animated class="mt-3"></b-progress>
             <p class="pt-5">
                 <b class="fadered" :key="sedes[cargado].sede">{{sedes[cargado].sede}}</b>
@@ -18,7 +18,7 @@
           </div>
         <div v-show="segunda">
             <!-- Cargando rubricas Generales -->
-            02 / 02
+            02 / 03
         </div>
           <datosede v-on:datosSedesCargados="dasedcargado" v-if="segunda" :cargar='segunda' ref="dsedes"></datosede>
         </v-col>
@@ -31,7 +31,7 @@
 import datosede from '@/components/cargaDatosSedes'
 import axios from '@/axios'
 import store from '@/store'
-import {mapState} from 'vuex'
+import {mapState, mapActions} from 'vuex'
 import router from '@/router'//necesito para acceder en que ruta estoy
 export default {
 data(){
@@ -51,6 +51,7 @@ created(){
     this.cargar();
 },
 methods:{
+...mapActions(['obtener_horario']),
 async cargar(){
     console.log(router);
     store.commit('Reiniciarbd');
@@ -105,6 +106,8 @@ async cargar(){
 dasedcargado(){
     console.log('datosSedesCargados');
     this.$emit('sedesCargadas');
+    //cargar horarios
+    this.obtener_horario()
     if(router.history.current.name == 'cargar'){
       setTimeout(() => {
         router.push({name:'Home'});  
