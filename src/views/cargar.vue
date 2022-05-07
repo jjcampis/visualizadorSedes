@@ -7,20 +7,30 @@
         <v-col md="6"
         offset-md="3" cols="6" sm="6">
           <v-img :src="require('@/assets/logo_red_maker.png')"></v-img>
-          <div v-if="!segunda">
+          <div v-if="ncarga == 1">
               <!-- Cargando rubricas Trimestrales -->
-              01 / 03
+              01 / 04
            <b-progress :value="mapear(cargado,0,sedes.length-1,0,100)" variant="danger" :animated=animated class="mt-3"></b-progress>
             <p class="pt-5">
                 <b class="fadered" :key="sedes[cargado].sede">{{sedes[cargado].sede}}</b>
             </p>
           {{cargado+1}} - {{sedes.length}}
           </div>
-        <div v-show="segunda">
+        <div v-show="ncarga == 2">
             <!-- Cargando rubricas Generales -->
-            02 / 03
+            02 / 04
         </div>
-          <datosede v-on:datosSedesCargados="dasedcargado" v-if="segunda" :cargar='segunda' ref="dsedes"></datosede>
+        <div v-show="ncarga == 3">
+            <!-- Cargando rubricas Generales -->
+            03 / 04
+        </div>
+        <div v-show="ncarga == 4">
+            <!-- Cargando rubricas Generales -->
+            04 / 04
+        </div>
+          <datosede v-on:datosSedesCargados="dasedcargado" v-if="ncarga == 2" :cargar='true' ref="dsedes"></datosede>
+          <distH v-on:hcargado="hcargo" v-if="ncarga == 3"></distH>
+          <personal v-on:pcargado="pcargo" v-if="ncarga == 4"></personal>
         </v-col>
       </v-row>
       </v-container>
@@ -28,7 +38,9 @@
 </template>
 
 <script>
-import datosede from '@/components/cargaDatosSedes'
+import datosede from '@/components/cargas/cargaDatosSedes'
+import distH from '@/components/cargas/distribH'
+import personal from '@/components/cargas/personal'
 import axios from '@/axios'
 import store from '@/store'
 import {mapState, mapActions} from 'vuex'
@@ -38,11 +50,13 @@ data(){
     return{
         animated:true,
         cargado:0,
-        segunda:false//esto hace referencia a la segunda carga(datos sedes)
+        ncarga:1//esto hace referencia a la segunda carga(datos sedes)
     }
 },
 components:{
-    datosede
+    datosede,
+    distH,
+    personal
 },
 computed:{
     ...mapState(['rubricas_sede','sedes','cargando']),
@@ -67,7 +81,7 @@ async cargar(){
                 }    
                 store.commit('SET_rubricas',{sede,response});
             if (this.cargado == this.sedes.length-1) {
-                this.segunda = true;
+                this.ncarga = 2;
             }
 
 
@@ -105,10 +119,21 @@ async cargar(){
 },
 dasedcargado(){
     console.log('datosSedesCargados');
-    this.$emit('sedesCargadas');
     //cargar horarios
-    this.obtener_horario()
-    if(router.history.current.name == 'cargar'){
+    this.ncarga = 3; 
+},
+
+hcargo(){
+  //this.redirect();
+  this.ncarga = 4;
+},
+pcargo(){
+this.redirect();
+},
+redirect(){
+  this.$emit('sedesCargadas');
+  console.log("redireccionando");
+  if(router.history.current.name == 'cargar'){
       setTimeout(() => {
         router.push({name:'Home'});  
   }, 1000);

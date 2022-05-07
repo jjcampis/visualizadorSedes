@@ -24,6 +24,7 @@ function rehydratedvue ({state}){//this.$eventHub.$emit('cargado IDB');
 export default new Vuex.Store({
   state: {
     count: 0,
+    selectedSede:'Todo',
     sedes:[
       /*{sede:'Colonia Wanda', id:1005588},
       {sede:'Dos Arroyos', id:1005589},
@@ -111,6 +112,7 @@ export default new Vuex.Store({
     rubricas_sede:{},
     rubricas_G:{},
     horario:[],
+    personal:[],
     //datos_sede:[],
     cargando: false
   },
@@ -159,9 +161,18 @@ export default new Vuex.Store({
       state.cargando = false;
       state.horario = payload;
     },
+    SET_personal(state,payload){
+      state.cargando = false;
+      state.personal = payload;
+    },
+    SET_selectedSede(state,payload){
+      state.selectedSede = payload;
+    },
     Reiniciarbd(state){
       state.rubricas_sede = {};
       state.rubricas_G = {};
+      state.horario = [];
+      state.personal = [];
     }
   },
   actions: {
@@ -191,11 +202,38 @@ export default new Vuex.Store({
       console.log(state.horario)
       if (Object.entries(state.horario).length == 0) {
         state.cargando = true;
-        let response = (process.env.NODE_ENV == 'production') ? await axios.get(axios.defaults.baseURL+'/json/horario-grupos?_format=json') : await axios.get('/json.html');
+        //let response = (process.env.NODE_ENV == 'production') ? await axios.get(axios.defaults.baseURL+'/json/horario-grupos?_format=json') : await axios.get('/json.html');
+        let response = await axios.get(axios.defaults.baseURL+'/json/horario-grupos?_format=json');
+        
         //let response = await axios.get('/json.html');
         let horario = response.data;
         console.log(horario);
         commit('SET_horario',horario);
+        //return response;
+      }else{
+      state.cargando = false;
+      console.log('ya existe');
+      return 200;
+      }
+    }catch(error){
+      state.cargando = false;
+      console.log(error);
+    }
+  },
+
+  async obtener_personal({state,commit}){
+    try{
+      //la URL base ya esta cargada en main.js (axios.baseURL)
+      console.log(state.personal)
+      if (Object.entries(state.personal).length == 0) {
+        state.cargando = true;
+        //let response = (process.env.NODE_ENV == 'production') ? await axios.get(axios.defaults.baseURL+'/json/personal-grupos?_format=json') : await axios.get('/json.html');
+        let response = await axios.get(axios.defaults.baseURL+'/json/personal?_format=json');
+        
+        //let response = await axios.get('/json.html');
+        let personal = response.data;
+        console.log(personal);
+        commit('SET_personal',personal);
         //return response;
       }else{
       state.cargando = false;
@@ -259,7 +297,7 @@ export default new Vuex.Store({
     
     plugins:[createPersistedState({
       key: 'dashboard_red_maker',
-      paths:['rubricas_sede','rubricas_G',"horario"],
+      paths:['rubricas_sede','rubricas_G',"horario","personal"],
       rehydrated: rehydratedvue
     })]
     

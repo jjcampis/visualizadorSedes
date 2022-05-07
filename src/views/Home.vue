@@ -4,13 +4,13 @@
   <v-col  cols="12" md="12">
     <v-card elevation="3" class="h-100" style="min-height:420px;">
       <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-      <apexchart v-if="showcharts" ref="barras" class="apex-moco" :type="type" height="400" width="100%" :options="chartOptions" :series="vecins" @dataPointSelection="get_S"></apexchart>
+      <apexchart v-if="showcharts" ref="barras" class="apex-moco" :type="type" height="400" width="100%" :options="chartOptions" :series="vecins" @click="get_S" @animationEnd="testb(0,2)" @dataPointSelection="clickeado"></apexchart>
       </div>
     </v-card>
   </v-col>
 </v-row>
 
-
+<!-- <button @click="testb">clickedamo</button> -->
 <v-row v-show="$vuetify.breakpoint.mobile">
   <v-col  cols="12" md="12">
     <v-card elevation="3" class="h-100" style="padding-bottom: 25px;">
@@ -22,6 +22,23 @@
     </v-card>
   </v-col>
 </v-row>
+
+
+<v-row v-show="showcharts">
+ <v-col  cols="12" md="12">
+    <v-card elevation="3" class="h-100" style="min-height:420px;">
+      <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+      <!-- <apexchart v-if="showcharts" ref="barras" class="apex-moco" :type="type" height="400" width="100%" :options="chartOptions" :series="vecins" @dataPointSelection="get_S"></apexchart> -->
+      <horario></horario>
+      </div>
+    </v-card>
+  </v-col>
+</v-row>
+
+<personal></personal>
+    
+
+
 
 <v-row class="mt-0" v-show="showcharts">
   <v-col cols="12" md="4">
@@ -72,7 +89,6 @@
         <v-list-item-content>
           <v-list-item-title class="text-left text-h5">
             <p class="mb-0">Promedios PST:
-
               <span v-if="sede !='Todo'">{{rubricas_G[sede].promPST.toFixed(2)}}</span>
             </p>
 
@@ -87,16 +103,16 @@
 </v-row>
 
 
-<v-row class="mt-0" v-show="showcharts">
+<!-- <v-row v-show="showcharts">
  <v-col  cols="12" md="12">
     <v-card elevation="3" class="h-100" style="min-height:420px;">
       <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-      <!-- <apexchart v-if="showcharts" ref="barras" class="apex-moco" :type="type" height="400" width="100%" :options="chartOptions" :series="vecins" @dataPointSelection="get_S"></apexchart> -->
+      <!-<apexchart v-if="showcharts" ref="barras" class="apex-moco" :type="type" height="400" width="100%" :options="chartOptions" :series="vecins" @dataPointSelection="get_S"></apexchart>
       <horario></horario>
       </div>
     </v-card>
   </v-col>
-</v-row>
+</v-row> -->
 
 </div>
 </template>
@@ -104,13 +120,17 @@
 <script>
 // @ is an alias to /src
 import chart from "@/components/chart.vue";
-import horario from "@/views/distribucion.vue";
-import { mapState } from 'vuex'
+import horario from "@/views/distrib_G.vue";
+import personal from "@/views/personal.vue";
+import store from '@/store';
+
+import { mapState, Store } from 'vuex'
 export default {
   name: "Home",
   components:{
     chart,
-    horario
+    horario,
+    personal
   },
   methods:{
     /* delayed: function(cual){
@@ -118,15 +138,46 @@ export default {
         this[cual] = true;
       }, 1000)
     } */
+    testb(selected,...x){
+      if (this.dpclick == false){
+        this.$refs.barras.toggleDataPointSelection(0,selected);
+        console.log("algo");
+        if(x[0] > 0){
+            let sede= this.sedes[selected].sede;
+            console.log(sede);
+            this.sede = sede;
+            store.commit('SET_selectedSede',{sede});
+          }
+      }
+
+      this.dpclick = false;
+    },
+
+
+    /*handleClickdp(data){
+      console.log("from vue"+data);
+    },*/
+    
+    //reemplazo por watch
+    clickeado(event, chartContext, config){
+        /*this.get_S(event, chartContext, config);
+        let selected = config.dataPointIndex;
+        this.testb(selected);*/
+        this.dpclick = true;
+    },
+
     get_S(event, chartContext, config){
         console.log("click")
-        console.log(this.sedes[config.dataPointIndex]);
-        this.sede = this.sedes[config.dataPointIndex].sede;
+        // console.log("dppp"+this.sedes[config.dataPointIndex]);
+        console.log("dppp",config);
+        let sede = this.sedes[config.dataPointIndex].sede;
+        this.sede = sede;
+        store.commit('SET_selectedSede',{sede});
     },
   },
 
   computed:{
-    ...mapState(['rubricas_sede','sedes','rubricas_G']),
+    ...mapState(['rubricas_sede','sedes','rubricas_G','selectedSede']),
     vsedes(){
       if(Object.keys(this.rubricas_G).length > 0){
       return Object.keys(this.rubricas_G).map((x)=>{return x});
@@ -264,12 +315,20 @@ if(Object.keys(this.rubricas_G).length > 0){
     } */
     },
   data: ()=>{
+    //https://stackoverflow.com/questions/46966689/how-can-i-call-method-from-data-on-vue-js
+    //esto es para poder acceder a metodos dentro de las config de apexcharts
+    dpclick:false;
+    //var self = this;
     return{
       // insDelay:false,
       created:0,
       creado:false,
       sede:'Todo',
       type:"line",
+      
+      //dpselected:-1,
+      
+
       showcharts:false,//para mostrar los pie en activated es un hack
       cambio: false,//asigno true cuando cambia el estado del menu 
       menuinicial: false,//en realidad se setea con el valor actual del menu en el created()
@@ -411,12 +470,33 @@ stackop:{
               height: 'auto',
               width: '100%',
               stacked: false,
+              events: {
+              click(event, chartContext, config) {
+                /* let ID = config;//.config.xaxis.categories[config.dataPointIndex];
+                //console.log("clickes"+JSON.stringify(config));
+                console.log(config);
+                console.log(chartContext); */
+
+                //self.dpselected = config.dataPointIndex;
+                //self.handleClickdp(ID);
+              }
+            },
+            
             },
             dataLabels: {
               enabled: true,
               enabledOnSeries: [0]
             },
             colors: ['#F44336', '#E91E63', '#9C27B0'],
+            /*colors: [
+              function ({ value, seriesIndex, dataPointIndex, w }) {
+                  if (dataPointIndex == 2) {
+                    return "#7E36AF";
+                  } else {
+                    return "#D9534F";
+                  }
+                }
+            ],*/
             stroke: {
               width: [0, 2, 5],
               curve: 'smooth'
@@ -533,7 +613,25 @@ stackop:{
           console.log('cambio');
           this.cambio = true;
         }
-      }
+      },
+      selectedSede(newVal,oldVal){
+            this.sede = newVal.sede;
+            console.log("Primer",newVal,oldVal);
+          let a = this.chartOptions.xaxis.categories;
+            console.log("aray",a);
+
+          //console.log("barritas",this.$refs.barritash.$el);
+          var selected = a.findIndex(a => a === newVal.sede);
+          // console.log("barras",selected);
+          //this.$refs.barritash.toggleDataPointSelection(0,selected)
+            //this.testb(selected);
+            console.log("Primers",selected);
+
+          if (newVal.sede != oldVal.sede) {
+            console.log("seleccionado");
+            this.testb(selected);
+          }
+          }
     },
     mounted(){
       setTimeout(() => {
@@ -559,6 +657,7 @@ stackop:{
       console.log('padre: ',this.$root.$children[0].drawer);
       ///de esta manera asigno el valor de una computed al cargar la pagina
        this.$set(this.chartOptions, 'labels', this.vsedes);
+       this.$set(this.chartOptions.xaxis, 'categories', this.vsedes);
        this.$set(this.radarOptions.xaxis, 'categories', this.vsedes);
        this.$set(this.stackop.xaxis, 'categories', this.vsedes);
       /*this.$set(this.chartOptions, 'labels', Object.values(this.sedes).map(x=>x.sede));
@@ -652,4 +751,6 @@ div.chart-wrapperm {
   align-items: center;
   justify-content: center
 }
+.apexcharts-bar-area:hover { fill: #e9f5479c !important; }
+.apexcharts-bar-area[selected = true]{ fill: turquoise !important; }
 </style>

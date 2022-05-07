@@ -2,16 +2,21 @@
 <v-app>
    <v-app-bar v-if="$route.name!=='cargar' && !loading" app style="background: #bd1919; z-index:22">
       <v-app-bar-nav-icon class="text-white" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title class="text-white">Visualizador por sedes</v-toolbar-title>
+      <v-toolbar-title class="text-white">Visualizador por sedes 
+        <span class="selsede" v-if="selectedSede.sede">{{selectedSede.sede}}</span>
+        <span class="selsede" v-else>{{selectedSede}}</span>
+      
+       </v-toolbar-title>
     </v-app-bar>
   
     <v-navigation-drawer hide-overlay v-if="$route.name!=='cargar'  && !loading" v-model="drawer" app>
       <v-img :src="require('./assets/logo_red_maker.png')"></v-img>
       
       <v-list >
-        <v-list-item to="/"><v-list-item-title>Sedes</v-list-item-title></v-list-item>
+        <v-list-item to="/"><v-list-item-title>General</v-list-item-title></v-list-item>
         <!-- <v-list-item to="/newhome"><v-list-item-title>Preinscriptos**</v-list-item-title></v-list-item> -->
-        <v-list-item to="/imprimir"><v-list-item-title>Distribución</v-list-item-title></v-list-item>
+        <v-list-item to="/imprimir"><v-list-item-title>Distribución Horaria</v-list-item-title></v-list-item>
+        <v-list-item to="/personal"><v-list-item-title>Personal</v-list-item-title></v-list-item>
         <v-list-item to="/cargar"><v-list-item-title>Actualizar - Datos</v-list-item-title></v-list-item>
         <!-- <v-list-item to="/about"><v-list-item-title>Asistencias</v-list-item-title></v-list-item> -->
         <!-- <v-list-item to="/rubricaT"><v-list-item-title>Rubrica Estudiantes</v-list-item-title></v-list-item> -->
@@ -35,6 +40,7 @@
       <transition v-if="!loading" name="fab-transition" mode="out-in">
         <!-- <keep-alive exclude="Home"> -->
         <!-- <keep-alive exclude="newhome"> -->
+          <!-- <keep-alive> -->
         <router-view></router-view>
         <!-- </keep-alive> -->
         </transition>
@@ -65,7 +71,7 @@ mounted(){
 //console.log(this.checkdata());
 },
 computed:{
-  ...mapState(['rubricas_sede'])
+  ...mapState(['rubricas_sede','selectedSede'])
 },
 methods:{
   cargaOk(){
@@ -173,5 +179,10 @@ localforage.ready().then(function() {
 .container{
      max-width: 100vw;
      padding:0px;
+  }
+  .selsede{
+    background: #FFF;
+    color: red;
+    padding: 10px;
   }
 </style>

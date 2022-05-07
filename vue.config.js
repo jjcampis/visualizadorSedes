@@ -1,10 +1,10 @@
 module.exports = {
   lintOnSave: false,
-  devServer: {
+  /*devServer: {
     proxy:'https://r2d2.roboticamisiones.com/'
-  },
+  },*/
   publicPath: process.env.NODE_ENV === 'production'
-    ? '/dashboard/'
+    ? '/dashboard/3'
     : '/',
     outputDir: 'docs'
 };

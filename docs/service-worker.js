@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/dashboard/precache-manifest.5d0a3032da462bf4095c438cc10e7197.js"
+  "/dashboard/3/precache-manifest.e58d101b0db29c4b587c0ebedad93500.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "Dashboard-Red-Maker"});
