@@ -104,7 +104,7 @@
                           </b-row>
                           <b-row no-gutters align-v="baseline" class="border">
                             <b-col cols="12" class="px-0 py-1 min">
-                              <p class="mb-1">{{dato.hr_trayecto.slice(7)}}</p>
+                              <p class="mb-0"><b class="dash-b"><span class="text-white color1 py-0">AU{{dato.hr_aula.slice(-1)}}</span> {{dato.hr_trayecto.slice(7)}}</b></p>
                               <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hL'+index">
                               <p class="nomfac my-0 text-dark">{{facilitador}}</p>
                               </span>
@@ -126,7 +126,7 @@
                           </b-row>
                           <b-row no-gutters align-v="baseline" class="border">
                             <b-col cols="12" class="px-0 py-1 min">
-                              <p class="mb-1">{{dato.hr_trayecto.slice(7)}}</p>
+                              <p class="mb-0"><b class="dash-b"><span class="text-white color1 py-0">AU{{dato.hr_aula.slice(-1)}}</span>{{dato.hr_trayecto.slice(7)}}</b></p>
                               <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hM'+index">
                               <p class="nomfac my-0 text-dark">{{facilitador}}</p>
                               </span>
@@ -147,7 +147,7 @@
                           </b-row>
                           <b-row no-gutters align-v="baseline" class="border">
                             <b-col cols="12" class="px-0 py-1 min">
-                              <p class="mb-1">{{dato.hr_trayecto.slice(7)}}</p>
+                              <p class="mb-0"><b class="dash-b"><span class="text-white color1 py-0">AU{{dato.hr_aula.slice(-1)}}</span>{{dato.hr_trayecto.slice(7)}}</b></p>
                               <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hX'+index">
                               <p class="nomfac my-0 text-dark">{{facilitador}}</p>
                               </span>
@@ -168,7 +168,7 @@
                           </b-row>
                           <b-row no-gutters align-v="baseline" class="border">
                             <b-col cols="12" class="px-0 py-1 min">
-                              <p class="mb-1">{{dato.hr_trayecto.slice(7)}}</p>
+                              <p class="mb-0"><b class="dash-b"><span class="text-white color1 py-0">AU{{dato.hr_aula.slice(-1)}}</span>{{dato.hr_trayecto.slice(7)}}</b></p>
                               <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hJ'+index">
                               <p class="nomfac my-0 text-dark">{{facilitador}}</p>
                               </span>
@@ -189,7 +189,7 @@
                           </b-row>
                           <b-row no-gutters align-v="baseline" class="border">
                             <b-col cols="12" class="px-0 py-1 min">
-                              <p class="mb-1">{{dato.hr_trayecto.slice(7)}}</p>
+                              <p class="mb-0"><b class="dash-b"><span class="text-white color1 py-0">AU{{dato.hr_aula.slice(-1)}}</span>{{dato.hr_trayecto.slice(7)}}</b></p>
                               <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hV'+index">
                               <p class="nomfac my-0 text-dark">{{facilitador}}</p>
                               </span>
@@ -210,7 +210,7 @@
                           </b-row>
                           <b-row no-gutters align-v="baseline" class="border">
                             <b-col cols="12" class="px-0 py-1 min">
-                              <p class="mb-1">{{dato.hr_trayecto.slice(7)}}</p>
+                              <p class="mb-0"><b class="dash-b"><span class="text-white color1 py-0">AU{{dato.hr_aula.slice(-1)}}</span>{{dato.hr_trayecto.slice(7)}}</b></p>
                               <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hS'+index">
                               <p class="nomfac my-0 text-dark">{{facilitador}}</p>
                               </span>
@@ -371,7 +371,10 @@ small{
   font-weight: bolder
 }
 .nomfac{
-  min-height: 24px;
+  min-height: 16px;
   font-size: 12px;
+}
+.dash-b{
+  color: #156673
 }
 </style>

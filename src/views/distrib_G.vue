@@ -58,12 +58,24 @@
       <!-- <b-table sticky-header head-variant="dark" :busy="cargando" class="my-0" outlined> -->
 
         <!-- <button @click="testbb">clickedamo</button> -->
-        
       <v-row>
         <v-col class="text-left" cols="12" md="12">
-          <b>{{sede}}</b>
+          <b>{{sede}} </b>
+          <b-button v-b-toggle.collapse-1 variant="outline-info"> 
+            <span v-if="hsVisible">
+              <v-icon>
+                  mdi-chevron-up
+                </v-icon>
+            </span>
+            <span v-else>
+              <v-icon>
+                  mdi-chevron-down
+                </v-icon>  
+            </span>
+            </b-button>
         </v-col>
       </v-row>
+      <b-collapse v-model="hsVisible" visible id="collapse-1" class="mt-2">
       <b-table-simple sticky-header striped small responsive>
       <b-thead head-variant="dark">
             <b-tr>
@@ -96,12 +108,13 @@
                             <b-col cols="8" class="text-white color1 py-0"><b>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</b><small> [{{dato.hr_carga_horaria}}]</small></b-col>
                             <b-col cols="4" class="text-white color2 py-0" :class="[dato.hr_cantidad_actual > 6 ? 'color2' : 'colorbad']"><b>{{dato.hr_cantidad_actual}}/<span class="cupo-max">{{dato.hr_cupo_maximo}}</span></b></b-col>
                           </b-row>
-                          <b-row no-gutters align-v="baseline">
+                          <b-row no-gutters align-v="baseline" class="border">
                             <b-col cols="12" class="px-0 py-1 min">
-                              <p class="mb-1">{{dato.hr_trayecto.slice(7)}}</p>
+                              <p class="mb-0"><b class="dash-b"><span class="text-white color1 py-0">AU{{dato.hr_aula.slice(-1)}}</span> {{dato.hr_trayecto.slice(7)}}</b></p>
                               <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hL'+index">
-                              <p class="nomfac my-0 text-dark">{{facilitador}}</p>
+                              <p class="nomfac my-0 text-dark">{{facilitador}}</p> 
                               </span>
+
                             </b-col>
                           </b-row>
                     </b-container>
@@ -119,8 +132,8 @@
                           </b-row>
                           <b-row no-gutters align-v="baseline" class="border">
                             <b-col cols="12" class="px-0 py-1 min">
-                              <p class="mb-1">{{dato.hr_trayecto.slice(7)}}</p>
-                              <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hL'+index">
+                              <p class="mb-0"><b class="dash-b"><span class="text-white color1 py-0">AU{{dato.hr_aula.slice(-1)}}</span>{{dato.hr_trayecto.slice(7)}}</b></p>
+                              <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hM'+index">
                               <p class="nomfac my-0 text-dark">{{facilitador}}</p>
                               </span>
                             </b-col>
@@ -135,13 +148,13 @@
                   <span class="text-info" v-for="(dato, index) in horarioGrouped.Miércoles" :key="'X'+index">
                    <b-container fluid class="max px-0">
                           <b-row no-gutters>
-                            <b-col cols="8" class="text-white color1 py-0"><b>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</b><small> [{{dato.hr_carga_horaria}}]</small></b-col>
+                            <b-col cols="8" class="text-white color1 py-0"><b>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</b></b-col>
                             <b-col cols="4" class="text-white color2 py-0" :class="[dato.hr_cantidad_actual > 6 ? 'color2' : 'colorbad']"><b>{{dato.hr_cantidad_actual}}/<span class="cupo-max">{{dato.hr_cupo_maximo}}</span></b></b-col>
                           </b-row>
                           <b-row no-gutters align-v="baseline" class="border">
                             <b-col cols="12" class="px-0 py-1 min">
-                              <p class="mb-1">{{dato.hr_trayecto.slice(7)}}</p>
-                              <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hL'+index">
+                              <p class="mb-0"><b class="dash-b"><span class="text-white color1 py-0">AU{{dato.hr_aula.slice(-1)}}</span>{{dato.hr_trayecto.slice(7)}}</b></p>
+                              <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hX'+index">
                               <p class="nomfac my-0 text-dark">{{facilitador}}</p>
                               </span>
                             </b-col>
@@ -156,13 +169,13 @@
                   <span class="text-info" v-for="(dato, index) in horarioGrouped.Jueves" :key="'J'+index">
                     <b-container fluid class="max px-0">
                           <b-row no-gutters>
-                            <b-col cols="8" class="text-white color1 py-0"><b>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</b><small> [{{dato.hr_carga_horaria}}]</small></b-col>
+                            <b-col cols="8" class="text-white color1 py-0"><b>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</b></b-col>
                             <b-col cols="4" class="text-white color2 py-0" :class="[dato.hr_cantidad_actual > 6 ? 'color2' : 'colorbad']"><b>{{dato.hr_cantidad_actual}}/<span class="cupo-max">{{dato.hr_cupo_maximo}}</span></b></b-col>
                           </b-row>
                           <b-row no-gutters align-v="baseline" class="border">
                             <b-col cols="12" class="px-0 py-1 min">
-                              <p class="mb-1">{{dato.hr_trayecto.slice(7)}}</p>
-                              <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hL'+index">
+                              <p class="mb-0"><b class="dash-b"><span class="text-white color1 py-0">AU{{dato.hr_aula.slice(-1)}}</span>{{dato.hr_trayecto.slice(7)}}</b></p>
+                              <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hJ'+index">
                               <p class="nomfac my-0 text-dark">{{facilitador}}</p>
                               </span>
                             </b-col>
@@ -177,13 +190,13 @@
                   <span class="text-info" v-for="(dato, index) in horarioGrouped.Viernes" :key="'V'+index">
                    <b-container fluid class="max px-0">
                           <b-row no-gutters>
-                            <b-col cols="8" class="text-white color1 py-0"><b>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</b><small> [{{dato.hr_carga_horaria}}]</small></b-col>
+                            <b-col cols="8" class="text-white color1 py-0"><b>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</b></b-col>
                             <b-col cols="4" class="text-white color2 py-0" :class="[dato.hr_cantidad_actual > 6 ? 'color2' : 'colorbad']"><b>{{dato.hr_cantidad_actual}}/<span class="cupo-max">{{dato.hr_cupo_maximo}}</span></b></b-col>
                           </b-row>
                           <b-row no-gutters align-v="baseline" class="border">
                             <b-col cols="12" class="px-0 py-1 min">
-                              <p class="mb-1">{{dato.hr_trayecto.slice(7)}}</p>
-                              <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hL'+index">
+                              <p class="mb-0"><b class="dash-b"><span class="text-white color1 py-0">AU{{dato.hr_aula.slice(-1)}}</span>{{dato.hr_trayecto.slice(7)}}</b></p>
+                              <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hV'+index">
                               <p class="nomfac my-0 text-dark">{{facilitador}}</p>
                               </span>
                             </b-col>
@@ -195,16 +208,16 @@
               <!-- sabado -->
               <b-td :class="valign('Sabado')" style="min-width: 250.6px">
                 <div v-if="horarioGrouped.hasOwnProperty('Sábado')">
-                  <span class="text-info" v-for="(dato, index) in horarioGrouped.Sábado" :key="'V'+index">
+                  <span class="text-info" v-for="(dato, index) in horarioGrouped.Sábado" :key="'S'+index">
                    <b-container fluid class="max px-0">
                           <b-row no-gutters>
-                            <b-col cols="8" class="text-white color1 py-0"><b>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</b><small> [{{dato.hr_carga_horaria}}]</small></b-col>
+                            <b-col cols="8" class="text-white color1 py-0"><b>{{dato.hr_hora_inicio}} A {{dato.hr_hora_fin}}</b></b-col>
                             <b-col cols="4" class="text-white color2 py-0" :class="[dato.hr_cantidad_actual > 6 ? 'color2' : 'colorbad']"><b>{{dato.hr_cantidad_actual}}/<span class="cupo-max">{{dato.hr_cupo_maximo}}</span></b></b-col>
                           </b-row>
                           <b-row no-gutters align-v="baseline" class="border">
                             <b-col cols="12" class="px-0 py-1 min">
-                              <p class="mb-1">{{dato.hr_trayecto.slice(7)}}</p>
-                              <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hL'+index">
+                              <p class="mb-0"><b class="dash-b"><span class="text-white color1 py-0">AU{{dato.hr_aula.slice(-1)}}</span>{{dato.hr_trayecto.slice(7)}}</b></p>
+                              <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hS'+index">
                               <p class="nomfac my-0 text-dark">{{facilitador}}</p>
                               </span>
                             </b-col>
@@ -218,6 +231,7 @@
         </b-tr>
       </b-tbody>
     </b-table-simple>
+      </b-collapse>
 </div>
 </template>
 
@@ -226,6 +240,11 @@
 import hmix from '../mixins/horarios'
 import {mapState} from 'vuex'
 export default {
+  data(){
+    return{
+      hsVisible:true
+    }
+  },
   mounted(){
     //alert("this.chartOptions.chart");
     console.log("this.chartOptions.chart");
@@ -310,8 +329,8 @@ created() {
 
 <style scoped>
 .b-table-sticky-header {
-    overflow-y: auto;
-    max-height: 750px !important;
+    overflow-y: hidden;
+    max-height: 100% !important;
     min-height: 540px;
 }
 .max{
@@ -342,7 +361,10 @@ small{
   font-weight: bolder
 }
 .nomfac{
-  min-height: 24px;
+  min-height: 16px;
   font-size: 12px;
+}
+.dash-b{
+  color: #156673
 }
 </style>

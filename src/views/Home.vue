@@ -2,7 +2,7 @@
 <div>
 <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
   <v-col  cols="12" md="12">
-    <v-card elevation="3" class="h-100" style="min-height:420px;">
+    <v-card elevation="3" class="h-100" style="min-height:320px;">
       <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
       <apexchart v-if="showcharts" ref="barras" class="apex-moco" :type="type" height="400" width="100%" :options="chartOptions" :series="vecins" @click="get_S" @animationEnd="testb(0,2)" @dataPointSelection="clickeado"></apexchart>
       </div>
@@ -26,7 +26,7 @@
 
 <v-row v-show="showcharts">
  <v-col  cols="12" md="12">
-    <v-card elevation="3" class="h-100" style="min-height:420px;">
+    <v-card elevation="3" class="h-100" style="min-height:320px;">
       <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
       <!-- <apexchart v-if="showcharts" ref="barras" class="apex-moco" :type="type" height="400" width="100%" :options="chartOptions" :series="vecins" @dataPointSelection="get_S"></apexchart> -->
       <horario></horario>

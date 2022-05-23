@@ -109,14 +109,67 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "rubG" */
       /* webpackPrefetch: true */ "../views/rubG.vue"),
+  },
+  {
+    path: "/login",
+    name: "login",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "login" */
+      /* webpackPrefetch: true */ "../views/login.vue"),
   }
 ];
+
+// function guardMyroute(to, from, next)
+// {
+//  var isAuthenticated= false;
+// //this is just an example. You will have to find a better or 
+// // centralised way to handle you localstorage data handling 
+// if(localStorage.getItem('LoggedUser'))
+//   isAuthenticated = true;
+//  else
+//   isAuthenticated= false;
+//  if(isAuthenticated) 
+//  {
+//   next(); // allow to enter route
+//  } 
+//  else
+//  {
+//   next('/login'); // go to '/login';
+//  }
+// }
 
 const router = new VueRouter({
   mode: "hash",//no se opta por history para evitar error de navegacion
   base: process.env.BASE_URL,
   routes,
 });
+
+router.beforeEach(async (to, from, next) => {
+  let isAuthenticated= false;
+  console.log(to,from);
+  if(store.state.logueado){
+    isAuthenticated = true;
+  }else{
+    isAuthenticated = false;
+  }
+  if (
+    // make sure the user is authenticated
+    !isAuthenticated &&
+    // ❗️ Avoid an infinite redirect
+    to.name !== 'login'
+  ) {
+    // redirect the user to the login page
+    // return { name: 'login' }
+    next({ name: 'login' })
+  }else{
+    next();
+  }
+})
+
+
 
 /*
 router.beforeEach((to, from, next) => {

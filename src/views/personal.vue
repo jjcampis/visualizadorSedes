@@ -24,9 +24,28 @@
   </v-col>
 </v-row>
 
-<p class="pt-3 text-left"><b>{{sede}}</b></p>
+<p class="pt-3 text-left"><b>{{sede}}</b>
+
+<b-button v-show="this.$route.name =='Home'" v-b-toggle.collapse-2 variant="outline-info"> 
+            <span v-if="psVisible">
+              <v-icon>
+                  mdi-chevron-up
+                </v-icon>
+            </span>
+            <span v-else>
+              <v-icon>
+                  mdi-chevron-down
+                </v-icon>  
+            </span>
+            </b-button>
+
+</p>
+
+
+
 <v-row v-show="showcharts">
  <v-col  cols="12" md="12">
+   <b-collapse v-model="psVisible" visible id="collapse-2" class="mt-2">
 <b-table-simple class="b-table-sticky-header-ac" sticky-header striped small responsive>
       <b-thead head-variant="dark">
             <tr>
@@ -36,6 +55,8 @@
                 <b-th>Celular</b-th>
                 <b-th>Email</b-th>
                 <b-th>Rol</b-th>
+                <b-th>Perfil</b-th>
+                <b-th>Linea de Accion</b-th>
                 <b-th>C.H. <br > a Cumplir</b-th>
                 <b-th>C.H. <br > Cumpliendo</b-th>
                 <b-th>C.H. <br > Diferencia</b-th>
@@ -66,6 +87,79 @@
               <b-td>
                 {{pers.ps_rol}}
               </b-td>
+              <b-td style="min-width:152px">
+                <span v-for="(perfil, index) in pers.ps_perfil.split(',')" :key="'perf'+index">
+                  <p class="iconos-rm">
+                    <v-tooltip  v-if="perfil.trim() == 'Pedagógico'" bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-icon
+                            class="redmaker-icon"
+                            v-bind="attrs"
+                            v-on="on"
+                          >
+                            mdi-school
+                          </v-icon>
+                        </template>
+                        <span>Pedagógico</span>
+                      </v-tooltip>
+                    
+                    <v-tooltip  v-if="perfil.trim() == 'Programador'" bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-icon
+                            class="programador-icon"
+                            v-bind="attrs"
+                            v-on="on"
+                          >
+                            mdi-emoticon-cool-outline
+                          </v-icon>
+                        </template>
+                        <span>Programador</span>
+                      </v-tooltip>
+                      <v-tooltip  v-if="perfil.trim() == 'Técnico'" bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-icon
+                            class="tecnico-icon"
+                            v-bind="attrs"
+                            v-on="on"
+                          >
+                            mdi-account-hard-hat
+                          </v-icon>
+                        </template>
+                        <span>Técnico</span>
+                      </v-tooltip>
+                  </p>
+                  <p class="iconos-rm">
+                  </p>
+                  <!-- <p v-if="perfil != 'Pedagógico' || perfil != ' Programador'" class="nomfac my-0 text-dark">{{perfil}}</p> -->
+                  
+                </span>
+
+              </b-td>
+              <b-td style="min-width:152px">
+                <span v-for="(LA, index) in pers.ps_linea_de_accion.split(',')" :key="'LA'+index">
+                  <p class="iconos-rm">
+                    <v-tooltip  v-if="LA.trim() == 'Conectar Igualdad'" bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <span v-bind="attrs" v-on="on" class="ci">CI</span>
+                        </template>
+                        <span>Conectar Igualdad</span>
+                      </v-tooltip>
+                    <v-tooltip  v-if="LA.trim() == 'Red Maker'" bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <span v-bind="attrs" v-on="on" class="rm">RM</span>
+                        </template>
+                        <span>Red Maker</span>
+                      </v-tooltip>
+                    <v-tooltip  v-if="LA.trim() == 'Sumá tu escuela'" bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <span v-bind="attrs" v-on="on" class="se">SE</span>
+                        </template>
+                        <span>Sumá tu Escuela</span>
+                      </v-tooltip>
+                <!-- {{LA}} -->
+                  </p>
+                </span>
+              </b-td>
               <b-td>
                 {{pers.ps_carga_horaria_total}}
               </b-td>
@@ -79,13 +173,13 @@
                 {{pers.ps_carga_horaria_actual_trayecto}}
               </b-td>
               <b-td>
-                {{pers.ps_tc_1}}
+                <span v-html="pers.ps_tc_1"></span>
               </b-td>
               <b-td>
                 {{pers.ps_carga_horaria_tc_1}}
               </b-td>
               <b-td>
-                {{pers.ps_tc_2}}
+                <span v-html="pers.ps_tc_2"></span>
               </b-td>
               <b-td>
                 {{pers.ps_carga_horaria_tc_2}}
@@ -93,6 +187,7 @@
             </b-tr>
           </b-tbody>
       </b-table-simple>
+   </b-collapse>
 </v-col>
 </v-row>
 
@@ -119,6 +214,7 @@ data:()=>{
   dpclick:false,
   cantP: {},
   sede:'Todo',
+  psVisible:true,
   chartOptions: data_personal
   }
 },
@@ -297,6 +393,24 @@ watch:{
   overflow-y: auto;
   max-height: max-content;
 }
+.redmaker-icon{
+  color: #bd1919 !important;
+}
+.programador-icon, .tecnico-icon{
+  color: #26958a !important;
+}
+p.iconos-rm {display: inline-flex;}
+
+.iconos-rm i, .iconos-rm span {margin: 0 4px;}
+span.ci {border: 2px solid #00adff;padding: 2px;border-radius: 5px;background: #00adff;color: #fff;font-weight: bold;}
+span.rm {border: 2px solid #c53434;padding: 2px;border-radius: 5px;background: #c53434;color: #fff;font-weight: bold;}
+span.se {border: 2px solid #00adff;
+    padding: 2px;
+    border-radius: 5px;
+    background: #ffffff;
+    color: #bd1919;
+    font-weight: bold;}
+
 </style>>
 
 </style>

@@ -109,6 +109,7 @@ export default new Vuex.Store({
       {sede:'Santo Pipó', id:19256},
       {sede:'Tres Capones', id:1005601},
 ],
+    logueado: false,
     rubricas_sede:{},
     rubricas_G:{},
     horario:[],
@@ -176,12 +177,17 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    login({state,commit}){
+      console.log("login");
+      state.logueado = true;
+    },
     async obtener_rubricas({state,commit},sede){
     try{
       //la URL base ya esta cargada en main.js (axios.baseURL)
       if (state.rubricas_sede[sede.sede] == undefined) {
         state.cargando = true;
-        let response = await axios.get(axios.defaults.baseURL+'/json/evaluacion_estudiantes?_format=json&field_user_espaciomaker_target_id_entityreference_filter='+sede.id);
+        // let response = await axios.get(axios.defaults.baseURL+'/json/evaluacion_estudiantes?_format=json&field_user_espaciomaker_target_id_entityreference_filter='+sede.id);
+        let response = await axios.get(axios.defaults.baseURL+'/dashboard/json/evaluacion_estudiantes_'+sede.id+'.json');
         let rubricas_sede = response.data;
         console.log(rubricas_sede);
         commit('SET_rubricas',{sede,rubricas_sede});
@@ -203,7 +209,8 @@ export default new Vuex.Store({
       if (Object.entries(state.horario).length == 0) {
         state.cargando = true;
         //let response = (process.env.NODE_ENV == 'production') ? await axios.get(axios.defaults.baseURL+'/json/horario-grupos?_format=json') : await axios.get('/json.html');
-        let response = await axios.get(axios.defaults.baseURL+'/json/horario-grupos?_format=json');
+        // let response = await axios.get(axios.defaults.baseURL+'/json/horario-grupos?_format=json');
+        let response = await axios.get(axios.defaults.baseURL+'/dashboard/json/horarios.json');
         
         //let response = await axios.get('/json.html');
         let horario = response.data;
@@ -228,7 +235,8 @@ export default new Vuex.Store({
       if (Object.entries(state.personal).length == 0) {
         state.cargando = true;
         //let response = (process.env.NODE_ENV == 'production') ? await axios.get(axios.defaults.baseURL+'/json/personal-grupos?_format=json') : await axios.get('/json.html');
-        let response = await axios.get(axios.defaults.baseURL+'/json/personal?_format=json');
+        // let response = await axios.get(axios.defaults.baseURL+'/json/personal?_format=json');
+        let response = await axios.get(axios.defaults.baseURL+'/dashboard/json/personal.json');
         
         //let response = await axios.get('/json.html');
         let personal = response.data;
@@ -249,7 +257,8 @@ export default new Vuex.Store({
     try {
       //devuelvo promesa para que cargar.vue pueda esperar antes de llamar al siguiente
       return new Promise((resolve,reject) => {
-      axios.get(axios.defaults.baseURL+'/json/evaluacion_estudiantes?_format=json&field_user_espaciomaker_target_id_entityreference_filter='+sede.id)
+      // axios.get(axios.defaults.baseURL+'/json/evaluacion_estudiantes?_format=json&field_user_espaciomaker_target_id_entityreference_filter='+sede.id)
+      axios.get(axios.defaults.baseURL+'/dashboard/json/evaluacion_estudiantes_'+sede.id+'.json')
       .then(function(response){
         resolve(response);
         console.log("cargo:"+JSON.parse(response.data));

@@ -1,15 +1,18 @@
 <template>
 <v-app>
-   <v-app-bar v-if="$route.name!=='cargar' && !loading" app style="background: #bd1919; z-index:22">
+  <div v-if="logueado && $route.name !=='cargar'">
+   <v-app-bar v-if="$route.name !=='cargar'  && !loading" app style="background: #bd1919; z-index:22">
       <v-app-bar-nav-icon class="text-white" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title class="text-white">Visualizador por sedes 
         <span class="selsede" v-if="selectedSede.sede">{{selectedSede.sede}}</span>
         <span class="selsede" v-else>{{selectedSede}}</span>
-      
+        <!-- ver una computed -->
+        Actualizado al: <span v-if="ult_act.r2d2_date" class="selsede">{{ult_act.r2d2_date}}</span>
+
        </v-toolbar-title>
     </v-app-bar>
   
-    <v-navigation-drawer hide-overlay v-if="$route.name!=='cargar'  && !loading" v-model="drawer" app>
+    <v-navigation-drawer hide-overlay v-if="$route.name !=='cargar' && !loading" v-model="drawer" app>
       <v-img :src="require('./assets/logo_red_maker.png')"></v-img>
       
       <v-list >
@@ -47,7 +50,14 @@
 
       </v-container>
     </v-main>
-
+  </div>
+  <div v-else>
+    <v-main>
+      <v-container>
+        <router-view></router-view>
+      </v-container>
+    </v-main>
+  </div>
 
 </v-app>
 </template>
@@ -57,6 +67,7 @@
 import eventHub from '@/eventHub'
 import {mapState} from 'vuex';
 import cargar from './views/cargar.vue'
+
 export default {
   data:()=>{
     return{
@@ -71,7 +82,14 @@ mounted(){
 //console.log(this.checkdata());
 },
 computed:{
-  ...mapState(['rubricas_sede','selectedSede'])
+  ...mapState(['rubricas_sede','selectedSede','personal','logueado']),
+  ult_act(){
+    if (this.personal.length > 0) {
+      return this.personal.slice(-1)[0]
+    }else{
+      return {r2d2_date:0}
+    }
+  }
 },
 methods:{
   cargaOk(){
@@ -181,8 +199,8 @@ localforage.ready().then(function() {
      padding:0px;
   }
   .selsede{
-    background: #FFF;
-    color: red;
+    background: #26958a;
+    color: #ffffff;
     padding: 10px;
   }
 </style>

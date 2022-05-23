@@ -57,8 +57,9 @@ return Math.round((val - in_min) * (out_max - out_min) / (in_max - in_min) + out
         //window.mysede = JSON.parse(JSON.stringify(this.trayectos));//clona a otro con igual hace ref
         window.mysede = this.rubricas_sede//por mas que haga ref al ser solo lectura puedo modificar este
         for (const sede of this.sedes) {
-          let response = await axios.get(axios.defaults.baseURL+'/json/evaluacion_sedes?_format=json&field_user_espaciomaker_target_id_entityreference_filter='+sede.id)
-          //return response
+          //let response = await axios.get(axios.defaults.baseURL+'/json/evaluacion_sedes?_format=json&field_user_espaciomaker_target_id_entityreference_filter='+sede.id)
+          let response = await axios.get(axios.defaults.baseURL+'/dashboard/json/evaluacion_sedes_'+sede.id+'.json')
+         //return response
           //aca llamo a otra funcion de ser necesario
           //await this.otra(response.data);//debe devolver una promise para que espere el tiempo de otra()
           

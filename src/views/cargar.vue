@@ -71,8 +71,10 @@ async cargar(){
     store.commit('Reiniciarbd');
     for (const sede of this.sedes) {
         console.log(sede);
-        console.log("URL: "+"r2d2.roboticamisiones.com"+'/json/evaluacion_estudiantes?_format=json&field_user_espaciomaker_target_id_entityreference_filter='+sede.id);
-          let response = await axios.get(axios.defaults.baseURL+'/json/evaluacion_estudiantes?_format=json&field_user_espaciomaker_target_id_entityreference_filter='+sede.id)
+        // console.log("URL: "+"r2d2.roboticamisiones.com"+'/json/evaluacion_estudiantes?_format=json&field_user_espaciomaker_target_id_entityreference_filter='+sede.id);
+          // let response = await axios.get(axios.defaults.baseURL+'/json/evaluacion_estudiantes?_format=json&field_user_espaciomaker_target_id_entityreference_filter='+sede.id)
+          // let response = await axios.get(axios.defaults.baseURL+'/json/evaluacion_estudiantes?_format=json&field_user_espaciomaker_target_id_entityreference_filter='+sede.id+'.json')
+          let response = await axios.get(axios.defaults.baseURL+'/dashboard/json/evaluacion_estudiantes_'+sede.id+'.json')
           //let dato = response.data;
           console.log("resp del serv: ",response.data);
             //if(dato){
@@ -141,7 +143,9 @@ redirect(){
 },
 cargadatoSede(sede){
 return new Promise((resolve,reject) => {
-        axios.get(axios.defaults.baseURL+'/json/evaluacion_sedes?_format=json&field_user_espaciomaker_target_id_entityreference_filter='+sede.id)
+        //axios.get(axios.defaults.baseURL+'/json/evaluacion_sedes?_format=json&field_user_espaciomaker_target_id_entityreference_filter='+sede.id)
+        axios.get(axios.defaults.baseURL+'/dashboard/json/evaluacion_sedes_'+sede.id+'.json')
+        
         .then(function(response){
         console.log('me cargue');
         resolve(response);

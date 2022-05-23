@@ -423,7 +423,8 @@ colores: ((value, key, item) => {
 this.isBusy = true;
 try{
       //la URL base ya esta cargada en main.js (axios.baseURL)
-      let response = await axios.get(axios.defaults.baseURL+'/json/evaluacion_sedes?_format=json&field_user_espaciomaker_target_id_entityreference_filter='+sede.id);
+      //let response = await axios.get(axios.defaults.baseURL+'/json/evaluacion_sedes?_format=json&field_user_espaciomaker_target_id_entityreference_filter='+sede.id);
+      let response = await axios.get(axios.defaults.baseURL+'/dashboard/json/evaluacion_sedes_'+sede.id+'.json');
       this.dato_sede = response.data;
       console.log(response.data);
       this.getDatosSede(sede.id);
