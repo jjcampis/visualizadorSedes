@@ -46,6 +46,26 @@
 <v-row v-show="showcharts">
  <v-col  cols="12" md="12">
    <b-collapse v-model="psVisible" visible id="collapse-2" class="mt-2">
+
+<v-btn-toggle
+          v-model="toggle_exclusive"
+          rounded
+          class="d-flex align-start"
+        >
+          <v-btn value="todos">
+            <v-icon>mdi-sigma</v-icon> Todos <b-badge variant="light">4</b-badge>
+          </v-btn>
+          <v-btn value="pedagogicos">
+            <v-icon>mdi-school</v-icon> pedagogicos
+          </v-btn>
+          <v-btn value="programadores">
+            <v-icon>mdi-emoticon-cool-outline</v-icon> Programadores
+          </v-btn>
+          <v-btn value="tecnicos">
+            <v-icon> mdi-account-hard-hat</v-icon> Tecnicos
+          </v-btn>
+        </v-btn-toggle>
+
 <b-table-simple class="b-table-sticky-header-ac" sticky-header striped small responsive>
       <b-thead head-variant="dark">
             <tr>
@@ -411,6 +431,11 @@ span.se {border: 2px solid #00adff;
     color: #bd1919;
     font-weight: bold;}
 
+    .v-btn-toggle>.v-btn.v-btn--active {
+    color:#FFF !important;
+    opacity: 1;
+    background: #bd1919;
+}
 </style>>
 
 </style>
