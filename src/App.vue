@@ -1,8 +1,11 @@
 <template>
-<v-app>
+<v-app :class="[$route.name =='cargar' ? 'fondoVerde' : 'fondoBlanco']">
   <div v-if="logueado && $route.name !=='cargar'">
    <v-app-bar v-if="$route.name !=='cargar'  && !loading" app style="background: #bd1919; z-index:22">
-      <v-app-bar-nav-icon class="text-white" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon class="text-white" @click.stop="drawer = !drawer" style="padding: 25px;
+    background: #26958a;
+    border-radius: 0px 20px 20px 0px;
+    left: -4px;"></v-app-bar-nav-icon>
       <v-toolbar-title class="text-white">Visualizador por sedes 
         <span class="selsede" v-if="selectedSede.sede">{{selectedSede.sede}}</span>
         <span class="selsede" v-else>{{selectedSede}}</span>
@@ -14,7 +17,8 @@
   
     <v-navigation-drawer hide-overlay v-if="$route.name !=='cargar' && !loading" v-model="drawer" app>
       <v-img :src="require('./assets/logo_red_maker.png')"></v-img>
-      
+      <b style="color: #26958a;">DASHBOARD</b>
+      <p>Version: 2.2.23</p>
       <v-list >
         <v-list-item to="/"><v-list-item-title>General</v-list-item-title></v-list-item>
         <!-- <v-list-item to="/newhome"><v-list-item-title>Preinscriptos**</v-list-item-title></v-list-item> -->
@@ -22,8 +26,8 @@
         <v-list-item to="/personal"><v-list-item-title>Personal</v-list-item-title></v-list-item>
         <v-list-item to="/cargar"><v-list-item-title>Actualizar - Datos</v-list-item-title></v-list-item>
         <!-- <v-list-item to="/about"><v-list-item-title>Asistencias</v-list-item-title></v-list-item> -->
-        <!-- <v-list-item to="/rubricaT"><v-list-item-title>Rubrica Estudiantes</v-list-item-title></v-list-item> -->
-        <!-- <v-list-item to="/rubG"><v-list-item-title>Rubrica Sedes</v-list-item-title></v-list-item> -->
+        <v-list-item to="/rubricaT"><v-list-item-title>Rubrica Estudiantes</v-list-item-title></v-list-item>
+        <v-list-item to="/rubG"><v-list-item-title>Rubrica Sedes</v-list-item-title></v-list-item>
       </v-list>
     </v-navigation-drawer>
   
@@ -80,6 +84,7 @@ export default {
 mounted(){
 //console.log(this.databaseExists('dashboard_red_maker'));
 //console.log(this.checkdata());
+ console.log('nuevo contenido 123-dani');
 },
 computed:{
   ...mapState(['rubricas_sede','selectedSede','personal','logueado']),
@@ -152,6 +157,12 @@ localforage.ready().then(function() {
 </script>
 
 <style lang="less">
+.fondoVerde{
+  background: #26958a !important;
+}
+.fondoBlanco{
+  background: #FFF !important;
+}
 .fade-enter-active,
 .fade-leave-active  {
   transition: opacity 3s ease;

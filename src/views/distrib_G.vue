@@ -111,9 +111,58 @@
                           <b-row no-gutters align-v="baseline" class="border">
                             <b-col cols="12" class="px-0 py-1 min">
                               <p class="mb-0"><b class="dash-b"><span class="text-white color1 py-0">AU{{dato.hr_aula.slice(-1)}}</span> {{dato.hr_trayecto.slice(7)}}</b></p>
-                              <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hL'+index">
-                              <p class="nomfac my-0 text-dark">{{facilitador}}</p> 
+                              <!-- <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hL'+index"> -->
+                                
+                                <span v-if="dato.hr_facilitador_export.length == 0">
+                                <span v-for="(facilitadorn, index) in dato.hr_facilitador.split(',')" :key="'hhL'+index">
+                                  <p class="nomfac my-0 text-dark">{{facilitadorn}}</p>
+                                </span>
                               </span>
+
+                              <span v-else v-for="(facilitador, index) in dato.hr_facilitador_export" :key="'hL'+index">
+                              <p class="nomfac my-0 text-dark">{{facilitador.ps_apellido}} {{facilitador.ps_nombre}} 
+                                <span v-for="(perfil,index) in facilitador.ps_perfil" :key="'pL'+index">
+                                      <v-tooltip  v-if="perfil == 'Pedagógico'" bottom>
+                                          <template v-slot:activator="{ on, attrs }">
+                                            <v-icon
+                                              class="redmaker-icon"
+                                              v-bind="attrs"
+                                              v-on="on"
+                                            >
+                                              mdi-school
+                                            </v-icon>
+                                          </template>
+                                          <span>Pedagógico</span>
+                                        </v-tooltip>
+                                      
+                                      <v-tooltip  v-if="perfil == 'Programador'" bottom>
+                                          <template v-slot:activator="{ on, attrs }">
+                                            <v-icon
+                                              class="programador-icon"
+                                              v-bind="attrs"
+                                              v-on="on"
+                                            >
+                                              mdi-emoticon-cool-outline
+                                            </v-icon>
+                                          </template>
+                                          <span>Programador</span>
+                                        </v-tooltip>
+                                        <v-tooltip  v-if="perfil == 'Técnico'" bottom>
+                                          <template v-slot:activator="{ on, attrs }">
+                                            <v-icon
+                                              class="tecnico-icon"
+                                              v-bind="attrs"
+                                              v-on="on"
+                                            >
+                                              mdi-account-hard-hat
+                                            </v-icon>
+                                          </template>
+                                          <span>Técnico</span>
+                                        </v-tooltip>
+                                  </span>
+                                </p>
+                              </span>
+                              
 
                             </b-col>
                           </b-row>
@@ -133,9 +182,57 @@
                           <b-row no-gutters align-v="baseline" class="border">
                             <b-col cols="12" class="px-0 py-1 min">
                               <p class="mb-0"><b class="dash-b"><span class="text-white color1 py-0">AU{{dato.hr_aula.slice(-1)}}</span>{{dato.hr_trayecto.slice(7)}}</b></p>
-                              <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hM'+index">
-                              <p class="nomfac my-0 text-dark">{{facilitador}}</p>
+                              
+                               <span v-if="dato.hr_facilitador_export.length == 0">
+                                <span v-for="(facilitadorn, index) in dato.hr_facilitador.split(',')" :key="'hhM'+index">
+                                  <p class="nomfac my-0 text-dark">{{facilitadorn}}</p>
+                                </span>
                               </span>
+
+                              <span v-else v-for="(facilitador, index) in dato.hr_facilitador_export" :key="'hM'+index">
+                              <p class="nomfac my-0 text-dark">{{facilitador.ps_apellido}} {{facilitador.ps_nombre}} 
+                                <span v-for="(perfil,index) in facilitador.ps_perfil" :key="'pM'+index">
+                                      <v-tooltip  v-if="perfil == 'Pedagógico'" bottom>
+                                          <template v-slot:activator="{ on, attrs }">
+                                            <v-icon
+                                              class="redmaker-icon"
+                                              v-bind="attrs"
+                                              v-on="on"
+                                            >
+                                              mdi-school
+                                            </v-icon>
+                                          </template>
+                                          <span>Pedagógico</span>
+                                        </v-tooltip>
+                                      
+                                      <v-tooltip  v-if="perfil == 'Programador'" bottom>
+                                          <template v-slot:activator="{ on, attrs }">
+                                            <v-icon
+                                              class="programador-icon"
+                                              v-bind="attrs"
+                                              v-on="on"
+                                            >
+                                              mdi-emoticon-cool-outline
+                                            </v-icon>
+                                          </template>
+                                          <span>Programador</span>
+                                        </v-tooltip>
+                                        <v-tooltip  v-if="perfil == 'Técnico'" bottom>
+                                          <template v-slot:activator="{ on, attrs }">
+                                            <v-icon
+                                              class="tecnico-icon"
+                                              v-bind="attrs"
+                                              v-on="on"
+                                            >
+                                              mdi-account-hard-hat
+                                            </v-icon>
+                                          </template>
+                                          <span>Técnico</span>
+                                        </v-tooltip>
+                                  </span>
+                                </p>
+                              </span>
+
                             </b-col>
                           </b-row>
                     </b-container>
@@ -154,9 +251,57 @@
                           <b-row no-gutters align-v="baseline" class="border">
                             <b-col cols="12" class="px-0 py-1 min">
                               <p class="mb-0"><b class="dash-b"><span class="text-white color1 py-0">AU{{dato.hr_aula.slice(-1)}}</span>{{dato.hr_trayecto.slice(7)}}</b></p>
-                              <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hX'+index">
-                              <p class="nomfac my-0 text-dark">{{facilitador}}</p>
+                              
+                               <span v-if="dato.hr_facilitador_export.length == 0">
+                                <span v-for="(facilitadorn, index) in dato.hr_facilitador.split(',')" :key="'hhX'+index">
+                                  <p class="nomfac my-0 text-dark">{{facilitadorn}}</p>
+                                </span>
                               </span>
+
+                              <span v-else v-for="(facilitador, index) in dato.hr_facilitador_export" :key="'hX'+index">
+                              <p class="nomfac my-0 text-dark">{{facilitador.ps_apellido}} {{facilitador.ps_nombre}} 
+                                <span v-for="(perfil,index) in facilitador.ps_perfil" :key="'pX'+index">
+                                      <v-tooltip  v-if="perfil == 'Pedagógico'" bottom>
+                                          <template v-slot:activator="{ on, attrs }">
+                                            <v-icon
+                                              class="redmaker-icon"
+                                              v-bind="attrs"
+                                              v-on="on"
+                                            >
+                                              mdi-school
+                                            </v-icon>
+                                          </template>
+                                          <span>Pedagógico</span>
+                                        </v-tooltip>
+                                      
+                                      <v-tooltip  v-if="perfil == 'Programador'" bottom>
+                                          <template v-slot:activator="{ on, attrs }">
+                                            <v-icon
+                                              class="programador-icon"
+                                              v-bind="attrs"
+                                              v-on="on"
+                                            >
+                                              mdi-emoticon-cool-outline
+                                            </v-icon>
+                                          </template>
+                                          <span>Programador</span>
+                                        </v-tooltip>
+                                        <v-tooltip  v-if="perfil == 'Técnico'" bottom>
+                                          <template v-slot:activator="{ on, attrs }">
+                                            <v-icon
+                                              class="tecnico-icon"
+                                              v-bind="attrs"
+                                              v-on="on"
+                                            >
+                                              mdi-account-hard-hat
+                                            </v-icon>
+                                          </template>
+                                          <span>Técnico</span>
+                                        </v-tooltip>
+                                  </span>
+                                </p>
+                              </span>
+
                             </b-col>
                           </b-row>
                     </b-container>
@@ -175,9 +320,57 @@
                           <b-row no-gutters align-v="baseline" class="border">
                             <b-col cols="12" class="px-0 py-1 min">
                               <p class="mb-0"><b class="dash-b"><span class="text-white color1 py-0">AU{{dato.hr_aula.slice(-1)}}</span>{{dato.hr_trayecto.slice(7)}}</b></p>
-                              <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hJ'+index">
-                              <p class="nomfac my-0 text-dark">{{facilitador}}</p>
+                              
+                               <span v-if="dato.hr_facilitador_export.length == 0">
+                                <span v-for="(facilitadorn, index) in dato.hr_facilitador.split(',')" :key="'hhJ'+index">
+                                  <p class="nomfac my-0 text-dark">{{facilitadorn}}</p>
+                                </span>
                               </span>
+
+                              <span v-else v-for="(facilitador, index) in dato.hr_facilitador_export" :key="'hJ'+index">
+                              <p class="nomfac my-0 text-dark">{{facilitador.ps_apellido}} {{facilitador.ps_nombre}} 
+                                <span v-for="(perfil,index) in facilitador.ps_perfil" :key="'pJ'+index">
+                                      <v-tooltip  v-if="perfil == 'Pedagógico'" bottom>
+                                          <template v-slot:activator="{ on, attrs }">
+                                            <v-icon
+                                              class="redmaker-icon"
+                                              v-bind="attrs"
+                                              v-on="on"
+                                            >
+                                              mdi-school
+                                            </v-icon>
+                                          </template>
+                                          <span>Pedagógico</span>
+                                        </v-tooltip>
+                                      
+                                      <v-tooltip  v-if="perfil == 'Programador'" bottom>
+                                          <template v-slot:activator="{ on, attrs }">
+                                            <v-icon
+                                              class="programador-icon"
+                                              v-bind="attrs"
+                                              v-on="on"
+                                            >
+                                              mdi-emoticon-cool-outline
+                                            </v-icon>
+                                          </template>
+                                          <span>Programador</span>
+                                        </v-tooltip>
+                                        <v-tooltip  v-if="perfil == 'Técnico'" bottom>
+                                          <template v-slot:activator="{ on, attrs }">
+                                            <v-icon
+                                              class="tecnico-icon"
+                                              v-bind="attrs"
+                                              v-on="on"
+                                            >
+                                              mdi-account-hard-hat
+                                            </v-icon>
+                                          </template>
+                                          <span>Técnico</span>
+                                        </v-tooltip>
+                                  </span>
+                                </p>
+                              </span>
+
                             </b-col>
                           </b-row>
                     </b-container>    
@@ -196,9 +389,57 @@
                           <b-row no-gutters align-v="baseline" class="border">
                             <b-col cols="12" class="px-0 py-1 min">
                               <p class="mb-0"><b class="dash-b"><span class="text-white color1 py-0">AU{{dato.hr_aula.slice(-1)}}</span>{{dato.hr_trayecto.slice(7)}}</b></p>
-                              <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hV'+index">
-                              <p class="nomfac my-0 text-dark">{{facilitador}}</p>
+                              
+                               <span v-if="dato.hr_facilitador_export.length == 0">
+                                <span v-for="(facilitadorn, index) in dato.hr_facilitador.split(',')" :key="'hhV'+index">
+                                  <p class="nomfac my-0 text-dark">{{facilitadorn}}</p>
+                                </span>
                               </span>
+
+                              <span v-else v-for="(facilitador, index) in dato.hr_facilitador_export" :key="'hV'+index">
+                              <p class="nomfac my-0 text-dark">{{facilitador.ps_apellido}} {{facilitador.ps_nombre}} 
+                                <span v-for="(perfil,index) in facilitador.ps_perfil" :key="'pV'+index">
+                                      <v-tooltip  v-if="perfil == 'Pedagógico'" bottom>
+                                          <template v-slot:activator="{ on, attrs }">
+                                            <v-icon
+                                              class="redmaker-icon"
+                                              v-bind="attrs"
+                                              v-on="on"
+                                            >
+                                              mdi-school
+                                            </v-icon>
+                                          </template>
+                                          <span>Pedagógico</span>
+                                        </v-tooltip>
+                                      
+                                      <v-tooltip  v-if="perfil == 'Programador'" bottom>
+                                          <template v-slot:activator="{ on, attrs }">
+                                            <v-icon
+                                              class="programador-icon"
+                                              v-bind="attrs"
+                                              v-on="on"
+                                            >
+                                              mdi-emoticon-cool-outline
+                                            </v-icon>
+                                          </template>
+                                          <span>Programador</span>
+                                        </v-tooltip>
+                                        <v-tooltip  v-if="perfil == 'Técnico'" bottom>
+                                          <template v-slot:activator="{ on, attrs }">
+                                            <v-icon
+                                              class="tecnico-icon"
+                                              v-bind="attrs"
+                                              v-on="on"
+                                            >
+                                              mdi-account-hard-hat
+                                            </v-icon>
+                                          </template>
+                                          <span>Técnico</span>
+                                        </v-tooltip>
+                                  </span>
+                                </p>
+                              </span>
+
                             </b-col>
                           </b-row>
                     </b-container>      
@@ -217,9 +458,57 @@
                           <b-row no-gutters align-v="baseline" class="border">
                             <b-col cols="12" class="px-0 py-1 min">
                               <p class="mb-0"><b class="dash-b"><span class="text-white color1 py-0">AU{{dato.hr_aula.slice(-1)}}</span>{{dato.hr_trayecto.slice(7)}}</b></p>
-                              <span v-for="(facilitador, index) in dato.hr_facilitador.split(',')" :key="'hS'+index">
-                              <p class="nomfac my-0 text-dark">{{facilitador}}</p>
+                              
+                               <span v-if="dato.hr_facilitador_export.length == 0">
+                                <span v-for="(facilitadorn, index) in dato.hr_facilitador.split(',')" :key="'hhS'+index">
+                                  <p class="nomfac my-0 text-dark">{{facilitadorn}}</p>
+                                </span>
                               </span>
+
+                              <span v-else v-for="(facilitador, index) in dato.hr_facilitador_export" :key="'hS'+index">
+                              <p class="nomfac my-0 text-dark">{{facilitador.ps_apellido}} {{facilitador.ps_nombre}} 
+                                <span v-for="(perfil,index) in facilitador.ps_perfil" :key="'pS'+index">
+                                      <v-tooltip  v-if="perfil == 'Pedagógico'" bottom>
+                                          <template v-slot:activator="{ on, attrs }">
+                                            <v-icon
+                                              class="redmaker-icon"
+                                              v-bind="attrs"
+                                              v-on="on"
+                                            >
+                                              mdi-school
+                                            </v-icon>
+                                          </template>
+                                          <span>Pedagógico</span>
+                                        </v-tooltip>
+                                      
+                                      <v-tooltip  v-if="perfil == 'Programador'" bottom>
+                                          <template v-slot:activator="{ on, attrs }">
+                                            <v-icon
+                                              class="programador-icon"
+                                              v-bind="attrs"
+                                              v-on="on"
+                                            >
+                                              mdi-emoticon-cool-outline
+                                            </v-icon>
+                                          </template>
+                                          <span>Programador</span>
+                                        </v-tooltip>
+                                        <v-tooltip  v-if="perfil == 'Técnico'" bottom>
+                                          <template v-slot:activator="{ on, attrs }">
+                                            <v-icon
+                                              class="tecnico-icon"
+                                              v-bind="attrs"
+                                              v-on="on"
+                                            >
+                                              mdi-account-hard-hat
+                                            </v-icon>
+                                          </template>
+                                          <span>Técnico</span>
+                                        </v-tooltip>
+                                  </span>
+                                </p>
+                              </span>
+
                             </b-col>
                           </b-row>
                     </b-container>      

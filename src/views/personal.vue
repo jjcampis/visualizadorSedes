@@ -8,7 +8,7 @@
   <v-col  cols="12" md="12">
     <v-card elevation="3" class="h-100" style="min-height:340px;">
       <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-      <apexchart v-if="showcharts" ref="barras" class="apex-moco" :type="type" height="300" width="100%" :options="chartOptions" :series="cant_pers" @click="get_S" @animationEnd="testb(0,2)" @dataPointSelection="clickeado"></apexchart>
+      <apexchart v-if="showcharts" ref="barras" class="apex-moco" :type="type" height="300" width="100%" :options="chartOptions" :series="cant_pers" @click="get_S" @animationEnd="testb(0,2)" @dataPointSelection="clickeado" :lazyUpdate="true"></apexchart>
       </div>
     </v-card>
   </v-col>
@@ -46,29 +46,76 @@
 <v-row v-show="showcharts">
  <v-col  cols="12" md="12">
    <b-collapse v-model="psVisible" visible id="collapse-2" class="mt-2">
-
-<v-btn-toggle
-          v-model="toggle_exclusive"
+     <div class="d-flex justify-content-between">
+        <v-btn-toggle
+          v-model="fTipo"
           rounded
-          class="d-flex align-start"
         >
-          <v-btn value="todos">
-            <v-icon>mdi-sigma</v-icon> Todos <b-badge variant="light">4</b-badge>
+          <v-btn value="Todos">
+            <v-icon :class="{'text-white':fTipo == 'Todos'}">mdi-sigma</v-icon> Todos
           </v-btn>
-          <v-btn value="pedagogicos">
-            <v-icon>mdi-school</v-icon> pedagogicos
+          <v-btn value="Pedagógico">
+            <v-icon :class="{'text-white':fTipo == 'Pedagógico'}">mdi-school</v-icon> pedagogicos
           </v-btn>
-          <v-btn value="programadores">
-            <v-icon>mdi-emoticon-cool-outline</v-icon> Programadores
+          <v-btn value="Programador">
+            <v-icon :class="{'text-white':fTipo == 'Programador'}">mdi-emoticon-cool-outline</v-icon> Programadores
           </v-btn>
-          <v-btn value="tecnicos">
-            <v-icon> mdi-account-hard-hat</v-icon> Tecnicos
+
+          <v-btn value="Técnico">
+            <v-icon :class="{'text-white':fTipo == 'Técnico'}"> mdi-account-hard-hat</v-icon> Tecnicos
           </v-btn>
         </v-btn-toggle>
+          <div v-if="personalFTipo != null && Object.entries(personalFTipo).length > 0"
+            style="
+                display: flex;
+                flex-grow: 1;">
+          <v-badge
+          overlap
+          color="medalla"
+          :content="personalFTipo.length">
+
+          </v-badge>
+          </div>
+
+<v-select v-if="this.$route.name !='Home'"
+            style="z-index: 13"
+          :items="todassedes"
+          item-text="sede"
+          item-value="sede"
+          label="Sede"
+          v-model="sede"
+        >
+        </v-select>
+        
+        <v-btn-toggle
+          v-model="fLA"
+          rounded
+        >
+        <v-btn value="Todos">
+            <v-icon :class="{'text-white':fLA == 'Todos'}">mdi-sigma</v-icon> Todos
+          </v-btn>
+          <v-btn value="Red Maker">
+            <div>
+              <span class="rm">RM</span>
+            </div>
+          </v-btn>
+          <v-btn value="Conectar Igualdad">
+            <div>
+            <span  class="ci">CI</span>  
+            </div>
+          </v-btn>
+          <v-btn value="Sumá tu escuela">
+            <div>
+              <span class="se">SE</span>  
+            </div>
+          </v-btn>
+        </v-btn-toggle>
+     </div>
 
 <b-table-simple class="b-table-sticky-header-ac" sticky-header striped small responsive>
       <b-thead head-variant="dark">
             <tr>
+                <b-th>Sede</b-th>
                 <b-th>DNI</b-th>
                 <b-th>Apellido</b-th>
                 <b-th>Nombre</b-th>
@@ -87,8 +134,11 @@
                 <b-th>C.H <br > T.C 02</b-th>
             </tr>
       </b-thead>
-          <b-tbody v-if="personalF != null && Object.entries(personalF).length > 0">
-            <b-tr v-for="(pers,index) in personalF" :key="index">
+          <b-tbody v-if="personalFTipo != null && Object.entries(personalFTipo).length > 0">
+            <b-tr v-for="(pers,index) in personalFTipo" :key="index">
+              <b-td>
+                {{pers.ps_espacio_maker}}
+              </b-td>
               <b-td>
                 {{pers.ps_dni}}
               </b-td>
@@ -105,10 +155,38 @@
                 {{pers.ps_email || "red@maker.com"}}
               </b-td>
               <b-td>
-                {{pers.ps_rol}}
+                <!-- {{pers.ps_rol}} -->
+                <v-tooltip  v-if="pers.ps_rol == 'Facilitador de Sede'" bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <span v-bind="attrs" v-on="on" class="FC">
+                      FC
+                    </span>
+                  </template>
+                  <span>Facilitador de sede</span>
+                </v-tooltip>
+
+                <v-tooltip  v-if="pers.ps_rol == 'Referente de Sede'" bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <span v-bind="attrs" v-on="on" class="RS">
+                      RS
+                    </span>
+                  </template>
+                  <span>Referente de sede</span>
+                </v-tooltip>
+
+                <v-tooltip  v-if="pers.ps_rol == 'Referente de Administrativo'" bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <span v-bind="attrs" v-on="on" class="RA">
+                      RA
+                    </span>
+                  </template>
+                  <span>Referente Administrativo</span>
+                </v-tooltip>
+
               </b-td>
               <b-td style="min-width:152px">
-                <span v-for="(perfil, index) in pers.ps_perfil.split(',')" :key="'perf'+index">
+                <div v-if="Object.entries(pers).length > 0">
+                  <span v-for="(perfil, index) in pers.ps_perfil.split(',')" :key="'perf'+index">
                   <p class="iconos-rm">
                     <v-tooltip  v-if="perfil.trim() == 'Pedagógico'" bottom>
                         <template v-slot:activator="{ on, attrs }">
@@ -153,7 +231,7 @@
                   <!-- <p v-if="perfil != 'Pedagógico' || perfil != ' Programador'" class="nomfac my-0 text-dark">{{perfil}}</p> -->
                   
                 </span>
-
+                </div>
               </b-td>
               <b-td style="min-width:152px">
                 <span v-for="(LA, index) in pers.ps_linea_de_accion.split(',')" :key="'LA'+index">
@@ -206,6 +284,15 @@
               </b-td>
             </b-tr>
           </b-tbody>
+          <b-tbody v-else>
+            <b-tr>
+              <b-td colspan="16" style="padding: 70px">
+                <span>
+                  No Existen Datos
+                </span>
+              </b-td>
+            </b-tr>
+          </b-tbody>
       </b-table-simple>
    </b-collapse>
 </v-col>
@@ -233,8 +320,10 @@ data:()=>{
   cambio: false,
   dpclick:false,
   cantP: {},
-  sede:'Todo',
+  sede:'Alba Posse',
   psVisible:true,
+  fTipo:'Todos',
+  fLA:'Todos',
   chartOptions: data_personal
   }
 },
@@ -250,20 +339,69 @@ computed:{
         return []
       }
     },
+    todassedes(){
+      if(Object.keys(this.rubricas_G).length > 0){
+      let vec = Object.keys(this.rubricas_G).map((x)=>{return x});
+      vec.unshift('Todo');
+      return vec
+      }else{
+        return []
+      }
+      },
     personalF(){
       if(this.sede != 'Todo'){
-      if(this.personal.length > 0){
-                //return Object.entries(this.personal).filter(x=>x[1].hr_espaciomaker == this.sede);
-            return this.personal.filter((tray) => {
-                //return tray.hr_espaciomaker.toLowerCase().includes(this.sede.toLowerCase());
-                return tray.ps_espacio_maker == this.sede;
-              })
-            
-            }else{
-                return ['no habia'];
-            }
+        if(this.personal.length > 0){
+                  //return Object.entries(this.personal).filter(x=>x[1].hr_espaciomaker == this.sede);
+              return this.personal.filter((tray) => {
+                  //return tray.hr_espaciomaker.toLowerCase().includes(this.sede.toLowerCase());
+                    return tray.ps_espacio_maker == this.sede;
+                })
+              
+              }else{
+                  return ['no habia'];
+              }
+    }else{
+      console.log("todos");
+      return this.personal.filter(x=>x.hasOwnProperty('ps_perfil'))
+      //f.filter(x=>x.hasOwnProperty('ps_perfil'))
     }
+    /*else{
+       if(this.personal.length > 0){
+                  //return Object.entries(this.personal).filter(x=>x[1].hr_espaciomaker == this.sede);
+              console.log(this.personal)
+              return Object.entries(this.personal).map(x=>x)
+              }
+    }*/
 
+    },
+    personalFTipo(){
+      if(this.personalF != null && Object.entries(this.personalF).length > 0){
+        if (this.fTipo != undefined && this.fTipo != "Todos" || (this.fLA != undefined && this.fLA != "Todos")){
+          
+          if(this.fTipo != undefined && this.fTipo != "Todos" ){
+            var filtro = this.personalF.filter(pers=> pers.ps_perfil.includes(this.fTipo))
+            //return filtro
+            }else{//no hay ningun filtro o son todos
+              filtro = this.personalF
+            }
+           if (this.fLA != undefined && this.fLA != "Todos"){
+             if(filtro.length > 0){
+                return filtro.filter(pers=> pers.ps_linea_de_accion.includes(this.fLA))   
+             }
+           }
+           return filtro
+          /*
+          if (this.fLA != undefined && this.fLA != ""){//si no esta vacio el filtro linea de accion lo filtro
+            let preF = this.personalF.filter(pers=> pers.ps_perfil.includes(this.fTipo))
+            return preF.filter(pers=> pers.ps_linea_de_accion.includes(this.fLA))
+          }else if(this.fTipo != undefined && this.fTipo != "Todos" ){
+            return this.personalF.filter(pers=> pers.ps_perfil.includes(this.fTipo))
+          }*/
+        
+        }else{//no hay ningun filtro o son todos
+          return this.personalF
+        }
+      }
     },
     cant_horasP(){
       if (this.personal.length > 0){
@@ -407,7 +545,17 @@ watch:{
     },
 }
 </script>
-
+<style>
+.medalla{
+  background: #26958a;
+}
+.redmaker-icon{
+  color: #bd1919 !important;
+}
+.programador-icon, .tecnico-icon{
+  color: #17a2b8 !important;
+}
+</style>
 <style scoped>
 .b-table-sticky-header-ac{
   overflow-y: auto;
@@ -417,14 +565,17 @@ watch:{
   color: #bd1919 !important;
 }
 .programador-icon, .tecnico-icon{
-  color: #26958a !important;
+  color: #17a2b8 !important;
 }
 p.iconos-rm {display: inline-flex;}
 
 .iconos-rm i, .iconos-rm span {margin: 0 4px;}
-span.ci {border: 2px solid #00adff;padding: 2px;border-radius: 5px;background: #00adff;color: #fff;font-weight: bold;}
+span.FC {border: 2px solid #c53434;padding: 2px;border-radius: 5px;background: #f1f1f1;color: #c53434;font-weight: bold;}
+span.RA {border: 2px solid #17a2b8;padding: 2px;border-radius: 5px;background: #17a2b8;color: #fff;font-weight: bold;}
+span.RS {border: 2px solid #c53434;padding: 2px;border-radius: 5px;background: #c53434;color: #fff;font-weight: bold;}
+span.ci {border: 2px solid #17a2b8;padding: 2px;border-radius: 5px;background: #17a2b8;color: #fff;font-weight: bold;}
 span.rm {border: 2px solid #c53434;padding: 2px;border-radius: 5px;background: #c53434;color: #fff;font-weight: bold;}
-span.se {border: 2px solid #00adff;
+span.se {border: 2px solid #17a2b8;
     padding: 2px;
     border-radius: 5px;
     background: #ffffff;
@@ -436,6 +587,4 @@ span.se {border: 2px solid #00adff;
     opacity: 1;
     background: #bd1919;
 }
-</style>>
-
 </style>

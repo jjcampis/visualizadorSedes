@@ -64,6 +64,7 @@ export default{
                this.$router.push('/'); 
             }else{
                console.log('usuario mal');
+               console.log('cambiazooio');
             }
          }
       }

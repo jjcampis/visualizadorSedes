@@ -234,6 +234,22 @@ if(filtrado.length > 0){
   })*/
   },
 
+recursos_materiales(dato_sede,sede){//dato_sede es el dato crudo, sede es la sede en si
+this.trayectitos_sedes[sede]['recursos'] = {
+  'nuestraspc' : dato_sede[0].field_em_pc_nuestras_export,
+  'otrospc': dato_sede[0].field_em_pc_de_otros_export,
+  'teleco': dato_sede[0].field_em_teleconferencia_export,
+  'tv': dato_sede[0].field_em_tv_export,
+  'robotica': dato_sede[0].field_em_kits_robotica_export,
+  'futbolistas': dato_sede[0].field_em_kits_futbolistas_export,
+  'soldador': dato_sede[0].field_em_kit_soldador_export,
+  'internet': dato_sede[0].field_em_internet_export,
+  'impresoras': dato_sede[0].field_em_impresora3d_export
+  }
+
+//console.log('recursos->',this.trayectitos_sedes['recursos']);
+},
+
 
 añadir_claves_trayectos(dato_sede,sede){
   //tr,tk...
@@ -287,6 +303,7 @@ llaves[clave].forEach(element => {
 //testing///
 //this.table_trayectitosP.push(this.table_trayectitos[0]) 
 //console.log(this.table_trayectitos);
+this.recursos_materiales(dato_sede,sede);
 let dato = this.trayectitos_sedes[sede];
 console.log('dato a enviar:',dato,sede); 
 store.commit('SET_rubricasG',{sede,dato})
@@ -556,7 +573,9 @@ store.commit('SET_rubricasG',{sede,dato})
         }
     }
 };
-console.log("la sede:",sede);
+
+this.recursos_materiales(dato_sede,sede);
+console.log("la sede:",sede,' ',this.trayectitos_sedes[sede]);
   store.commit('SET_rubricasG',{sede,dato})
 }
 },

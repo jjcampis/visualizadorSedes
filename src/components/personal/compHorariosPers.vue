@@ -1,6 +1,6 @@
 <template>
     <div>
-       <apexchart :key="createdH" ref="barritash" v-show="showchartsH && !cargando" class="apex-moco" :type="type" height="300" width="100%" :options="chartOptionsHP" :series="vecHP" @dataPointSelection="get_H"></apexchart>
+       <apexchart :key="createdH" ref="barritash" v-show="showchartsH && !cargando" class="apex-moco" :type="type" height="300" width="100%" :options="chartOptionsHP" :series="vecHP" @dataPointSelection="get_H" :lazyUpdate="true"></apexchart>
     </div>
 </template>
 

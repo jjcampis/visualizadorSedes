@@ -370,7 +370,7 @@ chartOptions: {
               tickPlacement: 'on',
               labels:{
                 style:{
-                        fontSize: '8.5px'
+                        fontSize: '6.5px'
                       }
               }
             },

@@ -6,7 +6,7 @@
 
 <script>
 export default {
-    props:['series','etiquetas'],
+    props:['series','etiquetas','op'],
     methods:{
       refresh(){
         console.log("clicked")
@@ -16,10 +16,26 @@ export default {
     watch:{
       series(antes,ahora){
         this.refresh();
-      }
+      },
+      //leer las props ni bien carga
+      // https://stackoverflow.com/questions/42722433/accessing-props-in-vue-component-data-function
+      op: {
+                // Run as soon as the component loads
+                immediate: true,
+                handler() {
+                    // Set the 'somevar' value as props
+                    //this.opcion = this.op;
+                    if (this.op == 'academica') {
+                      //alert('recibido'),
+                      // this.chartOptionsp.colors = ['#9ce698', '#fcf8e3', '#757575', '#f2dede']
+                      this.chartOptionsp.colors = ['#71a96e', '#f7f468', '#757575', '#f57777']
+                    }
+                }
+            }
     },
     data: function() {
       return {
+        //opcion: '',
         //seriesp: [44, 55, 13, 43],
         chartOptionsp: {
             chart: {
@@ -43,7 +59,10 @@ export default {
             },
             // colors: ['#690E2C', '#EC6592', '#E91E63', '#692D41','#B5184C'],
             // colors: ['#700303', '#BDBB2B', '#BD1919', '#0676BD','#094870'],//triada
-            colors: ['#BD4F22', '#5EBD2B', '#BD1919', '#06BDA1','#BD0FBD'],//doble separacion complementaria
+            
+              colors: ['#BD4F22', '#5EBD2B', '#BD1919', '#06BDA1','#BD0FBD'],//doble separacion complementaria
+            
+            //colors: ['#9ce698', '#fcf8e3', '#FFFFFF', '#f2dede'],//el que pidio dani
             //labels: ['TrendKids', 'TecnoKids', 'MakerJuniors', 'TeenMakers'],
             labels: this.etiquetas,
             dataLabels:{
@@ -115,8 +134,15 @@ export default {
                 }
               }
             }],
-            /*tooltip: {
-              shared: false,
+            /* tooltip: {
+              //shared: false,
+              enabled: true,
+              style: {
+                    fontSize: '12px',
+                    fontFamily: 'Helvetica, Arial, sans-serif',
+                    fontWeight: 'bold',
+                    color: '#000'
+                },
             } */
           }
         }
@@ -124,6 +150,10 @@ export default {
 }
 </script>
 <style>
+.apexcharts-tooltip > * {
+    color: #FFF;
+    text-shadow: 0px 0px 5px #000,0px 0px 4px #000,0px 0px 3px #000;
+}
 .apexcharts-legend.apx-legend-position-right{
   align-items: flex-start;
 }

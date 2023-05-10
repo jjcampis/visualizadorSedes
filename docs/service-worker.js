@@ -14,16 +14,12 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/dashboard/5/precache-manifest.0481a741b7c160c0c38d9533d75a7ef9.js"
+  "/dashboard/precache-manifest.c6063272711dd513b8ab8702cb6848d0.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "Dashboard-Red-Maker"});
 
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
-});
+workbox.core.skipWaiting();
 
 /**
  * The workboxSW.precacheAndRoute() method efficiently caches and responds to

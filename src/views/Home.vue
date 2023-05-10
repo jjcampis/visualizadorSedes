@@ -1,15 +1,37 @@
 <template>
 <div>
+
 <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
   <v-col  cols="12" md="12">
     <v-card elevation="3" class="h-100" style="min-height:320px;">
       <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-      <apexchart v-if="showcharts" ref="barras" class="apex-moco" :type="type" height="400" width="100%" :options="chartOptions" :series="vecins" @click="get_S" @animationEnd="testb(0,2)" @dataPointSelection="clickeado"></apexchart>
+            <apexchart v-if="showcharts" type="bar" height="350" width="100%" :options="graficos_inscriptos" :series="inscriptos_graf" :lazyUpdate="true" @click="get_S" @dataPointSelection="clickeado" @animationEnd="rendered++"></apexchart>
       </div>
     </v-card>
   </v-col>
 </v-row>
 
+
+<!-- <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+  <v-col  cols="12" md="12">
+    <v-card elevation="3" class="h-100" style="min-height:320px;">
+      <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+      <apexchart v-if="showcharts" ref="barras" class="apex-moco" type="bar" height="400" width="100%" :options="chartOptions" :series="vecins" @click="get_S" @animationEnd="testb(0,2)" @dataPointSelection="clickeado" :lazyUpdate="true"></apexchart>
+      </div>
+    </v-card>
+  </v-col>
+</v-row> -->
+
+<!-- <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+  <v-col  cols="12" md="12">
+    <v-card elevation="3" class="h-100" style="min-height:320px;">
+      <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+            <apexchart v-if="showcharts" type="bar" height="350" width="100%" :options="graficos_saberes" :series="PSTs"></apexchart>
+      </div>
+    </v-card>
+  </v-col>
+</v-row>
+ -->
 <!-- <button @click="testb">clickedamo</button> -->
 <v-row v-show="$vuetify.breakpoint.mobile">
   <v-col  cols="12" md="12">
@@ -17,7 +39,7 @@
       <!-- <apexchart type="radar" height="500" width="100%" :options="radarOptions" :series="vecins"></apexchart> -->
    <!-- <div :class="[cambio ? 'chart-wrapper2' : 'stackwraper']"> -->
      <div class="chart-wrapperm">
-    <apexchart :key="created" type="bar" height="2000" :options="stackop" :series="vecins"></apexchart>
+    <apexchart :key="created" type="bar" height="2000" :options="stackop" :series="vecins" @click="get_S" @dataPointSelection="clickeado"></apexchart>
    </div>
     </v-card>
   </v-col>
@@ -38,7 +60,167 @@
 <personal></personal>
     
 
+<b-card class="py-0 px-2">
+  <b-card-header class="bot-collapse" header-tag="header" role="tab">
+    <b-button block v-b-toggle.accordion-2 variant="danger"  @click="toggleRecursos" >
+      <div class="text-h6">Recursos
+        <span v-if="!recu">
+              <v-icon class="text">
+                  mdi-chevron-up
+                </v-icon>
+            </span>
+            <span v-else>
+              <v-icon>
+                  mdi-chevron-down
+                </v-icon>  
+            </span></div>
+      
+    </b-button>
+  </b-card-header>
+  
+          <keep-alive>
+  <b-collapse class="py-0 px-0" id="accordion-2" accordion="my-accordion" role="tabpanel">
+    <b-card-body class="pt-0 px-0">
+  <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+    <v-col cols="12" md="12">
+      <v-card elevation="3" dense class="h-100 round-top mt-3" style="min-height:320px;">
+        <v-card-item>
+      <v-toolbar-title class="text-h6 red round-top">
+              Compus Nuestras
+            </v-toolbar-title>
+        </v-card-item>
+        <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+            <apexchart ref="barras" class="apex-moco" type="bar" height="400" width="100%" :options="chartEquipos" :series="recurso('nuestraspc')" :lazyUpdate="true"></apexchart>
+        </div>
+      </v-card>
+    </v-col>
+  </v-row>
 
+  <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+    <v-col cols="12" md="12">
+      <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:320px;">
+        <v-card-item>
+      <v-toolbar-title class="text-h6 red round-top">
+              Otras Compus 
+            </v-toolbar-title>
+        </v-card-item>
+        <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+            <apexchart ref="barras" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('otrospc')" :lazyUpdate="false" :visible="showcharts"></apexchart>
+        </div>
+      </v-card>
+    </v-col>
+  </v-row>
+
+  <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+    <v-col cols="12" md="12">
+      <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
+        <v-card-item>
+      <v-toolbar-title class="text-h6 red round-top">
+              Kit - Robótica
+            </v-toolbar-title>
+        </v-card-item>
+        <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+            <apexchart ref="barras" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('robotica')" :lazyUpdate="true" :visible="showcharts"></apexchart>
+        </div>
+      </v-card>
+    </v-col>
+  </v-row>
+
+    <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+    <v-col cols="12" md="12">
+      <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
+        <v-card-item>
+      <v-toolbar-title class="text-h6 red round-top">
+              Kit - Soldador
+            </v-toolbar-title>
+        </v-card-item>
+        <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+            <apexchart ref="barras" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('soldador')" :lazyUpdate="true" :visible="showcharts"></apexchart>
+        </div>
+      </v-card>
+    </v-col>
+  </v-row>
+
+  <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+    <v-col cols="12" md="12">
+      <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
+        <v-card-item>
+      <v-toolbar-title class="text-h6 red round-top">
+              Equipos - Teleconferencias
+            </v-toolbar-title>
+        </v-card-item>
+        <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+            <apexchart ref="barras" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('teleco')" :lazyUpdate="true" :visible="showcharts"></apexchart>
+        </div>
+      </v-card>
+    </v-col>
+  </v-row>
+
+    <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+    <v-col cols="12" md="12">
+      <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
+        <v-card-item>
+      <v-toolbar-title class="text-h6 red round-top">
+              Kit - TV
+            </v-toolbar-title>
+        </v-card-item>
+        <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+            <apexchart ref="barras" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('tv')" :lazyUpdate="true" :visible="showcharts"></apexchart>
+        </div>
+      </v-card>
+    </v-col>
+  </v-row>
+
+    <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+    <v-col cols="12" md="12">
+      <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
+        <v-card-item>
+      <v-toolbar-title class="text-h6 red round-top">
+              Impresoras 3D
+            </v-toolbar-title>
+        </v-card-item>
+        <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+            <apexchart ref="barras" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('impresoras')" :lazyUpdate="true" :visible="showcharts"></apexchart>
+        </div>
+      </v-card>
+    </v-col>
+  </v-row>
+
+  <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+    <v-col cols="12" md="12">
+      <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
+        <v-card-item>
+      <v-toolbar-title class="text-h6 red round-top">
+              Kit - Futbolistas
+            </v-toolbar-title>
+        </v-card-item>
+        <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+            <apexchart ref="barras" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('futbolistas')" :lazyUpdate="true" :visible="showcharts"></apexchart>
+        </div>
+      </v-card>
+    </v-col>
+  </v-row>
+
+    <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+    <v-col cols="12" md="12">
+      <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
+        <v-card-item>
+      <v-toolbar-title class="text-h6 red round-top">
+              Internet
+            </v-toolbar-title>
+        </v-card-item>
+        <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+            <apexchart ref="barras" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('internet')" :lazyUpdate="true" :visible="showcharts"></apexchart>
+        </div>
+      </v-card>
+    </v-col>
+  </v-row>
+
+    </b-card-body>
+  </b-collapse>
+          </keep-alive>
+
+</b-card>
 
 <v-row class="mt-0" v-show="showcharts">
   <v-col cols="12" md="4">
@@ -79,7 +261,7 @@
           <!-- <v-list-item-subtitle class="text-left">Cantidad de alumnos Inscriptos</v-list-item-subtitle> -->
           </v-list-item-content>
           </v-list-item>
-              <chart v-if="showcharts" ref="situacionchart" :etiquetas='campo' :series='situacionAc'></chart>
+              <chart v-if="showcharts" ref="situacionchart" :etiquetas='campo' :series='situacionAc' op='academica'></chart>
     </v-card>
   </v-col>
 
@@ -122,6 +304,9 @@
 import chart from "@/components/chart.vue";
 import horario from "@/views/distrib_G.vue";
 import personal from "@/views/personal.vue";
+//opciones (parte grafica de personal)
+import data_inscriptos from '@/components/datas/cantidad_inscriptos';
+import data_saberes from '@/components/datas/cantidad_saberes';
 import store from '@/store';
 
 import { mapState, Store } from 'vuex'
@@ -138,6 +323,26 @@ export default {
         this[cual] = true;
       }, 1000)
     } */
+    recurso(que){
+      if(Object.keys(this.rubricas_G).length > 0){
+      //recorro con map el array de rubricas_G
+
+      let ok = Object.keys(this.rubricas_G).map((x)=>{return this.rubricas_G[x]['recursos'][que].rrmm_stock_funcionando});
+      let reparacion = Object.keys(this.rubricas_G).map((x)=>{return this.rubricas_G[x]['recursos'][que].rrmm_stock_para_reparar});
+      let baja = Object.keys(this.rubricas_G).map((x)=>{return this.rubricas_G[x]['recursos'][que].rrmm_stock_con_baja});
+      //this.type = "bar";
+        return [{'name':'ok','data': ok},
+                {'name':'reparacion','data': reparacion},
+                {'name':'baja','data': baja}      
+              ]
+      }else{
+        return []
+      }
+    },
+    toggleRecursos(){
+      this.recu = !this.recu;
+    },
+
     testb(selected,...x){
       if (this.dpclick == false){
         this.$refs.barras.toggleDataPointSelection(0,selected);
@@ -278,12 +483,39 @@ if(Object.keys(this.rubricas_G).length > 0){
        //obtengo el estado del menu 
         return this.$root.$children[0].drawer;
       },
+      inscriptos_graf(){
+        let insc = Object.keys(this.rubricas_G).map((x)=>{return this.rubricas_G[x].inscriptos});
+        return [{'name':'inscriptos','data': insc}]
+      },
+    
+
+    /*recursos(){
+      if(Object.keys(this.rubricas_G).length > 0){
+      //recorro con map el array de rubricas_G
+
+      let ok = Object.keys(this.rubricas_G).map((x)=>{return this.rubricas_G[x]['recursos'].nuestraspc.rrmm_stock_funcionando});
+      let reparacion = Object.keys(this.rubricas_G).map((x)=>{return this.rubricas_G[x]['recursos'].nuestraspc.rrmm_stock_para_reparar});
+      let baja = Object.keys(this.rubricas_G).map((x)=>{return this.rubricas_G[x]['recursos'].nuestraspc.rrmm_stock_con_baja});
+      //this.type = "bar";
+        return [{'name':'ok','data': ok},
+                {'name':'reparacion','data': reparacion},
+                {'name':'baja','data': baja}      
+              ]
+    }else{
+      return []
+    }},*/
+
+
     vecins(){
       if(Object.keys(this.rubricas_G).length > 0){
+      //antes de la dibujada cosmica
       let inscripted = Object.keys(this.rubricas_G).map((x)=>{return this.rubricas_G[x].inscriptos});
+      //let aproved = Object.keys(this.rubricas_G).map((x)=>{return this.rubricas_G[x].aprobados});
+      //let na = Object.keys(this.rubricas_G).map((x)=>{return this.rubricas_G[x].noaprobados});
+       //despues
       let aproved = Object.keys(this.rubricas_G).map((x)=>{return this.rubricas_G[x].aprobados});
       let na = Object.keys(this.rubricas_G).map((x)=>{return this.rubricas_G[x].noaprobados});
-       
+      
       if (this.$vuetify.breakpoint.xs) {
         console.log('es mobile');
         this.type = "radar";
@@ -293,10 +525,12 @@ if(Object.keys(this.rubricas_G).length > 0){
               ]  
       }else{
       //es desktop
-      this.type = "line";
-      return [{'name':'inscriptos','type':'column','data': inscripted},
-      {'name':'aprobados','type':'area','data': aproved},
-      {'name':'no aprobados','type':'line','data': na}]
+      this.type = "bar";
+      return [//{'name':'inscriptos','type':'column','data': inscripted},
+     {'name':'aprobados','data': aproved},
+      {'name':'no aprobados','data': na}]
+      // {'name':'aprobados','type':'area','data': aproved},
+      // {'name':'no aprobados','type':'line','data': na}]
       
       }
     }else{
@@ -321,6 +555,10 @@ if(Object.keys(this.rubricas_G).length > 0){
     //var self = this;
     return{
       // insDelay:false,
+      recu: true,
+      rendered:0,
+      graficos_inscriptos: data_inscriptos,
+      graficos_saberes: data_saberes,
       created:0,
       creado:false,
       sede:'Todo',
@@ -334,7 +572,8 @@ if(Object.keys(this.rubricas_G).length > 0){
       menuinicial: false,//en realidad se setea con el valor actual del menu en el created()
       
 
-      campo: ['aprobados','noaprobados','ssa','bajas','evaluados'],
+      //campo: ['aprobados','noaprobados','ssa','bajas','evaluados'],
+      campo: ['aprobados','noaprobados','ssa','bajas'],
       etiquetas: ['TrendKids','TecnoKids','MakerJuniors','TeensMaker','TeamInn','HighMaker'],
       seriesSedes: [20, 35, 23, 90, 20,45],
 
@@ -469,9 +708,10 @@ stackop:{
             chart: {
               height: 'auto',
               width: '100%',
-              stacked: false,
-              events: {
-              click(event, chartContext, config) {
+              stacked: true,
+              stackType: '100%',
+              events: {                  
+              click(event, chartContext, config){
                 /* let ID = config;//.config.xaxis.categories[config.dataPointIndex];
                 //console.log("clickes"+JSON.stringify(config));
                 console.log(config);
@@ -483,11 +723,68 @@ stackop:{
             },
             
             },
+            animations: {
+              enabled: true,
+              easing: 'easeinout',
+              speed: 200,
+              animateGradually: {
+                delay: 1000
+              },
+              dynamicAnimation: {
+                enabled: true,
+                speed: 250
+              }
+            },
             dataLabels: {
               enabled: true,
-              enabledOnSeries: [0]
+              enabledOnSeries: [0,1,2],
+              style: {
+               // colors: ['#23b14d', '#fef200'],
+                /* colors:[
+    function ({ seriesIndex,dataPointIndex,  w  }) {
+      if (w.config.series[seriesIndex].data[dataPointIndex] > 0) {
+       return "#ff0014";
+     } else {
+       return "#1f52b0";
+     }
+    },
+  ], */
+
+      fontSize: '10px',
+      fontFamily: 'Helvetica, Arial, sans-serif',
+      fontWeight: 'bold',
+      colors: ['#23b14d', '#fef200','#ff0000'],
+ 
+                //forecolor:'#000'
+              },
+              background: {
+                enabled: true,
+                foreColor: '#333',
+                padding: 5,
+                borderRadius: 5,
+                borderWidth: 0.2,
+                borderColor: '#F06',
+                opacity: 1,
+                dropShadow: {
+                  enabled: true,
+                  top: 1,
+                  left: 1,
+                  blur: 1,
+                  color: '#000',
+                  opacity: 0.45
+                }
+              }
             },
-            colors: ['#F44336', '#E91E63', '#9C27B0'],
+            //no para el 100%
+            /*dataLabels: {
+              enabled: true,
+              enabledOnSeries: [0,1],
+              position:'center',
+              offsetY:0
+            },*/
+            
+            // colors: ['#F44336', '#E91E63', '#9C27B0'],
+            colors: ['#23b14d', '#fef200', '#ed1b24'],
             /*colors: [
               function ({ value, seriesIndex, dataPointIndex, w }) {
                   if (dataPointIndex == 2) {
@@ -498,12 +795,14 @@ stackop:{
                 }
             ],*/
             stroke: {
-              width: [0, 2, 5],
-              curve: 'smooth'
+              // width: [0, 2, 5],
+              width: [1,1,1],
+              //curve: 'smooth'
             },
             plotOptions: {
               bar: {
                 columnWidth: '60%',
+                barHeight: '100%',
                 horizontal: false
               }
             },
@@ -539,7 +838,9 @@ stackop:{
                 tooltip: {
                   shared: true,
                   position:'bottomLeft',
-                  x: {
+                
+                 delay: { show: 5000 },
+                 x: {
                     formatter: function (x) {
                       if (typeof x !== "undefined") {
                         return x.toFixed(0) + " alumnos";
@@ -557,7 +858,8 @@ stackop:{
 
 
             fill: {
-              opacity: [0.85, 0.25, 1],
+              // opacity: [0.85, 0.25, 1],
+              opacity: [1, 1, 1],
               gradient: {
                 inverseColors: false,
                 shade: 'light',
@@ -575,7 +877,7 @@ stackop:{
             xaxis: {
               labels:{
                     style:{
-                      fontSize: '8.5px',
+                      fontSize: '6.5px',
                       trim:true,
                       hideOverlappingLabels: false
                     }
@@ -599,11 +901,193 @@ stackop:{
                   }
                   return y;
                 }
-              }
+               }
             }
-          }
-        }
+          },
 
+          chartEquipos:{
+            chart: {
+              height: 'auto',
+              width: '100%',
+              stacked: true,
+              
+              
+              },
+
+            dataLabels: {
+              enabled: true,
+              enabledOnSeries: [0,1,2],
+              style: {
+              fontSize: '10px',
+              fontFamily: 'Helvetica, Arial, sans-serif',
+              fontWeight: 'bold',
+              colors: ['#23b14d', '#fef200','#ff0000'],
+ 
+              //color:'#f00'
+              },
+              background: {
+                enabled: true,
+                foreColor: '#fff',
+                color:'#000',
+                /*foreColor: function ({ seriesIndex }) {
+                  const colors = ['#FF0000', '#0f0', '#00f'];
+                  return colors[seriesIndex % colors.length];
+                },*/
+                padding: 5,
+                borderRadius: 5,
+                borderWidth: 0.52,
+                borderColor: '#F06',
+                opacity: 0.4,
+                dropShadow: {
+                  enabled: true,
+                  top: 1,
+                  left: 1,
+                  blur: 1,
+                  color: '#000',
+                  opacity: 0.45
+                }
+              },
+              /*formatter: function (val, opts) {
+                var labelColors = ['#ff0000', '#00ff00', '#0000ff'];
+                var labelIndex = opts.dataPointIndex % labelColors.length;
+                return labelIndex
+                return '<span style=\"color:' + labelColors[labelIndex] + '\">' + val + '</span>';
+                //return '<span style=\"color:'+labelColors[labelIndex]+'\">' + value + '</span>'
+               // return '<span style="color: white;">' + value + '</span>';
+              }*/
+            },
+            
+            //no para el 100%
+            /*dataLabels: {
+              enabled: true,
+              enabledOnSeries: [0,1],
+              position:'center',
+              offsetY:0
+            },*/
+            
+            // colors: ['#F44336', '#E91E63', '#9C27B0'],
+            colors: ['#23b14d', '#fef200', '#ed1b24'],
+            /*colors: [
+              function ({ value, seriesIndex, dataPointIndex, w }) {
+                  if (dataPointIndex == 2) {
+                    return "#7E36AF";
+                  } else {
+                    return "#D9534F";
+                  }
+                }
+            ],*/
+            stroke: {
+              // width: [0, 2, 5],
+              width: [1,1,1],
+              //curve: 'smooth'
+            },
+            plotOptions: {
+              bar: {
+                columnWidth: '60%',
+                barHeight: '100%',
+                horizontal: false
+              }
+            },
+            legend: {
+              position: 'top'
+            },
+
+
+
+            responsive: [{
+              breakpoint: 580,
+              options: {
+                chart:{
+                stacked: true,
+                type:'bar',
+                stackType: '100%',
+                },
+                plotOptions: {
+                  bar: {
+                    barHeight: '100%',
+                    horizontal: true
+                  }
+                },
+                yaxis: {
+                  type: 'string'
+                },
+                xaxis: {
+                  title: {
+                    text: 'Equipos',
+                  },
+                  min: 0
+                },
+                tooltip: {
+                  shared: true,
+                  position:'bottomLeft',
+                
+                 delay: { show: 5000 },
+                 x: {
+                    formatter: function (x) {
+                      if (typeof x !== "undefined") {
+                        return x.toFixed(0) + " equipos";
+                      }
+                      return x;
+                    }
+                  }
+                },
+                legend: {
+                  position: "bottom"
+                }
+              }
+            }],
+
+
+
+            fill: {
+              // opacity: [0.85, 0.25, 1],
+              opacity: [1, 1, 1],
+              gradient: {
+                inverseColors: false,
+                shade: 'light',
+                type: "vertical",
+                opacityFrom: 0.85,
+                opacityTo: 0.55,
+                stops: [0, 100, 100, 100]
+              }
+            },
+            //labels: ["25 de Mayo","Alba Posse","Almafuerte","Apóstoles","Aristóbulo del Valle","Azara","Bernardo de Irigoyen","Caá Yarí","Campo Grande","Campo Ramón","Campo Viera","Candelaria","Capioví","Cerro Azul","Cerro Corá","Colonia Alberdi","Colonia Aurora","Colonia Delicia","Colonía Victoria","Comandante Andresito","Concepción de la Sierra","Corpus","Dos de Mayo","El Alcazar","El Soberbio","Eldorado","Fachinal","Garuhape","Garupá","General Urquiza","Gobernador Roca","Guaraní","Jardín América","Leandro N. Alem","Loreto","Los helechos","Montecarlo","Oberá","Panambí","Posadas (En el Polo TIC)","Pozo Azul","Profundidad","Puerto Esperanza","Puerto Iguazú","Puerto Libertad","Puerto Piray","Puerto Rico 01","Puerto Rico 02","Ruiz de Montoya","Salto Encantado","San Ignacio","San Javier","San José","San Martín","San Pedro","San Vicente","Santa Ana","Santiago de Liniers","Santo Pipó"],
+            labels: [],
+            markers: {
+              size: 0
+            },
+            xaxis: {
+              labels:{
+                    style:{
+                      fontSize: '6.5px',
+                      trim:true,
+                      hideOverlappingLabels: false
+                    }
+                    },
+              type: 'string'
+            },
+            yaxis: {
+              title: {
+                text: 'Equipos',
+              },
+              min: 0
+            },
+            tooltip: {
+              shared: true,
+              position:'topRight',
+              intersect: false,
+              y: {
+                formatter: function (y) {
+                  if (typeof y !== "undefined") {
+                    return y.toFixed(0) + " equipos";
+                  }
+                  return y;
+                }
+               }
+            }
+          
+        }
+    }
     },
     watch:{
       //observo si se clickeo el menu
@@ -657,7 +1141,10 @@ stackop:{
       console.log('padre: ',this.$root.$children[0].drawer);
       ///de esta manera asigno el valor de una computed al cargar la pagina
        this.$set(this.chartOptions, 'labels', this.vsedes);
+       this.$set(this.graficos_inscriptos, 'labels', this.vsedes);
+       console.log("acaaaaa",this.chartOptions);
        this.$set(this.chartOptions.xaxis, 'categories', this.vsedes);
+       this.$set(this.chartEquipos.xaxis, 'categories', this.vsedes);
        this.$set(this.radarOptions.xaxis, 'categories', this.vsedes);
        this.$set(this.stackop.xaxis, 'categories', this.vsedes);
       /*this.$set(this.chartOptions, 'labels', Object.values(this.sedes).map(x=>x.sede));
@@ -690,6 +1177,27 @@ stackop:{
   }
 </script>
 <style>
+.h-90{
+  height: 90% !important;
+}
+
+.red{
+  background:rgb(189, 25, 25);
+  color: aliceblue;
+}
+
+.round-top{
+  border-radius: 25px 25px 0px 0px !important;
+}
+
+.bot-collapse{
+    margin-left: -1.8em;
+    margin-right: -1.8em;
+    padding: 0px !important;
+    margin-top: -1.4em;
+    }
+
+
 .apex-moco .apexcharts-canvas .apexcharts-svg{
   /* background: blue !important; */
   overflow: visible !important;

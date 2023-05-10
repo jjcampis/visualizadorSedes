@@ -1,12 +1,14 @@
 <template>
   <v-main>
       <v-container fluid fill-heights
-      style="max-width: 95%;"
+      style="width: 600px; background: white;border-radius: 20px; margin-top: 40px;"
       class="px-0">
       <v-row no-gutters>
         <v-col md="6"
         offset-md="3" cols="6" sm="6">
           <v-img :src="require('@/assets/logo_red_maker.png')"></v-img>
+          <p style="color:  #26958a"><b>DASHBOARD</b></p>
+          <p>Version: 2.2.23</p>
           <div v-if="ncarga == 1">
               <!-- Cargando rubricas Trimestrales -->
               01 / 04

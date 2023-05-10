@@ -108,7 +108,7 @@ chartOptions: {
     xaxis: {
       labels:{
             style:{
-              fontSize: '8.5px',
+              fontSize: '6.5px',
               trim:true,
               hideOverlappingLabels: false
             }
