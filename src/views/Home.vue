@@ -1,16 +1,39 @@
 <template>
 <div>
 
+
 <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
   <v-col  cols="12" md="12">
-    <v-card elevation="3" class="h-100" style="min-height:320px;">
-      <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-            <apexchart v-if="showcharts" type="bar" height="350" width="100%" :options="graficos_inscriptos" :series="inscriptos_graf" :lazyUpdate="true" @click="get_S" @dataPointSelection="clickeado" @animationEnd="rendered++"></apexchart>
-      </div>
-    </v-card>
+    <b-card class="py-0 px-2 titulo">
+      <b-card-header class="bot-collapse" header-tag="header" role="tab">
+        <b-button block v-b-toggle.accordion-inscr variant="danger">
+          <div class="text-h6 text-span-i">Inscriptos
+             <span>
+             <v-icon
+              :class="{'mdi mdi-chevron-up': visib, 'mdi mdi-chevron-down': !visib}"
+            ></v-icon>
+            </span>
+          </div>
+          
+        </b-button>
+      </b-card-header>
+      <b-collapse v-model="visib" class="py-0 px-0" id="accordion-inscr" accordion="accordion-inscr" role="tabpanel">
+        <b-card-body class="pt-0 px-0">
+
+            <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+              <v-col  cols="12" md="12">
+                <v-card elevation="3" class="h-100" style="min-height:320px;">
+                  <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+                        <apexchart ref="inscriptosx" v-show="visib" type="bar" height="350" width="100%" :options="graficos_inscriptos" :series="inscriptos_graf" :lazyUpdate="true" @click="get_S" @dataPointSelection="clickeado" @animationEnd="rendered++"></apexchart>
+                  </div>
+                </v-card>
+              </v-col>
+            </v-row>
+        </b-card-body>
+      </b-collapse>
+    </b-card>
   </v-col>
 </v-row>
-
 
 <!-- <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
   <v-col  cols="12" md="12">
@@ -33,194 +56,226 @@
 </v-row>
  -->
 <!-- <button @click="testb">clickedamo</button> -->
-<v-row v-show="$vuetify.breakpoint.mobile">
+
+
+<!-- <b-button block variant="danger"  @click="visiblex" >cambiar {{visib}}</b-button>
+ -->
+
+<!-- <v-row v-show="$vuetify.breakpoint.mobile">
   <v-col  cols="12" md="12">
     <v-card elevation="3" class="h-100" style="padding-bottom: 25px;">
-      <!-- <apexchart type="radar" height="500" width="100%" :options="radarOptions" :series="vecins"></apexchart> -->
-   <!-- <div :class="[cambio ? 'chart-wrapper2' : 'stackwraper']"> -->
      <div class="chart-wrapperm">
     <apexchart :key="created" type="bar" height="2000" :options="stackop" :series="vecins" @click="get_S" @dataPointSelection="clickeado"></apexchart>
    </div>
     </v-card>
   </v-col>
-</v-row>
+</v-row> -->
+<v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+  <v-col  cols="12" md="12">
+    <b-card class="py-0 px-2 titulo">
+      <b-card-header class="bot-collapse" header-tag="header" role="tab">
+        <b-button block v-b-toggle.accordion-pers variant="danger">
+          <div class="text-h6 text-span-i">Personal
+            <span>
+             <v-icon
+              :class="{'mdi mdi-chevron-up': !perso, 'mdi mdi-chevron-down': perso}"
+            ></v-icon>
+            </span>
+                </div>
+          
+        </b-button>
+      </b-card-header>
+      <b-collapse class="py-0 px-0" id="accordion-pers" accordion="accordion-pers" role="tabpanel">
+        <b-card-body class="pt-0 px-0">
+                <v-row v-show="$vuetify.breakpoint.mobile">
+                  <v-col  cols="12" md="12">
+                    <v-card elevation="3" class="h-100" style="padding-bottom: 25px;">
+                      <div class="chart-wrapperm">
+                        <apexchart :key="created" type="bar" height="2000" :options="stackop" :series="vecins" @click="get_S" @dataPointSelection="clickeado"></apexchart>
+                      </div>
+                    </v-card>
+                  </v-col>
+                </v-row>
 
+                <v-row v-show="showcharts">
+                <v-col  cols="12" md="12">
+                    <v-card elevation="3" class="h-100" style="min-height:320px;">
+                      <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+                      <!-- <apexchart v-if="showcharts" ref="barras" class="apex-moco" :type="type" height="400" width="100%" :options="chartOptions" :series="vecins" @dataPointSelection="get_S"></apexchart> -->
+                      <horario></horario>
+                      <personal></personal>
+                      </div>
+                    </v-card>
+                  </v-col>
+                </v-row>
 
-<v-row v-show="showcharts">
- <v-col  cols="12" md="12">
-    <v-card elevation="3" class="h-100" style="min-height:320px;">
-      <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-      <!-- <apexchart v-if="showcharts" ref="barras" class="apex-moco" :type="type" height="400" width="100%" :options="chartOptions" :series="vecins" @dataPointSelection="get_S"></apexchart> -->
-      <horario></horario>
-      </div>
-    </v-card>
+        </b-card-body>
+      </b-collapse>
+    </b-card>
   </v-col>
 </v-row>
 
-<personal></personal>
+<!-- <personal></personal> -->
     
-
-<b-card class="py-0 px-2">
-  <b-card-header class="bot-collapse" header-tag="header" role="tab">
-    <b-button block v-b-toggle.accordion-2 variant="danger"  @click="toggleRecursos" >
-      <div class="text-h6">Recursos
-        <span v-if="!recu">
-              <v-icon class="text">
-                  mdi-chevron-up
-                </v-icon>
+<v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+  <v-col  cols="12" md="12">
+    <b-card class="py-0 px-2 titulo">
+      <b-card-header class="bot-collapse" header-tag="header" role="tab">
+        <b-button block v-b-toggle.accordion-2 variant="danger">
+          <div class="text-h6 text-span-i">Recursos {{recu}}
+            <span>
+             <v-icon
+              :class="{'mdi mdi-chevron-up': recu, 'mdi mdi-chevron-down': !recu}"
+            ></v-icon>
             </span>
-            <span v-else>
-              <v-icon>
-                  mdi-chevron-down
-                </v-icon>  
-            </span></div>
+          </div>
+          
+        </b-button>
+      </b-card-header>
       
-    </b-button>
-  </b-card-header>
-  
-          <keep-alive>
-  <b-collapse class="py-0 px-0" id="accordion-2" accordion="my-accordion" role="tabpanel">
-    <b-card-body class="pt-0 px-0">
-  <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
-    <v-col cols="12" md="12">
-      <v-card elevation="3" dense class="h-100 round-top mt-3" style="min-height:320px;">
-        <v-card-item>
-      <v-toolbar-title class="text-h6 red round-top">
-              Compus Nuestras
-            </v-toolbar-title>
-        </v-card-item>
-        <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-            <apexchart ref="barras" class="apex-moco" type="bar" height="400" width="100%" :options="chartEquipos" :series="recurso('nuestraspc')" :lazyUpdate="true"></apexchart>
-        </div>
-      </v-card>
-    </v-col>
-  </v-row>
+      <b-collapse v-model="recu" class="py-0 px-0" id="accordion-2" accordion="my-accordion" role="tabpanel">
+        <b-card-body class="py-0 px-0">
+        <v-row v-show="!$vuetify.breakpoint.mobile && showcharts && this.graf_rec[0]">
+        <v-col cols="12" md="12">
+          <v-card elevation="3" dense class="h-100 round-top mt-3" style="min-height:320px;">
+            <v-card-item>
+          <v-toolbar-title class="text-h6 red round-top">
+                  Compus Nuestras
+                </v-toolbar-title>
+            </v-card-item>
+            <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+                <apexchart ref="recursos1" class="apex-moco" type="bar" height="400" width="100%" :options="chartEquipos" :series="recurso('nuestraspc')" :lazyUpdate="true"></apexchart>
+            </div>
+          </v-card>
+        </v-col>
+        </v-row>
 
-  <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
-    <v-col cols="12" md="12">
-      <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:320px;">
-        <v-card-item>
-      <v-toolbar-title class="text-h6 red round-top">
-              Otras Compus 
-            </v-toolbar-title>
-        </v-card-item>
-        <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-            <apexchart ref="barras" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('otrospc')" :lazyUpdate="false" :visible="showcharts"></apexchart>
-        </div>
-      </v-card>
-    </v-col>
-  </v-row>
+        <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+          <v-col cols="12" md="12" v-show="this.graf_rec[1]">
+            <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:320px;">
+              <v-card-item>
+            <v-toolbar-title class="text-h6 red round-top">
+                    Otras Compus 
+                  </v-toolbar-title>
+              </v-card-item>
+              <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+                  <apexchart ref="recursos2" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('otrospc')" :lazyUpdate="false" :visible="showcharts" :deferred-render="true"></apexchart>
+              </div>
+            </v-card>
+          </v-col>
+        </v-row>
 
-  <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
-    <v-col cols="12" md="12">
-      <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
-        <v-card-item>
-      <v-toolbar-title class="text-h6 red round-top">
-              Kit - Robótica
-            </v-toolbar-title>
-        </v-card-item>
-        <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-            <apexchart ref="barras" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('robotica')" :lazyUpdate="true" :visible="showcharts"></apexchart>
-        </div>
-      </v-card>
-    </v-col>
-  </v-row>
+        <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+          <v-col cols="12" md="12" v-show="this.graf_rec[2]">
+            <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
+              <v-card-item>
+            <v-toolbar-title class="text-h6 red round-top">
+                    Kit - Robótica
+                  </v-toolbar-title>
+              </v-card-item>
+              <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+                  <apexchart ref="recursos3" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('robotica')" :lazyUpdate="true" :deferred-render="true" :visible="showcharts"></apexchart>
+              </div>
+            </v-card>
+          </v-col>
+        </v-row>
 
-    <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
-    <v-col cols="12" md="12">
-      <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
-        <v-card-item>
-      <v-toolbar-title class="text-h6 red round-top">
-              Kit - Soldador
-            </v-toolbar-title>
-        </v-card-item>
-        <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-            <apexchart ref="barras" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('soldador')" :lazyUpdate="true" :visible="showcharts"></apexchart>
-        </div>
-      </v-card>
-    </v-col>
-  </v-row>
+          <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+          <v-col cols="12" md="12" v-show="this.graf_rec[3]">
+            <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
+              <v-card-item>
+            <v-toolbar-title class="text-h6 red round-top">
+                    Kit - Soldador
+                  </v-toolbar-title>
+              </v-card-item>
+              <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+                  <apexchart ref="recursos4" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('soldador')" :lazyUpdate="true" :deferred-render="true" :visible="showcharts"></apexchart>
+              </div>
+            </v-card>
+          </v-col>
+        </v-row>
 
-  <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
-    <v-col cols="12" md="12">
-      <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
-        <v-card-item>
-      <v-toolbar-title class="text-h6 red round-top">
-              Equipos - Teleconferencias
-            </v-toolbar-title>
-        </v-card-item>
-        <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-            <apexchart ref="barras" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('teleco')" :lazyUpdate="true" :visible="showcharts"></apexchart>
-        </div>
-      </v-card>
-    </v-col>
-  </v-row>
+        <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+          <v-col cols="12" md="12" v-show="this.graf_rec[4]">
+            <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
+              <v-card-item>
+            <v-toolbar-title class="text-h6 red round-top">
+                    Equipos - Teleconferencias
+                  </v-toolbar-title>
+              </v-card-item>
+              <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+                  <apexchart ref="recursos5" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('teleco')" :lazyUpdate="true" :deferred-render="true" :visible="showcharts"></apexchart>
+              </div>
+            </v-card>
+          </v-col>
+        </v-row>
 
-    <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
-    <v-col cols="12" md="12">
-      <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
-        <v-card-item>
-      <v-toolbar-title class="text-h6 red round-top">
-              Kit - TV
-            </v-toolbar-title>
-        </v-card-item>
-        <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-            <apexchart ref="barras" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('tv')" :lazyUpdate="true" :visible="showcharts"></apexchart>
-        </div>
-      </v-card>
-    </v-col>
-  </v-row>
+          <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+          <v-col cols="12" md="12" v-show="this.graf_rec[5]">
+            <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
+              <v-card-item>
+            <v-toolbar-title class="text-h6 red round-top">
+                    Kit - TV
+                  </v-toolbar-title>
+              </v-card-item>
+              <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+                  <apexchart ref="recursos6" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('tv')" :lazyUpdate="true" :deferred-render="true" :visible="showcharts"></apexchart>
+              </div>
+            </v-card>
+          </v-col>
+        </v-row>
 
-    <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
-    <v-col cols="12" md="12">
-      <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
-        <v-card-item>
-      <v-toolbar-title class="text-h6 red round-top">
-              Impresoras 3D
-            </v-toolbar-title>
-        </v-card-item>
-        <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-            <apexchart ref="barras" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('impresoras')" :lazyUpdate="true" :visible="showcharts"></apexchart>
-        </div>
-      </v-card>
-    </v-col>
-  </v-row>
+          <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+          <v-col cols="12" md="12" v-show="this.graf_rec[6]">
+            <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
+              <v-card-item>
+            <v-toolbar-title class="text-h6 red round-top">
+                    Impresoras 3D
+                  </v-toolbar-title>
+              </v-card-item>
+              <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+                  <apexchart ref="recursos7" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('impresoras')" :lazyUpdate="true" :deferred-render="true" :visible="showcharts"></apexchart>
+              </div>
+            </v-card>
+          </v-col>
+        </v-row>
 
-  <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
-    <v-col cols="12" md="12">
-      <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
-        <v-card-item>
-      <v-toolbar-title class="text-h6 red round-top">
-              Kit - Futbolistas
-            </v-toolbar-title>
-        </v-card-item>
-        <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-            <apexchart ref="barras" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('futbolistas')" :lazyUpdate="true" :visible="showcharts"></apexchart>
-        </div>
-      </v-card>
-    </v-col>
-  </v-row>
+        <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+          <v-col cols="12" md="12" v-show="this.graf_rec[7]">
+            <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
+              <v-card-item>
+            <v-toolbar-title class="text-h6 red round-top">
+                    Kit - Futbolistas
+                  </v-toolbar-title>
+              </v-card-item>
+              <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+                  <apexchart ref="recursos8" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('futbolistas')" :lazyUpdate="true" :deferred-render="true" :visible="showcharts"></apexchart>
+              </div>
+            </v-card>
+          </v-col>
+        </v-row>
 
-    <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
-    <v-col cols="12" md="12">
-      <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
-        <v-card-item>
-      <v-toolbar-title class="text-h6 red round-top">
-              Internet
-            </v-toolbar-title>
-        </v-card-item>
-        <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-            <apexchart ref="barras" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('internet')" :lazyUpdate="true" :visible="showcharts"></apexchart>
-        </div>
-      </v-card>
-    </v-col>
-  </v-row>
+        <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+        <v-col cols="12" md="12" v-show="this.graf_rec[8]">
+          <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
+            <v-card-item>
+          <v-toolbar-title class="text-h6 red round-top">
+                  Internet
+                </v-toolbar-title>
+            </v-card-item>
+            <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+                <apexchart ref="recursos9" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('internet')" :lazyUpdate="true" :deferred-render="true" :visible="showcharts"></apexchart>
+            </div>
+          </v-card>
+        </v-col>
+      </v-row>
 
-    </b-card-body>
-  </b-collapse>
-          </keep-alive>
+        </b-card-body>
+      </b-collapse>
 
-</b-card>
+    </b-card>
+  </v-col>
+</v-row>
 
 <v-row class="mt-0" v-show="showcharts">
   <v-col cols="12" md="4">
@@ -323,6 +378,41 @@ export default {
         this[cual] = true;
       }, 1000)
     } */
+  //para graficar recursos 1 a 1
+/* renderChartsWithDelay(index) {
+ // alert(index);
+  if (index >= this.graf_rec.length) {
+    return;
+  }
+  index = parseInt(index);
+  const chartRef = this.$refs['recursos' + index];
+  console.log(this.$refs['recursos1']);
+  // Renderiza el gráfico actual y espera a que termine la animación
+  console.log("charted: ",'recursos' + index);
+  console.log("charted: ",chartRef);
+  chartRef.refresh(() => {
+    // La animación ha terminado, aumenta en uno el vector
+    this.$set(this.graf_rec, index-1, true);
+
+    setTimeout(() => {
+      this.renderChartsWithDelay(index + 1);
+      console.log("renderizando: recurso", index + 1);
+    }, 1000); // Ajusta el tiempo de retraso según tus necesidades
+  });
+}, */
+renderChartsWithDelay() {
+  for (let i = 0; i < this.graf_rec.length; i++) {
+    setTimeout(() => {
+      //const chartRef = this.$refs['recursos' + (i + 1)];
+      //chartRef.render();
+      this.$set(this.graf_rec, i, true);
+      //alert('recursos'+(i+1));
+    }, 1000); // Ajusta el tiempo de retraso según tus necesidades
+  }
+},
+  ///fin graficar recursos
+
+
     recurso(que){
       if(Object.keys(this.rubricas_G).length > 0){
       //recorro con map el array de rubricas_G
@@ -342,6 +432,12 @@ export default {
     toggleRecursos(){
       this.recu = !this.recu;
     },
+    toggleperso(){
+      this.perso = !this.perso;
+    },
+    /* visiblex(){
+      this.visib = !this.visib;
+    }, */
 
     testb(selected,...x){
       if (this.dpclick == false){
@@ -554,8 +650,14 @@ if(Object.keys(this.rubricas_G).length > 0){
     dpclick:false;
     //var self = this;
     return{
+
+      //cantidad de graficos de recursos
+      cant_rec: 9,
+      graf_rec:[],
       // insDelay:false,
-      recu: true,
+      visib:true,
+      recu: false,
+      perso:true,
       rendered:0,
       graficos_inscriptos: data_inscriptos,
       graficos_saberes: data_saberes,
@@ -728,11 +830,12 @@ stackop:{
               easing: 'easeinout',
               speed: 200,
               animateGradually: {
-                delay: 1000
+                enabled: true,
+                speed: 100
               },
               dynamicAnimation: {
                 enabled: true,
-                speed: 250
+                speed: 1000
               }
             },
             dataLabels: {
@@ -913,6 +1016,19 @@ stackop:{
               
               
               },
+               animations: {
+              enabled: true,
+              easing: 'easeinout',
+              speed: 20,
+              animateGradually: {
+                enabled: true,
+                speed: 10
+              },
+              dynamicAnimation: {
+                enabled: true,
+                speed: 1000
+              }
+            },
 
             dataLabels: {
               enabled: true,
@@ -1091,6 +1207,13 @@ stackop:{
     },
     watch:{
       //observo si se clickeo el menu
+      recu(antes,ahora){
+        if(ahora){
+          //alert(ahora);
+           // Llama a la función para iniciar la renderización iterativa con retraso
+        this.renderChartsWithDelay();
+        }
+      },
       menux(antes,ahora){
         console.log(antes,ahora);
         if(antes != this.menuinicial){//se cambio
@@ -1118,6 +1241,19 @@ stackop:{
           }
     },
     mounted(){
+      //renderizo lo graficos de recursos 1 a 1
+      /* for (let i = 1; i <= this.cant_rec; i++) {
+        const chartRef = this.$refs['recursos' + i];
+        this.graf_rec.push(chartRef);
+      } */
+      for (let i = 0; i < this.cant_rec; i++) {
+        this.graf_rec.push(false);
+      }
+      console.log("array de recursos: ",this.graf_rec);
+
+  //fin graficar recursos
+
+
       setTimeout(() => {
         this.creado = true;
         this.created++
@@ -1177,6 +1313,12 @@ stackop:{
   }
 </script>
 <style>
+.titulo > .card-body {
+    padding-bottom: 0px;
+}
+.text-span-i span >i{
+    color: white !important 
+}
 .h-90{
   height: 90% !important;
 }

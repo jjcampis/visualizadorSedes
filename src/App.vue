@@ -7,8 +7,18 @@
     border-radius: 0px 20px 20px 0px;
     left: -4px;"></v-app-bar-nav-icon>
       <v-toolbar-title class="text-white">Visualizador por sedes 
-        <span class="selsede" v-if="selectedSede.sede">{{selectedSede.sede}}</span>
-        <span class="selsede" v-else>{{selectedSede}}</span>
+        <!-- <span class="selsede" v-if="selectedSede.sede">{{selectedSede.sede}}</span> -->
+        <!-- <span class="selsede" v-else>{{selectedSede}}</span> -->
+        <v-col cols="6">
+            <v-select
+            style="z-index: 13"
+          :items="todassedes"
+          item-text="sede"
+          item-value="sede"
+          label="Sede"
+          v-model="sede"
+        ></v-select>
+              </v-col>
         <!-- ver una computed -->
         Actualizado al: <span v-if="ult_act.r2d2_date" class="selsede">{{ult_act.r2d2_date}}</span>
 
@@ -28,6 +38,7 @@
         <!-- <v-list-item to="/about"><v-list-item-title>Asistencias</v-list-item-title></v-list-item> -->
         <v-list-item to="/rubricaT"><v-list-item-title>Rubrica Estudiantes</v-list-item-title></v-list-item>
         <v-list-item to="/rubG"><v-list-item-title>Rubrica Sedes</v-list-item-title></v-list-item>
+        <v-list-item to="/graf_recursos"><v-list-item-title>recursos</v-list-item-title></v-list-item>
       </v-list>
     </v-navigation-drawer>
   
@@ -76,6 +87,7 @@ export default {
   data:()=>{
     return{
       drawer: true,
+      sede:'Todo',
       loading:true,
       compo: cargar,
       timeElapsed: false
@@ -87,14 +99,24 @@ mounted(){
  console.log('nuevo contenido 123-dani');
 },
 computed:{
-  ...mapState(['rubricas_sede','selectedSede','personal','logueado']),
+  ...mapState(['rubricas_sede','selectedSede','personal','logueado','rubricas_G']),
   ult_act(){
     if (this.personal.length > 0) {
       return this.personal.slice(-1)[0]
     }else{
       return {r2d2_date:0}
     }
-  }
+  },
+  todassedes(){
+      if(Object.keys(this.rubricas_G).length > 0){
+      let vec = Object.keys(this.rubricas_G).map((x)=>{return x});
+      //let vec = Object.values(this.sedes).map(x=>x.sede);
+      vec.unshift('Todo');
+      return vec
+      }else{
+        return []
+      }
+    },
 },
 methods:{
   cargaOk(){

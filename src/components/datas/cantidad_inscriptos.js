@@ -25,11 +25,12 @@ export default{
               easing: 'easeinout',
               speed: 200,
               animateGradually: {
-                delay: 1000
+                enabled: true,
+                speed: 100
               },
               dynamicAnimation: {
                 enabled: true,
-                speed: 250
+                speed: 1000
               }
             },
             dataLabels: {
