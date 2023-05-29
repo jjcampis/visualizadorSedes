@@ -23,11 +23,10 @@
           class="py-0 px-0"
           id="accordion-2"
           accordion="my-accordion"
-          role="tabpanel"
         >
-          <b-card-body class="py-0 px-0">
-            <div>algo</div>
-            <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
+          <b-card-body class="py-0 px-0"  v-show="recu">
+            <div>algo  {{this.graf_rec}}</div>
+            <v-row v-show="!$vuetify.breakpoint.mobile && showcharts && rec1">
               <v-col cols="12" md="12">
                 <v-card
                   elevation="3"
@@ -42,7 +41,6 @@
                   </v-card-item>
                   <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
                     <apexchart
-                      ref="recursos1"
                       class="apex-moco"
                       type="bar"
                       height="400"
@@ -56,6 +54,34 @@
               </v-col>
             </v-row>
 
+<v-row v-show="!$vuetify.breakpoint.mobile && showcharts && rec2">
+              <v-col cols="12" md="12">
+                <v-card
+                  elevation="3"
+                  dense
+                  class="h-90 round-top mt-3"
+                  style="min-height: 320px"
+                >
+                  <v-card-item>
+                    <v-toolbar-title class="text-h6 red round-top">
+                      Otras Compus
+                    </v-toolbar-title>
+                  </v-card-item>
+                  <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
+                    <apexchart
+                      class="apex-moco"
+                      type="bar"
+                      height="250"
+                      width="100%"
+                      :options="chartEquipos"
+                      :series="recurso('otrospc')"
+                      :lazyUpdate="true"
+                      :deferred-render="true"
+                    ></apexchart>
+                  </div>
+                </v-card>
+              </v-col>
+            </v-row>
 
         <!--     <v-row
               v-show="
@@ -130,14 +156,17 @@
 <script>
 import { chartEquipos }from "@/components/datas/chart_equipos"; //objeto chartoptions
 import { mapState } from "vuex";
+import eventBus from '../eventHub';
 
 export default {
   data: () => {
     return {
-      showcharts: true,
       cant_rec: 9,
       graf_rec: [],
-      recu: true,
+      //nuevo
+      rec1:false,
+      rec2:false,
+      recu: false,
       showcharts: false,
       cambio: false,
       menuinicial: false,
@@ -145,15 +174,23 @@ export default {
     };
   },
   mounted() {
-    console.log(this.chartEquipos.xaxis);
+    //console.log(this.chartEquipos.xaxis);
     //renderizo lo graficos de recursos 1 a 1
     /* for (let i = 1; i <= this.cant_rec; i++) {
         const chartRef = this.$refs['recursos' + i];
         this.graf_rec.push(chartRef);
       } */
+eventBus.$on('chartAnimationEnd', (chartContext, options) => {
+      // Realiza acciones adicionales cuando se produce el evento
+      console.log("Evento de animación del gráfico recibido");
+      console.log(chartContext);
+      console.log(options);
+    });
+
+
     setTimeout(() => {
       this.showcharts = true;
-    }, 500);
+    }, 150);
 
     for (let i = 0; i < this.cant_rec; i++) {
       this.graf_rec.push(false);
@@ -161,16 +198,25 @@ export default {
     console.log("array de recursos: ", this.graf_rec);
   },
   methods: {
-    renderChartsWithDelay() {
-      for (let i = 0; i < this.graf_rec.length; i++) {
-        setTimeout(() => {
-          //const chartRef = this.$refs['recursos' + (i + 1)];
-          //chartRef.render();
-          this.$set(this.graf_rec, i, true);
-          //alert('recursos'+(i+1));
-        }, 1000); // Ajusta el tiempo de retraso según tus necesidades
-      }
-    },
+renderChartsWithDelay() {
+  const numCharts = 3; // Número total de gráficos
+  const delayMultiplier = 2000; // Multiplicador para el tiempo de retraso
+
+  let currentIndex = 0;
+
+  const showNextChart = () => {
+    const propertyName = 'rec' + (currentIndex + 1);
+    this[propertyName] = true;
+
+    currentIndex++;
+
+    if (currentIndex < numCharts) {
+      setTimeout(showNextChart, delayMultiplier);
+    }
+  };
+
+  setTimeout(showNextChart, delayMultiplier);
+},
 
     recurso(que) {
       if (Object.keys(this.rubricas_G).length > 0) {
@@ -203,7 +249,7 @@ export default {
   watch: {
     //observo si se clickeo el menu
     recu(antes, ahora) {
-      if (ahora) {
+      if (!ahora) {
         //alert(ahora);
         // Llama a la función para iniciar la renderización iterativa con retraso
         this.renderChartsWithDelay();
@@ -337,5 +383,8 @@ div.chart-wrapperm {
 }
 .apexcharts-bar-area[selected="true"] {
   fill: turquoise !important;
+}
+.my-element {
+  visibility: hidden;
 }
 </style>

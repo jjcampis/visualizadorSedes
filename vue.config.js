@@ -10,7 +10,7 @@ module.exports = {
     proxy:'https://r2d2.roboticamisiones.com/'
   },
   publicPath: process.env.NODE_ENV === 'production'
-    ? '/dashboard'
+    ? '/dashboard/test'
     : '/',
     outputDir: 'docs',
     configureWebpack: {

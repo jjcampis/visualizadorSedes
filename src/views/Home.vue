@@ -24,7 +24,21 @@
               <v-col  cols="12" md="12">
                 <v-card elevation="3" class="h-100" style="min-height:320px;">
                   <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-                        <apexchart ref="inscriptosx" v-show="visib" type="bar" height="350" width="100%" :options="graficos_inscriptos" :series="inscriptos_graf" :lazyUpdate="true" @click="get_S" @dataPointSelection="clickeado" @animationEnd="rendered++"></apexchart>
+                        <apexchart 
+                        ref="inscriptosx"
+                        v-show="visib"
+                        type="bar" 
+                        height="350" 
+                        width="100%" 
+                        :options="graficos_inscriptos" 
+                        :series="inscriptos_graf" 
+                        :lazyUpdate="true"
+                        :key="rendered"
+                        @click="pintari"
+                        @animationEnd="pintari">
+                        <!-- @click="((event) => handle($refs.inscriptosx))" -->
+                        <!-- @animationEnd="rendered++"> -->
+                        </apexchart>
                   </div>
                 </v-card>
               </v-col>
@@ -75,23 +89,30 @@
     <b-card class="py-0 px-2 titulo">
       <b-card-header class="bot-collapse" header-tag="header" role="tab">
         <b-button block v-b-toggle.accordion-pers variant="danger">
-          <div class="text-h6 text-span-i">Personal
+          <div class="text-h6 text-span-i">Personal {{perso}}
             <span>
              <v-icon
-              :class="{'mdi mdi-chevron-up': !perso, 'mdi mdi-chevron-down': perso}"
+              :class="{'mdi mdi-chevron-up': perso, 'mdi mdi-chevron-down': !perso}"
             ></v-icon>
             </span>
-                </div>
+          </div>
           
         </b-button>
       </b-card-header>
-      <b-collapse class="py-0 px-0" id="accordion-pers" accordion="accordion-pers" role="tabpanel">
+      <b-collapse v-model="perso" class="py-0 px-0" id="accordion-pers" accordion="accordion-pers">
         <b-card-body class="pt-0 px-0">
                 <v-row v-show="$vuetify.breakpoint.mobile">
                   <v-col  cols="12" md="12">
                     <v-card elevation="3" class="h-100" style="padding-bottom: 25px;">
                       <div class="chart-wrapperm">
-                        <apexchart :key="created" type="bar" height="2000" :options="stackop" :series="vecins" @click="get_S" @dataPointSelection="clickeado"></apexchart>
+                        <apexchart 
+                        :key="created" 
+                        type="bar"
+                        height="2000" 
+                        :options="stackop" 
+                        :series="vecins"
+                        >
+                        </apexchart>
                       </div>
                     </v-card>
                   </v-col>
@@ -102,8 +123,8 @@
                     <v-card elevation="3" class="h-100" style="min-height:320px;">
                       <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
                       <!-- <apexchart v-if="showcharts" ref="barras" class="apex-moco" :type="type" height="400" width="100%" :options="chartOptions" :series="vecins" @dataPointSelection="get_S"></apexchart> -->
-                      <horario></horario>
-                      <personal></personal>
+                      <horario :estado="perso"></horario>
+                      <personal  :estado="perso"></personal>
                       </div>
                     </v-card>
                   </v-col>
@@ -122,7 +143,7 @@
     <b-card class="py-0 px-2 titulo">
       <b-card-header class="bot-collapse" header-tag="header" role="tab">
         <b-button block v-b-toggle.accordion-2 variant="danger">
-          <div class="text-h6 text-span-i">Recursos {{recu}}
+          <div class="text-h6 text-span-i">Recursos
             <span>
              <v-icon
               :class="{'mdi mdi-chevron-up': recu, 'mdi mdi-chevron-down': !recu}"
@@ -133,9 +154,9 @@
         </b-button>
       </b-card-header>
       
-      <b-collapse v-model="recu" class="py-0 px-0" id="accordion-2" accordion="my-accordion" role="tabpanel">
+      <b-collapse v-model="recu" class="py-0 px-0" id="accordion-2" accordion="accordion-2">
         <b-card-body class="py-0 px-0">
-        <v-row v-show="!$vuetify.breakpoint.mobile && showcharts && this.graf_rec[0]">
+        <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
         <v-col cols="12" md="12">
           <v-card elevation="3" dense class="h-100 round-top mt-3" style="min-height:320px;">
             <v-card-item>
@@ -144,14 +165,14 @@
                 </v-toolbar-title>
             </v-card-item>
             <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-                <apexchart ref="recursos1" class="apex-moco" type="bar" height="400" width="100%" :options="chartEquipos" :series="recurso('nuestraspc')" :lazyUpdate="true"></apexchart>
+                <apexchart class="apex-moco" type="bar" height="400" width="100%" :options="chartEquipos" :series="recurso('nuestraspc')" :lazyUpdate="true"></apexchart>
             </div>
           </v-card>
         </v-col>
         </v-row>
 
         <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
-          <v-col cols="12" md="12" v-show="this.graf_rec[1]">
+          <v-col cols="12" md="12">
             <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:320px;">
               <v-card-item>
             <v-toolbar-title class="text-h6 red round-top">
@@ -159,14 +180,14 @@
                   </v-toolbar-title>
               </v-card-item>
               <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-                  <apexchart ref="recursos2" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('otrospc')" :lazyUpdate="false" :visible="showcharts" :deferred-render="true"></apexchart>
+                  <apexchart class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('otrospc')" :lazyUpdate="true"></apexchart>
               </div>
             </v-card>
           </v-col>
         </v-row>
 
         <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
-          <v-col cols="12" md="12" v-show="this.graf_rec[2]">
+          <v-col cols="12" md="12">
             <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
               <v-card-item>
             <v-toolbar-title class="text-h6 red round-top">
@@ -174,14 +195,14 @@
                   </v-toolbar-title>
               </v-card-item>
               <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-                  <apexchart ref="recursos3" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('robotica')" :lazyUpdate="true" :deferred-render="true" :visible="showcharts"></apexchart>
+                  <apexchart class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('robotica')" :lazyUpdate="true" ></apexchart>
               </div>
             </v-card>
           </v-col>
         </v-row>
 
           <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
-          <v-col cols="12" md="12" v-show="this.graf_rec[3]">
+          <v-col cols="12" md="12">
             <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
               <v-card-item>
             <v-toolbar-title class="text-h6 red round-top">
@@ -189,14 +210,14 @@
                   </v-toolbar-title>
               </v-card-item>
               <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-                  <apexchart ref="recursos4" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('soldador')" :lazyUpdate="true" :deferred-render="true" :visible="showcharts"></apexchart>
+                  <apexchart class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('soldador')" :lazyUpdate="true" ></apexchart>
               </div>
             </v-card>
           </v-col>
         </v-row>
 
         <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
-          <v-col cols="12" md="12" v-show="this.graf_rec[4]">
+          <v-col cols="12" md="12">
             <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
               <v-card-item>
             <v-toolbar-title class="text-h6 red round-top">
@@ -204,14 +225,14 @@
                   </v-toolbar-title>
               </v-card-item>
               <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-                  <apexchart ref="recursos5" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('teleco')" :lazyUpdate="true" :deferred-render="true" :visible="showcharts"></apexchart>
+                  <apexchart class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('teleco')" :lazyUpdate="true" ></apexchart>
               </div>
             </v-card>
           </v-col>
         </v-row>
 
           <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
-          <v-col cols="12" md="12" v-show="this.graf_rec[5]">
+          <v-col cols="12" md="12">
             <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
               <v-card-item>
             <v-toolbar-title class="text-h6 red round-top">
@@ -219,14 +240,14 @@
                   </v-toolbar-title>
               </v-card-item>
               <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-                  <apexchart ref="recursos6" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('tv')" :lazyUpdate="true" :deferred-render="true" :visible="showcharts"></apexchart>
+                  <apexchart class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('tv')" :lazyUpdate="true" ></apexchart>
               </div>
             </v-card>
           </v-col>
         </v-row>
 
           <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
-          <v-col cols="12" md="12" v-show="this.graf_rec[6]">
+          <v-col cols="12" md="12">
             <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
               <v-card-item>
             <v-toolbar-title class="text-h6 red round-top">
@@ -234,14 +255,14 @@
                   </v-toolbar-title>
               </v-card-item>
               <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-                  <apexchart ref="recursos7" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('impresoras')" :lazyUpdate="true" :deferred-render="true" :visible="showcharts"></apexchart>
+                  <apexchart class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('impresoras')" :lazyUpdate="true" ></apexchart>
               </div>
             </v-card>
           </v-col>
         </v-row>
 
         <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
-          <v-col cols="12" md="12" v-show="this.graf_rec[7]">
+          <v-col cols="12" md="12">
             <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
               <v-card-item>
             <v-toolbar-title class="text-h6 red round-top">
@@ -249,14 +270,14 @@
                   </v-toolbar-title>
               </v-card-item>
               <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-                  <apexchart ref="recursos8" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('futbolistas')" :lazyUpdate="true" :deferred-render="true" :visible="showcharts"></apexchart>
+                  <apexchart class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('futbolistas')" :lazyUpdate="true" ></apexchart>
               </div>
             </v-card>
           </v-col>
         </v-row>
 
         <v-row v-show="!$vuetify.breakpoint.mobile && showcharts">
-        <v-col cols="12" md="12" v-show="this.graf_rec[8]">
+        <v-col cols="12" md="12">
           <v-card elevation="3" dense class="h-90 round-top mt-3" style="min-height:150px;">
             <v-card-item>
           <v-toolbar-title class="text-h6 red round-top">
@@ -264,7 +285,7 @@
                 </v-toolbar-title>
             </v-card-item>
             <div :class="[cambio ? 'chart-wrapper2' : 'chart-wrapper']">
-                <apexchart ref="recursos9" class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('internet')" :lazyUpdate="true" :deferred-render="true" :visible="showcharts"></apexchart>
+                <apexchart class="apex-moco" type="bar" height="250" width="100%" :options="chartEquipos" :series="recurso('internet')" :lazyUpdate="true" ></apexchart>
             </div>
           </v-card>
         </v-col>
@@ -362,9 +383,12 @@ import personal from "@/views/personal.vue";
 //opciones (parte grafica de personal)
 import data_inscriptos from '@/components/datas/cantidad_inscriptos';
 import data_saberes from '@/components/datas/cantidad_saberes';
+import { chartEquipos }from "@/components/datas/chart_equipos";
+import { chartOptions }from "@/components/datas/cantidad_options";
+//import data_radar from '@/components/datas/cantidad_radar';//no ocupo
 import store from '@/store';
 
-import { mapState, Store } from 'vuex'
+import { mapState } from 'vuex'
 export default {
   name: "Home",
   components:{
@@ -373,6 +397,38 @@ export default {
     personal
   },
   methods:{
+    pintari(){
+      const chart = this.$refs.inscriptosx;
+      const index = this.chartEquipos.xaxis.categories.findIndex(a => a === this.selectedSede.sede);
+      //console.log(chart);
+      // compruebo que no este seleccionado  chart.w.globals.selectedDataPoints
+      let seleccion = this.$refs.inscriptosx.chart.w.globals.selectedDataPoints
+      if (Array.isArray(seleccion) && seleccion[0] != index) {
+          chart.toggleDataPointSelection(0, index);
+      }
+      if (this.selectedSede.sede === "Todo") {
+        chart.toggleDataPointSelection(0,seleccion);
+      }
+    },
+   /*  handle(data){
+      // console.log("from vue"+data.config);
+      let seleccion = data.chart.w.globals.selectedDataPoints;
+      if (Array.isArray(seleccion) && seleccion.length > 0 && seleccion[0] != '') {
+        //console.log('correcto'); //ya esta seleccionado no hago nada
+        console.log('correcto',seleccion[0])
+        // this.pintari();
+      }else{
+        this.pintari();
+        console.log('incorrecto')        
+      }
+    }, */
+    actuinsc(){//forzar animacion
+        setTimeout(() => {
+            this.rendered++;
+          }, 10),
+        //setTimeout(() => {this.showchartsH = true;},500),
+        this.$refs.barritash.refresh();
+      },
     /* delayed: function(cual){
       setTimeout(() => {
         this[cual] = true;
@@ -400,7 +456,7 @@ export default {
     }, 1000); // Ajusta el tiempo de retraso según tus necesidades
   });
 }, */
-renderChartsWithDelay() {
+/* renderChartsWithDelay() {
   for (let i = 0; i < this.graf_rec.length; i++) {
     setTimeout(() => {
       //const chartRef = this.$refs['recursos' + (i + 1)];
@@ -409,7 +465,7 @@ renderChartsWithDelay() {
       //alert('recursos'+(i+1));
     }, 1000); // Ajusta el tiempo de retraso según tus necesidades
   }
-},
+}, */
   ///fin graficar recursos
 
 
@@ -429,17 +485,17 @@ renderChartsWithDelay() {
         return []
       }
     },
-    toggleRecursos(){
+    /* toggleRecursos(){
       this.recu = !this.recu;
     },
     toggleperso(){
       this.perso = !this.perso;
-    },
+    }, */
     /* visiblex(){
       this.visib = !this.visib;
     }, */
 
-    testb(selected,...x){
+    /* testb(selected,...x){
       if (this.dpclick == false){
         this.$refs.barras.toggleDataPointSelection(0,selected);
         console.log("algo");
@@ -452,7 +508,7 @@ renderChartsWithDelay() {
       }
 
       this.dpclick = false;
-    },
+    }, */
 
 
     /*handleClickdp(data){
@@ -460,21 +516,21 @@ renderChartsWithDelay() {
     },*/
     
     //reemplazo por watch
-    clickeado(event, chartContext, config){
+    // clickeado(event, chartContext, config){
         /*this.get_S(event, chartContext, config);
         let selected = config.dataPointIndex;
         this.testb(selected);*/
-        this.dpclick = true;
-    },
+      //this.dpclick = true;
+    //},
 
-    get_S(event, chartContext, config){
+    /* get_S(event, chartContext, config){
         console.log("click")
         // console.log("dppp"+this.sedes[config.dataPointIndex]);
         console.log("dppp",config);
         let sede = this.sedes[config.dataPointIndex].sede;
         this.sede = sede;
         store.commit('SET_selectedSede',{sede});
-    },
+    }, */
   },
 
   computed:{
@@ -647,20 +703,24 @@ if(Object.keys(this.rubricas_G).length > 0){
   data: ()=>{
     //https://stackoverflow.com/questions/46966689/how-can-i-call-method-from-data-on-vue-js
     //esto es para poder acceder a metodos dentro de las config de apexcharts
-    dpclick:false;
     //var self = this;
     return{
-
+      
       //cantidad de graficos de recursos
-      cant_rec: 9,
-      graf_rec:[],
+      /* cant_rec: 9,
+      graf_rec:[], */
       // insDelay:false,
+      //dpclick era parte de que no deselccione
+      //dpclick:false,
       visib:true,
       recu: false,
-      perso:true,
+      perso:false,
       rendered:0,
       graficos_inscriptos: data_inscriptos,
+      chartEquipos: chartEquipos,
+      chartOptions: chartOptions,
       graficos_saberes: data_saberes,
+      //graficos_radar: data_radar,
       created:0,
       creado:false,
       sede:'Todo',
@@ -678,39 +738,6 @@ if(Object.keys(this.rubricas_G).length > 0){
       campo: ['aprobados','noaprobados','ssa','bajas'],
       etiquetas: ['TrendKids','TecnoKids','MakerJuniors','TeensMaker','TeamInn','HighMaker'],
       seriesSedes: [20, 35, 23, 90, 20,45],
-
-
-radarOptions:{
-            chart: {
-              height: 350,
-              type: 'radar',
-              dropShadow: {
-                enabled: true,
-                blur: 1,
-                left: 1,
-                top: 1
-              }
-            },
-            title: {
-              text: 'Radar Chart - Multi Series'
-            },
-            stroke: {
-              width: 2
-            },
-            fill: {
-              opacity: 0.1
-            },
-            markers: {
-              size: 0
-            },
-             xaxis: {
-               categories:[]
-            },
-            /* xaxis: {
-              type: 'string',
-              // categories: ['2011', '2012', '2013', '2014', '2015', '2016']
-            } */
-},
 
 treeOptions:{
             legend: {
@@ -791,429 +818,18 @@ stackop:{
               offsetX: 40
           }
 },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          chartOptions: {
-            chart: {
-              height: 'auto',
-              width: '100%',
-              stacked: true,
-              stackType: '100%',
-              events: {                  
-              click(event, chartContext, config){
-                /* let ID = config;//.config.xaxis.categories[config.dataPointIndex];
-                //console.log("clickes"+JSON.stringify(config));
-                console.log(config);
-                console.log(chartContext); */
-
-                //self.dpselected = config.dataPointIndex;
-                //self.handleClickdp(ID);
-              }
-            },
-            
-            },
-            animations: {
-              enabled: true,
-              easing: 'easeinout',
-              speed: 200,
-              animateGradually: {
-                enabled: true,
-                speed: 100
-              },
-              dynamicAnimation: {
-                enabled: true,
-                speed: 1000
-              }
-            },
-            dataLabels: {
-              enabled: true,
-              enabledOnSeries: [0,1,2],
-              style: {
-               // colors: ['#23b14d', '#fef200'],
-                /* colors:[
-    function ({ seriesIndex,dataPointIndex,  w  }) {
-      if (w.config.series[seriesIndex].data[dataPointIndex] > 0) {
-       return "#ff0014";
-     } else {
-       return "#1f52b0";
-     }
-    },
-  ], */
-
-      fontSize: '10px',
-      fontFamily: 'Helvetica, Arial, sans-serif',
-      fontWeight: 'bold',
-      colors: ['#23b14d', '#fef200','#ff0000'],
- 
-                //forecolor:'#000'
-              },
-              background: {
-                enabled: true,
-                foreColor: '#333',
-                padding: 5,
-                borderRadius: 5,
-                borderWidth: 0.2,
-                borderColor: '#F06',
-                opacity: 1,
-                dropShadow: {
-                  enabled: true,
-                  top: 1,
-                  left: 1,
-                  blur: 1,
-                  color: '#000',
-                  opacity: 0.45
-                }
-              }
-            },
-            //no para el 100%
-            /*dataLabels: {
-              enabled: true,
-              enabledOnSeries: [0,1],
-              position:'center',
-              offsetY:0
-            },*/
-            
-            // colors: ['#F44336', '#E91E63', '#9C27B0'],
-            colors: ['#23b14d', '#fef200', '#ed1b24'],
-            /*colors: [
-              function ({ value, seriesIndex, dataPointIndex, w }) {
-                  if (dataPointIndex == 2) {
-                    return "#7E36AF";
-                  } else {
-                    return "#D9534F";
-                  }
-                }
-            ],*/
-            stroke: {
-              // width: [0, 2, 5],
-              width: [1,1,1],
-              //curve: 'smooth'
-            },
-            plotOptions: {
-              bar: {
-                columnWidth: '60%',
-                barHeight: '100%',
-                horizontal: false
-              }
-            },
-            legend: {
-              position: 'top'
-            },
-
-
-
-            responsive: [{
-              breakpoint: 580,
-              options: {
-                chart:{
-                stacked: true,
-                type:'bar',
-                stackType: '100%',
-                },
-                plotOptions: {
-                  bar: {
-                    barHeight: '100%',
-                    horizontal: true
-                  }
-                },
-                yaxis: {
-                  type: 'string'
-                },
-                xaxis: {
-                  title: {
-                    text: 'Alumnos',
-                  },
-                  min: 0
-                },
-                tooltip: {
-                  shared: true,
-                  position:'bottomLeft',
-                
-                 delay: { show: 5000 },
-                 x: {
-                    formatter: function (x) {
-                      if (typeof x !== "undefined") {
-                        return x.toFixed(0) + " alumnos";
-                      }
-                      return x;
-                    }
-                  }
-                },
-                legend: {
-                  position: "bottom"
-                }
-              }
-            }],
-
-
-
-            fill: {
-              // opacity: [0.85, 0.25, 1],
-              opacity: [1, 1, 1],
-              gradient: {
-                inverseColors: false,
-                shade: 'light',
-                type: "vertical",
-                opacityFrom: 0.85,
-                opacityTo: 0.55,
-                stops: [0, 100, 100, 100]
-              }
-            },
-            //labels: ["25 de Mayo","Alba Posse","Almafuerte","Apóstoles","Aristóbulo del Valle","Azara","Bernardo de Irigoyen","Caá Yarí","Campo Grande","Campo Ramón","Campo Viera","Candelaria","Capioví","Cerro Azul","Cerro Corá","Colonia Alberdi","Colonia Aurora","Colonia Delicia","Colonía Victoria","Comandante Andresito","Concepción de la Sierra","Corpus","Dos de Mayo","El Alcazar","El Soberbio","Eldorado","Fachinal","Garuhape","Garupá","General Urquiza","Gobernador Roca","Guaraní","Jardín América","Leandro N. Alem","Loreto","Los helechos","Montecarlo","Oberá","Panambí","Posadas (En el Polo TIC)","Pozo Azul","Profundidad","Puerto Esperanza","Puerto Iguazú","Puerto Libertad","Puerto Piray","Puerto Rico 01","Puerto Rico 02","Ruiz de Montoya","Salto Encantado","San Ignacio","San Javier","San José","San Martín","San Pedro","San Vicente","Santa Ana","Santiago de Liniers","Santo Pipó"],
-            labels: [],
-            markers: {
-              size: 0
-            },
-            xaxis: {
-              labels:{
-                    style:{
-                      fontSize: '6.5px',
-                      trim:true,
-                      hideOverlappingLabels: false
-                    }
-                    },
-              type: 'string'
-            },
-            yaxis: {
-              title: {
-                text: 'Alumnos',
-              },
-              min: 0
-            },
-            tooltip: {
-              shared: true,
-              position:'topRight',
-              intersect: false,
-              y: {
-                formatter: function (y) {
-                  if (typeof y !== "undefined") {
-                    return y.toFixed(0) + " alumnos";
-                  }
-                  return y;
-                }
-               }
-            }
-          },
-
-          chartEquipos:{
-            chart: {
-              height: 'auto',
-              width: '100%',
-              stacked: true,
-              
-              
-              },
-               animations: {
-              enabled: true,
-              easing: 'easeinout',
-              speed: 20,
-              animateGradually: {
-                enabled: true,
-                speed: 10
-              },
-              dynamicAnimation: {
-                enabled: true,
-                speed: 1000
-              }
-            },
-
-            dataLabels: {
-              enabled: true,
-              enabledOnSeries: [0,1,2],
-              style: {
-              fontSize: '10px',
-              fontFamily: 'Helvetica, Arial, sans-serif',
-              fontWeight: 'bold',
-              colors: ['#23b14d', '#fef200','#ff0000'],
- 
-              //color:'#f00'
-              },
-              background: {
-                enabled: true,
-                foreColor: '#fff',
-                color:'#000',
-                /*foreColor: function ({ seriesIndex }) {
-                  const colors = ['#FF0000', '#0f0', '#00f'];
-                  return colors[seriesIndex % colors.length];
-                },*/
-                padding: 5,
-                borderRadius: 5,
-                borderWidth: 0.52,
-                borderColor: '#F06',
-                opacity: 0.4,
-                dropShadow: {
-                  enabled: true,
-                  top: 1,
-                  left: 1,
-                  blur: 1,
-                  color: '#000',
-                  opacity: 0.45
-                }
-              },
-              /*formatter: function (val, opts) {
-                var labelColors = ['#ff0000', '#00ff00', '#0000ff'];
-                var labelIndex = opts.dataPointIndex % labelColors.length;
-                return labelIndex
-                return '<span style=\"color:' + labelColors[labelIndex] + '\">' + val + '</span>';
-                //return '<span style=\"color:'+labelColors[labelIndex]+'\">' + value + '</span>'
-               // return '<span style="color: white;">' + value + '</span>';
-              }*/
-            },
-            
-            //no para el 100%
-            /*dataLabels: {
-              enabled: true,
-              enabledOnSeries: [0,1],
-              position:'center',
-              offsetY:0
-            },*/
-            
-            // colors: ['#F44336', '#E91E63', '#9C27B0'],
-            colors: ['#23b14d', '#fef200', '#ed1b24'],
-            /*colors: [
-              function ({ value, seriesIndex, dataPointIndex, w }) {
-                  if (dataPointIndex == 2) {
-                    return "#7E36AF";
-                  } else {
-                    return "#D9534F";
-                  }
-                }
-            ],*/
-            stroke: {
-              // width: [0, 2, 5],
-              width: [1,1,1],
-              //curve: 'smooth'
-            },
-            plotOptions: {
-              bar: {
-                columnWidth: '60%',
-                barHeight: '100%',
-                horizontal: false
-              }
-            },
-            legend: {
-              position: 'top'
-            },
-
-
-
-            responsive: [{
-              breakpoint: 580,
-              options: {
-                chart:{
-                stacked: true,
-                type:'bar',
-                stackType: '100%',
-                },
-                plotOptions: {
-                  bar: {
-                    barHeight: '100%',
-                    horizontal: true
-                  }
-                },
-                yaxis: {
-                  type: 'string'
-                },
-                xaxis: {
-                  title: {
-                    text: 'Equipos',
-                  },
-                  min: 0
-                },
-                tooltip: {
-                  shared: true,
-                  position:'bottomLeft',
-                
-                 delay: { show: 5000 },
-                 x: {
-                    formatter: function (x) {
-                      if (typeof x !== "undefined") {
-                        return x.toFixed(0) + " equipos";
-                      }
-                      return x;
-                    }
-                  }
-                },
-                legend: {
-                  position: "bottom"
-                }
-              }
-            }],
-
-
-
-            fill: {
-              // opacity: [0.85, 0.25, 1],
-              opacity: [1, 1, 1],
-              gradient: {
-                inverseColors: false,
-                shade: 'light',
-                type: "vertical",
-                opacityFrom: 0.85,
-                opacityTo: 0.55,
-                stops: [0, 100, 100, 100]
-              }
-            },
-            //labels: ["25 de Mayo","Alba Posse","Almafuerte","Apóstoles","Aristóbulo del Valle","Azara","Bernardo de Irigoyen","Caá Yarí","Campo Grande","Campo Ramón","Campo Viera","Candelaria","Capioví","Cerro Azul","Cerro Corá","Colonia Alberdi","Colonia Aurora","Colonia Delicia","Colonía Victoria","Comandante Andresito","Concepción de la Sierra","Corpus","Dos de Mayo","El Alcazar","El Soberbio","Eldorado","Fachinal","Garuhape","Garupá","General Urquiza","Gobernador Roca","Guaraní","Jardín América","Leandro N. Alem","Loreto","Los helechos","Montecarlo","Oberá","Panambí","Posadas (En el Polo TIC)","Pozo Azul","Profundidad","Puerto Esperanza","Puerto Iguazú","Puerto Libertad","Puerto Piray","Puerto Rico 01","Puerto Rico 02","Ruiz de Montoya","Salto Encantado","San Ignacio","San Javier","San José","San Martín","San Pedro","San Vicente","Santa Ana","Santiago de Liniers","Santo Pipó"],
-            labels: [],
-            markers: {
-              size: 0
-            },
-            xaxis: {
-              labels:{
-                    style:{
-                      fontSize: '6.5px',
-                      trim:true,
-                      hideOverlappingLabels: false
-                    }
-                    },
-              type: 'string'
-            },
-            yaxis: {
-              title: {
-                text: 'Equipos',
-              },
-              min: 0
-            },
-            tooltip: {
-              shared: true,
-              position:'topRight',
-              intersect: false,
-              y: {
-                formatter: function (y) {
-                  if (typeof y !== "undefined") {
-                    return y.toFixed(0) + " equipos";
-                  }
-                  return y;
-                }
-               }
-            }
-          
-        }
+        
     }
     },
     watch:{
       //observo si se clickeo el menu
-      recu(antes,ahora){
+      /* recu(antes,ahora){
         if(ahora){
           //alert(ahora);
            // Llama a la función para iniciar la renderización iterativa con retraso
         this.renderChartsWithDelay();
         }
-      },
+      }, */
       menux(antes,ahora){
         console.log(antes,ahora);
         if(antes != this.menuinicial){//se cambio
@@ -1221,7 +837,8 @@ stackop:{
           this.cambio = true;
         }
       },
-      selectedSede(newVal,oldVal){
+      //esto era para que no se deselccione
+      /* selectedSede(newVal,oldVal){
             this.sede = newVal.sede;
             console.log("Primer",newVal,oldVal);
           let a = this.chartOptions.xaxis.categories;
@@ -1238,6 +855,12 @@ stackop:{
             console.log("seleccionado");
             this.testb(selected);
           }
+          }, */
+
+          selectedSede(newVal) {
+            if (newVal) {
+              this.pintari();//pinta inscriptos
+              }
           }
     },
     mounted(){
@@ -1246,10 +869,10 @@ stackop:{
         const chartRef = this.$refs['recursos' + i];
         this.graf_rec.push(chartRef);
       } */
-      for (let i = 0; i < this.cant_rec; i++) {
+      /* for (let i = 0; i < this.cant_rec; i++) {
         this.graf_rec.push(false);
       }
-      console.log("array de recursos: ",this.graf_rec);
+      console.log("array de recursos: ",this.graf_rec); */
 
   //fin graficar recursos
 
@@ -1260,28 +883,30 @@ stackop:{
       }, 1);
       //this.delayed('insDelay');
       setTimeout(() => {
-        this.showcharts = true;},500)
+        this.showcharts = true;
+        this.actuinsc();        
+        },500);
 
-      if (this.$refs.barras) {
+      //if (this.$refs.barras) {
       // HTML element exists
       //this.$refs.barras.refresh();
       /* var chart = new ApexCharts(this.$refs.chart, options);
       chart.render(); */
-    }
+    //}
       //esto me da la lib de vuetify si es mobile
       //console.log(this.$vuetify.breakpoint.width)
     },
     created() {
       // sino no toma
       // this.creado = true;
-      console.log('padre: ',this.$root.$children[0].drawer);
+      //console.log('padre: ',this.$root.$children[0].drawer);
       ///de esta manera asigno el valor de una computed al cargar la pagina
-       this.$set(this.chartOptions, 'labels', this.vsedes);
+       //this.$set(this.chartOptions, 'labels', this.vsedes); //no se usa creo
        this.$set(this.graficos_inscriptos, 'labels', this.vsedes);
-       console.log("acaaaaa",this.chartOptions);
-       this.$set(this.chartOptions.xaxis, 'categories', this.vsedes);
+       //console.log("acaaaaa",this.chartOptions);
+       //this.$set(this.chartOptions.xaxis, 'categories', this.vsedes); //solo necesario para el selectedSedes
        this.$set(this.chartEquipos.xaxis, 'categories', this.vsedes);
-       this.$set(this.radarOptions.xaxis, 'categories', this.vsedes);
+       //this.$set(this.radarOptions.xaxis, 'categories', this.vsedes);
        this.$set(this.stackop.xaxis, 'categories', this.vsedes);
       /*this.$set(this.chartOptions, 'labels', Object.values(this.sedes).map(x=>x.sede));
       console.log(Object.values(this.sedes).map(x=>x.sede));
@@ -1403,4 +1028,7 @@ div.chart-wrapperm {
 }
 .apexcharts-bar-area:hover { fill: #e9f5479c !important; }
 .apexcharts-bar-area[selected = true]{ fill: turquoise !important; }
+.invisible {
+    visibility: hidden;
+  }
 </style>

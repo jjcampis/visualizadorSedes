@@ -47,7 +47,10 @@
 </v-row>
 <!-- end loading -->
 <!-- <button @click="actu">click</button> -->
-<apexchart :key="createdH" ref="barritash" v-show="showchartsH && !cargando" class="apex-moco" :type="type" height="200" width="100%" :options="chartOptions" :series="vechoras" @animationEnd="testb(0,2)" @dataPointSelection="get_H"></apexchart>
+<!-- {{createdH}} -->
+<apexchart :key="createdH" ref="barritash" v-show="!cargando" class="apex-moco" :type="type" height="200" width="100%" :options="chartOptions" :series="vechoras" @animationEnd="pintarh"></apexchart>
+<!-- <apexchart :key="createdH" ref="barritash" v-show="!cargando" class="apex-moco" :type="type" height="200" width="100%" :options="chartOptions" :series="vechoras" @animationEnd="pintarh"></apexchart> -->
+
   <!-- thead-tr-class="d-none" -->
   <!-- <b-table sticky-header head-variant="dark" 
       :fields="fields"
@@ -60,7 +63,7 @@
         <!-- <button @click="testbb">clickedamo</button> -->
       <v-row>
         <v-col class="text-left" cols="12" md="12">
-          <b>{{sede}} </b>
+          <b>{{selectedSede.sede}} </b>
           <b-button v-b-toggle.collapse-1 variant="outline-info"> 
             <span v-if="hsVisible">
               <v-icon>
@@ -534,27 +537,21 @@ export default {
       hsVisible:true
     }
   },
-  mounted(){
+  props:['estado'],
+   mounted(){
     //alert("this.chartOptions.chart");
-    console.log("this.chartOptions.chart");
-    this.$set(this.chartOptions.chart, 'id', 2);
-    this.actu2();
+    //console.log("this.chartOptions.chart");
+    //this.$set(this.chartOptions.chart, 'id', 2);
+   // this.actu2();
+  //  setTimeout(()=>{this.actu()},1500);
+  //this.pintarh();
   },
-  computed:{
-        ...mapState(['selectedSede']),
-        },
+
         watch:{
-          selectedSede(newVal,oldVal){
-            this.sede = newVal.sede;
-            // console.log("Primer",newVal,oldVal);
-          let a = this.chartOptions.xaxis.categories;
-          //console.log("barritas",this.$refs.barritash.$el);
-          var selected = a.findIndex(a => a === newVal.sede);
-          // console.log("barras",selected);
-          //this.$refs.barritash.toggleDataPointSelection(0,selected)
-          if (newVal.sede != oldVal.sede) {
-            this.testbb(selected);
-          }
+          /* selectedSede(newVal,oldVal){
+          if (newVal) {
+              this.pintar(newVal);
+              } */
           //console.log(this.$refs.barritash.toggleDataPointSelection);
 
 
@@ -588,15 +585,27 @@ export default {
             this.$refs.barritash.$el.children[0].children[0].children[0].children[4].children[0].children[selected].setAttribute("selected","true");
           }
           */
-
-        }
+         estado(newVal){
+          if (newVal) {
+              this.actu();
+              }
+            }
+        //}
         },
 methods:{
-  testbb(selected){
+ /*  testbb(selected){
     this.$refs.barritash.toggleDataPointSelection(0,selected);
     //alert(selected);
-  },
-  actu2(){
+  }, */
+  /*  pintaru(){
+      const chart = this.$refs.barritash;
+      console.log(chart);
+      const index = this.chartOptions.xaxis.categories.findIndex(a => a === this.selectedSede.sede);
+      console.log(chart);
+      chart.toggleDataPointSelection(0, index);
+      //alert('holaa')
+    }, */
+/*   actu2(){
         // :key="created" 
         setTimeout(() => {
             this.creado = true;
@@ -605,12 +614,21 @@ methods:{
         setTimeout(() => {this.showchartsH = true;},500)
         // window.dispatchEvent(new Event('resize'))
         //this.$refs.barritash.refresh();
-      }
+      } */
+      actu(){
+        setTimeout(() => {
+            this.creado = true;
+            this.createdH++
+          }, 1),
+        setTimeout(() => {this.showchartsH = true;},500),
+        this.$refs.barritash.refresh();
+      },
 },
-created() {
+beforeupdate() {
           // sino no toma
           ///de esta manera asigno el valor de una computed al cargar la pagina
     //this.actu2();
+    //setTimeout(()=>{this.actu()},1500);
     },
   mixins:[hmix]
 }

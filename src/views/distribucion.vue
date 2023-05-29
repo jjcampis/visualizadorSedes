@@ -1,7 +1,7 @@
 <template>
 <div>
   <v-row align="center">
-      <v-col
+      <!-- <v-col
         class="d-flex"
         cols="12"
         md="6"
@@ -14,7 +14,7 @@
           v-model="sede"
           :disabled="cargando"
         ></v-select>
-      </v-col>
+      </v-col> -->
       <!-- vacios -->
       <v-col
         class="d-flex"
@@ -61,7 +61,7 @@
 </v-row>
 <!-- end loading -->
 <!-- <button @click="actu">click</button> -->
-<apexchart :key="createdH" ref="barritash" v-show="showchartsH && !cargando" class="apex-moco" :type="type" height="200" width="100%" :options="chartOptions" :series="vechoras" @animationEnd="testb(0,2)" @dataPointSelection="get_Hb"></apexchart>
+<apexchart :key="createdH" ref="barritash" v-show="!cargando" class="apex-moco" :type="type" height="200" width="100%" :options="chartOptions" :series="vechoras" @animationEnd="pintarh"></apexchart>
   <!-- thead-tr-class="d-none" -->
   <!-- <b-table sticky-header head-variant="dark" 
       :fields="fields"
@@ -583,8 +583,7 @@ export default {
         },
   },
   mounted(){
-    setTimeout(
-      ()=>{this.actu()},1500);
+    // setTimeout(()=>{this.actu()},1500);
     },
 }
 </script>

@@ -146,7 +146,7 @@ export default{
           this.$set(this.chartOptions.xaxis, 'categories', Object.values(this.sedes).map(x=>x.sede));
         },
     mounted(){
-    this.obtener_horario().then(this.actu())
+    this.obtener_horario()//.then(this.pintarh())
     },
     activated: function() {
         if (this.creado) {
@@ -159,13 +159,18 @@ export default{
         }
       },
       watch:{
-        horario(newVal,oldVal){
+        /* horario(newVal,oldVal){
           console.log("cambioHo");
           this.actu();
-        }
+        }, */
+        selectedSede(newVal){
+          if (newVal) {
+              this.pintarh();
+              }
+            }
       },
       computed:{
-        ...mapState(['horario','cargando','sedes']),
+        ...mapState(['horario','cargando','sedes','selectedSede']),
         horarioF(){
             //console.log(Object.entries(this.horario).filter(x=>x[1].hr_espaciomaker == this.sede));
             console.log(Object.entries(this.horario).length > 0);
@@ -174,7 +179,7 @@ export default{
                 //return Object.entries(this.horario).filter(x=>x[1].hr_espaciomaker == this.sede);
             return Object.values(this.horario).filter((tray) => {
                 //return tray.hr_espaciomaker.toLowerCase().includes(this.sede.toLowerCase());
-                return tray.hr_espaciomaker == this.sede;
+                return tray.hr_espaciomaker == this.selectedSede.sede;
               })
             
             }else{
@@ -239,9 +244,22 @@ export default{
       }
     },
     methods:{
-      ...mapActions(['obtener_horario']),
+      ...mapActions(['obtener_horario','selectedSede']),
+      pintaru(){
+        console.log("llamado - pintaru");
+        this.pintarh();
+      },
+      pintarh(){
+        console.log("llamado - pintarh");
+        const chart = this.$refs.barritash;
+        console.log(chart);
+        const index = this.chartOptions.xaxis.categories.findIndex(a => a === this.selectedSede.sede);
+        console.log(chart);
+        chart.toggleDataPointSelection(0, index);
+        //alert('holaa')
+      },
       //funcion para alinear verticalmente segun el horario
-      testb(selected,...x){
+      /* testb(selected,...x){
         if (this.dpclick == false){
           this.$refs.barritash.toggleDataPointSelection(0,selected);
           console.log("x ",x," ruta ", this.$route);
@@ -253,8 +271,8 @@ export default{
           }
         }
         this.dpclick = false;
-      },
-      actu(){
+      }, */
+      /* actu(){
         // :key="created" 
         setTimeout(() => {
             this.creado = true;
@@ -263,8 +281,9 @@ export default{
         setTimeout(() => {this.showchartsH = true;},500),
         // window.dispatchEvent(new Event('resize'))
         this.$refs.barritash.refresh();
+        //alert("naranja");
           
-      },
+      }, */
       valign(dia){
         return "align-top";
         /*if(this.horarioGrouped.hasOwnProperty(dia)){
@@ -272,13 +291,13 @@ export default{
          return (h>=14 ? "align-bottom" : "align-top")
         }*/
       },
-      get_H(event, chartContext, config){
+      /* get_H(event, chartContext, config){
             console.log("click")
             console.log(this.sedes[config.dataPointIndex]);
             this.sede = this.sedes[config.dataPointIndex].sede;
             // let sede = this.sede;
             // store.commit('SET_selectedSede',{sede});
-        },
+        }, */
     
     }
 }

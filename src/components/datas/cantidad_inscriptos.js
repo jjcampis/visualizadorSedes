@@ -5,18 +5,16 @@ export default{
               width: '100%',
               stacked: false,
               events: {
-              click(event, chartContext, config) {
-                /* let ID = config;//.config.xaxis.categories[config.dataPointIndex];
-                //console.log("clickes"+JSON.stringify(config));
-                console.log(config);
-                console.log(chartContext); */
-
-                //self.dpselected = config.dataPointIndex;
-                //self.handleClickdp(ID);
-              },
               animationEnd: function(chartContext,options){
                 //alert('termine')
-              }
+              },
+              /* click(event, chartContext, config) {
+                console.log('indice de la serie');
+                console.log(config.globals.selectedDataPoints[0])
+            }, */
+               /* dataPointSelection: function(event, chartContext, config) {
+                this.pintari();
+              }  */
             },
             
             },
@@ -52,16 +50,6 @@ export default{
 
             },
             colors: ['#F44336'],
-            /*colors: [
-              function ({ value, seriesIndex, dataPointIndex, w }) {
-                  if (dataPointIndex == 2) {
-                    return "#7E36AF";
-                  } else {
-                    return "#D9534F";
-                  }
-                }
-            ],*/
-            
             plotOptions: {
               bar: {
                 columnWidth: '60%',
@@ -71,9 +59,6 @@ export default{
             legend: {
               position: 'top'
             },
-
-
-
             responsive: [{
               breakpoint: 580,
               options: {
@@ -115,8 +100,6 @@ export default{
               }
             }],
 
-
-
             fill: {
               opacity: [0.85, 0.25, 1],
               gradient: {
@@ -151,8 +134,6 @@ export default{
               labels: {
                 show: true,
               },
-
-
             },
             tooltip: {
               shared: true,
@@ -167,5 +148,4 @@ export default{
                 }
               }
             }
-         // }
 }

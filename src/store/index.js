@@ -38,7 +38,7 @@ export default new Vuex.Store({
       {sede:'Aristóbulo del Valle', id:19202},
       {sede:'Arroyo del Medio', id:1005584},
       {sede:'Azara', id:19203},
-      {sede:'Bernardo de Irigoyen', id:19204},
+      /* {sede:'Bernardo de Irigoyen', id:19204},
       {sede:'Bonpland', id:1005585},
       {sede:'Caá Yarí', id:19205},
       {sede:'Campo Grande', id:19206},
@@ -111,7 +111,7 @@ export default new Vuex.Store({
       {sede:'Santa María', id:1005600},
       {sede:'Santiago de Liniers', id:19255},
       {sede:'Santo Pipó', id:19256},
-      {sede:'Tres Capones', id:1005601},
+      {sede:'Tres Capones', id:1005601}, */
  ],
     logueado: false,
     rubricas_sede:{},

@@ -1,11 +1,18 @@
+import eventBus from '../../eventHub';
 const chartEquipos = {
     chart: {
       height: 'auto',
       width: '100%',
       stacked: true,
     },
+    events: {
+      animationEnd: function (chartContext, options) {
+        eventBus.$emit('chartAnimationEnd', chartContext, options);
+        console.log("se renderizoooo");
+      }
+    },
     animations: {
-      enabled: false
+      enabled: true
       },
     dataLabels: {
       enabled: true,
